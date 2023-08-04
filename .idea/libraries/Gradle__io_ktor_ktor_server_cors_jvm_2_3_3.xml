@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.ktor:ktor-server-cors-jvm:2.3.3" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.ktor" artifactId="ktor-server-cors-jvm" version="2.3.3" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-cors-jvm/2.3.3/70fa4ff02f688faa2321c299af66729179c78d05/ktor-server-cors-jvm-2.3.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-cors-jvm/2.3.3/5692a242e150266027f3d82846dcb0e989bc756b/ktor-server-cors-jvm-2.3.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.ktor:ktor-server-compression-jvm:2.3.3" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.ktor" artifactId="ktor-server-compression-jvm" version="2.3.3" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-compression-jvm/2.3.3/430584e5daca53e06e610f8a18d5ec535881d364/ktor-server-compression-jvm-2.3.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-compression-jvm/2.3.3/17a817cc464e952c1dfbbcea4fd5ceba2b7d2874/ktor-server-compression-jvm-2.3.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

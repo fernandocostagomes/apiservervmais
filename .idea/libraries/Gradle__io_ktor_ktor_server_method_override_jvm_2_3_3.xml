@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.ktor:ktor-server-method-override-jvm:2.3.3" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.ktor" artifactId="ktor-server-method-override-jvm" version="2.3.3" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-method-override-jvm/2.3.3/35a75f33bdbd0ea460fb7ca335be351e10eb6970/ktor-server-method-override-jvm-2.3.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-method-override-jvm/2.3.3/d0c25d198dce720fc6d89cc0e090045b02317ada/ktor-server-method-override-jvm-2.3.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
