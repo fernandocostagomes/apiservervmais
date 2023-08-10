@@ -56,8 +56,8 @@ class ParameterService(private val connection: Connection) {
     suspend fun create(parameter: Parameter): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(INSERT_PARAMETER, Statement.RETURN_GENERATED_KEYS)
         statement.setInt(1, parameter.codeParameter)
-        statement.setString(1, parameter.nameParameter)
-        statement.setString(2, parameter.valueParameter)
+        statement.setString(2, parameter.nameParameter)
+        statement.setString(3, parameter.valueParameter)
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -89,8 +89,8 @@ class ParameterService(private val connection: Connection) {
         val statement = connection.prepareStatement(UPDATE_PARAMETER)
         statement.setInt(0, id)
         statement.setInt(1, parameter.codeParameter)
-        statement.setString(1, parameter.nameParameter)
-        statement.setString(2, parameter.valueParameter)
+        statement.setString(2, parameter.nameParameter)
+        statement.setString(3, parameter.valueParameter)
         statement.executeUpdate()
     }
 

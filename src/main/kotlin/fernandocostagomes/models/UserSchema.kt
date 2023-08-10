@@ -7,10 +7,11 @@ import java.sql.SQLException
 import java.sql.Statement
 
 @Serializable
-data class User(val user_date: String,
-                val user_email: String,
-                val user_phone: String,
-                val user_pwd: String)
+data class User(val userDate: String,
+                val userEmail: String,
+                val userPhone: String,
+                val userPwd: String)
+
 class UserService(private val connection: Connection) {
     companion object {
         private const val TABLE = "user"
@@ -67,10 +68,10 @@ class UserService(private val connection: Connection) {
     // Create new user
     suspend fun create(user: User): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)
-        statement.setString(1, user.user_date)
-        statement.setString(2, user.user_email)
-        statement.setString(3, user.user_phone)
-        statement.setString(4, user.user_pwd)
+        statement.setString(1, user.userDate)
+        statement.setString(2, user.userEmail)
+        statement.setString(3, user.userPhone)
+        statement.setString(4, user.userPwd)
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -88,16 +89,16 @@ class UserService(private val connection: Connection) {
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val date_user = resultSet.getString(COLUMN_DATE)
-            val email_user = resultSet.getString(COLUMN_EMAIL)
-            val phone_user = resultSet.getString(COLUMN_PHONE)
-            val password_user = resultSet.getString(COLUMN_PWD)
+            val dateUser = resultSet.getString(COLUMN_DATE)
+            val emailUser = resultSet.getString(COLUMN_EMAIL)
+            val phoneUser = resultSet.getString(COLUMN_PHONE)
+            val passwordUser = resultSet.getString(COLUMN_PWD)
 
             return@withContext User(
-                date_user,
-                email_user,
-                phone_user,
-                password_user)
+                dateUser,
+                emailUser,
+                phoneUser,
+                passwordUser)
         } else {
             throw Exception("Record not found")
         }
@@ -107,10 +108,10 @@ class UserService(private val connection: Connection) {
     suspend fun update(id: Int, user: User) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(UPDATE_USER)
         statement.setInt(0, id)
-        statement.setString(1, user.user_date)
-        statement.setString(2, user.user_email)
-        statement.setString(3, user.user_phone)
-        statement.setString(4, user.user_pwd)
+        statement.setString(1, user.userDate)
+        statement.setString(2, user.userEmail)
+        statement.setString(3, user.userPhone)
+        statement.setString(4, user.userPwd)
         statement.executeUpdate()
     }
 
@@ -128,16 +129,16 @@ class UserService(private val connection: Connection) {
         val userList = mutableListOf<User>()
 
         while (resultSet.next()) {
-            val date_user = resultSet.getString(COLUMN_DATE)
-            val email_user = resultSet.getString(COLUMN_EMAIL)
-            val phone_user = resultSet.getString(COLUMN_PHONE)
-            val pwd_user = resultSet.getString(COLUMN_PWD)
+            val dateUser = resultSet.getString(COLUMN_DATE)
+            val emailUser = resultSet.getString(COLUMN_EMAIL)
+            val phoneUser = resultSet.getString(COLUMN_PHONE)
+            val pwdUser = resultSet.getString(COLUMN_PWD)
 
             val user = User(
-                date_user,
-                email_user,
-                phone_user,
-                pwd_user)
+                dateUser,
+                emailUser,
+                phoneUser,
+                pwdUser)
             userList.add(user)
         }
 

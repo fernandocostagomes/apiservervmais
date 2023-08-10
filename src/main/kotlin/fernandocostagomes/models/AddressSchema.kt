@@ -7,7 +7,13 @@ import java.sql.SQLException
 import java.sql.Statement
 
 @Serializable
-data class Address(val codeAddress: Int, val nameAddress: String, val valueAddress: String)
+data class Address(
+    val nameAddress: String,
+    val codeAddress: Int,
+    val addressAddress: String,
+    val numberAddress: String,
+    val cityAddress: String,
+    val stateAddress: String)
 class AddressService(private val connection: Connection) {
     companion object {
         private const val TABLE = "address"
@@ -71,9 +77,12 @@ class AddressService(private val connection: Connection) {
     // Create new address
     suspend fun create(address: Address): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(INSERT_ADDRESS, Statement.RETURN_GENERATED_KEYS)
-        statement.setInt(1, address.codeAddress)
         statement.setString(1, address.nameAddress)
-        statement.setString(2, address.valueAddress)
+        statement.setInt(2, address.codeAddress)
+        statement.setString(3, address.addressAddress)
+        statement.setString(4, address.numberAddress)
+        statement.setString(5, address.cityAddress)
+        statement.setString(6, address.stateAddress)
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -91,10 +100,13 @@ class AddressService(private val connection: Connection) {
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val code = resultSet.getInt("code_address")
             val name = resultSet.getString("name_address")
-            val value = resultSet.getString("value_address")
-            return@withContext Address(code, name, value)
+            val code = resultSet.getInt("code_address")
+            val address = resultSet.getString("address_address")
+            val number = resultSet.getString("number_address")
+            val city = resultSet.getString("city_address")
+            val state = resultSet.getString("state_address")
+            return@withContext Address(name, code, address, number, city, state)
         } else {
             throw Exception("Record not found")
         }
@@ -104,9 +116,12 @@ class AddressService(private val connection: Connection) {
     suspend fun update(id: Int, address: Address) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(UPDATE_ADDRESS)
         statement.setInt(0, id)
-        statement.setInt(1, address.codeAddress)
         statement.setString(1, address.nameAddress)
-        statement.setString(2, address.valueAddress)
+        statement.setInt(2, address.codeAddress)
+        statement.setString(3, address.addressAddress)
+        statement.setString(4, address.numberAddress)
+        statement.setString(5, address.cityAddress)
+        statement.setString(6, address.stateAddress)
         statement.executeUpdate()
     }
 

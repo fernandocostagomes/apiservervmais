@@ -10,17 +10,15 @@ fun Application.configureDatabases() {
 
     val dbConnection: Connection = connectToPostgres(embedded = true)
 
+    val addressService = AddressService(dbConnection)
+    val groupService = GroupService(dbConnection)
     val parameterService = ParameterService(dbConnection)
-    val teamCgdService = TeamCgdService(dbConnection)
-    val playerCgdService = PlayerCgdService(dbConnection)
-    val matchCgdService = MatchCgdService(dbConnection)
     val userService = UserService(dbConnection)
 
+    configureRoutingAddress(addressService)
+    configureRoutingGroup(groupService)
     configureRoutingParameter(parameterService)
-    configureRoutingTeam(teamCgdService)
-    configureRoutingPlayer(playerCgdService)
-    configureRoutingMatchCgd(matchCgdService)
-    configureRoutingUserCgd(userService)
+    configureRoutingUser(userService)
 }
 
 /**
@@ -47,10 +45,10 @@ fun Application.configureDatabases() {
 fun connectToPostgres(embedded: Boolean): Connection {
 
     val url = "127.0.0.1"
-    val db = "dbcgd"
+    val db = "dbvmaispostgres"
     val port = "5432"
-    val user = "postgres"
-    val pwd = "cgdpwd"
+    val user = "uservmaispostgres"
+    val pwd = "pwdvmaispostgres"
 
     Class.forName("org.postgresql.Driver")
 

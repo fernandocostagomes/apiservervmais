@@ -1,47 +1,47 @@
 package fernandocostagomes.routes
 
-import fernandocostagomes.models.PlayerCgd
-import fernandocostagomes.models.PlayerCgdService
+import fernandocostagomes.models.Group
+import fernandocostagomes.models.GroupService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.configureRoutingPlayer(player_cgdService: PlayerCgdService){
+fun Application.configureRoutingGroup(groupService: GroupService){
     routing {
-        // Create player_cgd
-        post("/player_cgd") {
-            val player_cgd = call.receive<PlayerCgd>()
-            val id = player_cgdService.create(player_cgd)
+        // Create group
+        post("/group") {
+            val group = call.receive<Group>()
+            val id = groupService.create(group)
             call.respond(HttpStatusCode.Created, id)
         }
-        // List all player_cgd
-        get("/player_cgd") {
-            val listTeam = player_cgdService.list()
+        // List all group
+        get("/group") {
+            val listTeam = groupService.list()
             call.respond(HttpStatusCode.OK, listTeam)
         }
-        // Read player_cgd
-        get("/player_cgd/{id}") {
+        // Read group
+        get("/group/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             try {
-                val player_cgd = player_cgdService.read(id)
-                call.respond(HttpStatusCode.OK, player_cgd)
+                val group = groupService.read(id)
+                call.respond(HttpStatusCode.OK, group)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)
             }
         }
-        // Update player_cgd
-        put("/player_cgd/{id}") {
+        // Update group
+        put("/group/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            val player_cgd = call.receive<PlayerCgd>()
-            player_cgdService.update(id, player_cgd)
+            val group = call.receive<Group>()
+            groupService.update(id, group)
             call.respond(HttpStatusCode.OK)
         }
-        // Delete player_cgd
-        delete("/player_cgd/{id}") {
+        // Delete group
+        delete("/group/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            player_cgdService.delete(id)
+            groupService.delete(id)
             call.respond(HttpStatusCode.OK)
         }
     }

@@ -8,10 +8,10 @@ import java.sql.Statement
 
 @Serializable
 data class Group(
-    val group_name: String,
-    val group_pwd: String,
-    val group_date: String,
-    val user_id: Int)
+    val groupName: String,
+    val groupPwd: String,
+    val groupDate: String,
+    val userId: Int)
 class GroupService(private val connection: Connection) {
     companion object {
         private const val TABLE = "group"
@@ -66,10 +66,10 @@ class GroupService(private val connection: Connection) {
     // Create new group
     suspend fun create(group: Group): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(INSERT_GROUP, Statement.RETURN_GENERATED_KEYS)
-        statement.setString(1, group.group_name)
-        statement.setString(2, group.group_pwd)
-        statement.setString(3, group.group_date)
-        statement.setInt(4, group.user_id)
+        statement.setString(1, group.groupName)
+        statement.setString(2, group.groupPwd)
+        statement.setString(3, group.groupDate)
+        statement.setInt(4, group.userId)
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -101,10 +101,10 @@ class GroupService(private val connection: Connection) {
     suspend fun update(id: Int, group: Group) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(UPDATE_GROUP)
         statement.setInt(0, id)
-        statement.setString(1, group.group_name)
-        statement.setString(2, group.group_pwd)
-        statement.setString(2, group.group_date)
-        statement.setInt(3, group.user_id)
+        statement.setString(1, group.groupName)
+        statement.setString(2, group.groupPwd)
+        statement.setString(3, group.groupDate)
+        statement.setInt(4, group.userId)
         statement.executeUpdate()
     }
 

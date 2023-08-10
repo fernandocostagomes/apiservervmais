@@ -7,7 +7,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.configureRoutingUserCgd(userService: UserService){
+fun Application.configureRoutingUser(userService: UserService){
     routing {
         // Create user
         post("/user") {
