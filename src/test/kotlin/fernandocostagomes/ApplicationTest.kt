@@ -15,7 +15,7 @@ class ApplicationTest {
         }
         client.get("/").apply {
             assertEquals(HttpStatusCode.OK, status)
-            assertEquals("ApiServer V+!!", bodyAsText())
+            assertEquals("ApiServer V+!", bodyAsText())
         }
     }
 }
