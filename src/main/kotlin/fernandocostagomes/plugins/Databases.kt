@@ -47,8 +47,8 @@ fun connectToPostgres(embedded: Boolean): Connection {
     val url = "127.0.0.1"
     val db = "dbvmaispostgres"
     val port = "5432"
-    val user = "uservmaispostgres"
-    val pwd = "pwdvmaispostgres"
+    val user = "postgres"
+    val pwd = "cgdpwd"
 
     Class.forName("org.postgresql.Driver")
 
