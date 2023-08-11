@@ -14,12 +14,12 @@ data class Group(
     val userId: Int)
 class ServiceGroup(private val connection: Connection): SchemaInterface {
     companion object {
-        private const val TABLE = "group"
-        private const val COLUMN_ID = "group_id"
-        private const val COLUMN_NAME = "group_name"
-        private const val COLUMN_PWD = "group_pwd"
-        private const val COLUMN_DATE = "group_date"
-        private const val COLUMN_USER_ID = "user_id"
+        private const val TABLE = "v_group"
+        private const val COLUMN_ID = "v_group_id"
+        private const val COLUMN_NAME = "v_group_name"
+        private const val COLUMN_PWD = "v_group_pwd"
+        private const val COLUMN_DATE = "v_group_date"
+        private const val COLUMN_USER_ID = "v_user_id"
 
         private const val CREATE_TABLE_GROUP = "CREATE TABLE IF NOT EXISTS " +
                 "$TABLE (" +

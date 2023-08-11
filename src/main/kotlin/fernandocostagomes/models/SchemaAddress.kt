@@ -17,14 +17,14 @@ data class Address(
     val stateAddress: String)
 class ServiceAddress(private val connection: Connection) : SchemaInterface{
     companion object {
-        private const val TABLE = "address"
-        private const val COLUMN_ID = "address_id"
-        private const val COLUMN_NAME = "address_name"
-        private const val COLUMN_CODE = "address_code"
-        private const val COLUMN_ADDRESS = "address_address"
-        private const val COLUMN_NUMBER = "address_number"
-        private const val COLUMN_CITY = "address_city"
-        private const val COLUMN_STATE = "address_state"
+        private const val TABLE = "v_address"
+        private const val COLUMN_ID = "v_address_id"
+        private const val COLUMN_NAME = "v_address_name"
+        private const val COLUMN_CODE = "v_address_code"
+        private const val COLUMN_ADDRESS = "v_address_address"
+        private const val COLUMN_NUMBER = "v_address_number"
+        private const val COLUMN_CITY = "v_address_city"
+        private const val COLUMN_STATE = "v_address_state"
 
         private const val CREATE_TABLE_ADDRESS =
                 "CREATE TABLE IF NOT EXISTS " +

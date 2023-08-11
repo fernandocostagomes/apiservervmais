@@ -14,15 +14,16 @@ data class User(val userDate: String,
 
 class ServiceUser(private val connection: Connection) : SchemaInterface {
     companion object {
-        private const val TABLE = "user"
-        private const val COLUMN_ID = "user_id"
-        private const val COLUMN_DATE = "user_date"
-        private const val COLUMN_EMAIL = "user_email"
-        private const val COLUMN_PHONE = "user_phone"
-        private const val COLUMN_PWD = "user_pwd"
+        private const val TABLE = "v_user"
+        private const val COLUMN_ID = "v_user_id"
+        private const val COLUMN_DATE = "v_user_date"
+        private const val COLUMN_EMAIL = "v_user_email"
+        private const val COLUMN_PHONE = "v_user_phone"
+        private const val COLUMN_PWD = "v_user_pwd"
 
         private const val CREATE_TABLE_USER =
-            "CREATE TABLE IF NOT EXISTS $TABLE(" +
+            "CREATE TABLE IF NOT EXISTS " +
+                "$TABLE (" +
                 "$COLUMN_ID SERIAL PRIMARY KEY, " +
                 "$COLUMN_DATE VARCHAR(20), " +
                 "$COLUMN_EMAIL VARCHAR(50) NOT NULL, " +
