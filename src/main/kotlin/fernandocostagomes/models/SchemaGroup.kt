@@ -17,7 +17,7 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
         private const val TABLE = "group"
         private const val COLUMN_ID = "group_id"
         private const val COLUMN_NAME = "group_name"
-        private const val COLUMN_PWD = "group_name"
+        private const val COLUMN_PWD = "group_pwd"
         private const val COLUMN_DATE = "group_date"
         private const val COLUMN_USER_ID = "user_id"
 

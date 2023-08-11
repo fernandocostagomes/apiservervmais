@@ -14,10 +14,10 @@ data class Parameter(
 class ServiceParameter(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "parameter"
-        private const val COLUMN_ID = "id_parameter"
-        private const val COLUMN_CODE = "code_parameter"
-        private const val COLUMN_NAME = "name_parameter"
-        private const val COLUMN_VALUE = "value_parameter"
+        private const val COLUMN_ID = "parameter_id"
+        private const val COLUMN_CODE = "parameter_code"
+        private const val COLUMN_NAME = "parameter_name"
+        private const val COLUMN_VALUE = "parameter_value"
 
         private const val CREATE_TABLE_PARAMETER =
                 "CREATE TABLE IF NOT EXISTS " +

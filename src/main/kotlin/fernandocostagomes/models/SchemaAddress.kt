@@ -1,11 +1,11 @@
 package fernandocostagomes.models
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
-import java.util.Objects
 
 @Serializable
 data class Address(
