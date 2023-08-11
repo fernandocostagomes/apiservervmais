@@ -10,14 +10,20 @@ fun Application.configureDatabases() {
 
     val dbConnection: Connection = connectToPostgres(embedded = true)
 
+    val serviceAction = ServiceAction(dbConnection)
     val serviceAddress = ServiceAddress(dbConnection)
     val serviceGroup = ServiceGroup(dbConnection)
     val serviceParameter = ServiceParameter(dbConnection)
+    val servicePermission = ServicePermission(dbConnection)
+    val serviceRole = ServiceRole(dbConnection)
     val serviceUser = ServiceUser(dbConnection)
 
     configureRoutingAddress(serviceAddress)
+    configureRoutingAction(serviceAction)
     configureRoutingGroup(serviceGroup)
     configureRoutingParameter(serviceParameter)
+    configureRoutingPermission(servicePermission)
+    configureRoutingRole(serviceRole)
     configureRoutingUser(serviceUser)
 }
 

@@ -14,3 +14,12 @@ const val parameterMoreIdConst = "/parameter/{id}"
 
 const val userConst = "/user"
 const val userMoreIdConst = "/user/{id}"
+
+const val actionConst = "/action"
+const val actionMoreIdConst = "/action/{id}"
+
+const val permissionConst = "/permission"
+const val permissionMoreIdConst = "/permission/{id}"
+
+const val roleConst = "/role"
+const val roleMoreIdConst = "/role/{id}"
