@@ -104,12 +104,12 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val name = resultSet.getString("name_address")
-            val code = resultSet.getInt("code_address")
-            val address = resultSet.getString("address_address")
-            val number = resultSet.getString("number_address")
-            val city = resultSet.getString("city_address")
-            val state = resultSet.getString("state_address")
+            val name = resultSet.getString( COLUMN_NAME )
+            val code = resultSet.getInt( COLUMN_CODE )
+            val address = resultSet.getString( COLUMN_ADDRESS)
+            val number = resultSet.getString( COLUMN_NUMBER )
+            val city = resultSet.getString( COLUMN_CITY )
+            val state = resultSet.getString( COLUMN_STATE )
             return@withContext Address(name, code, address, number, city, state)
         } else {
             throw Exception("Record not found")
