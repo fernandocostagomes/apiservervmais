@@ -12,7 +12,7 @@ data class User(val userDate: String,
                 val userPhone: String,
                 val userPwd: String)
 
-class UserService(private val connection: Connection) {
+class ServiceUser(private val connection: Connection) : SchemaInterface {
     companion object {
         private const val TABLE = "user"
         private const val COLUMN_ID = "user_id"
@@ -63,15 +63,14 @@ class UserService(private val connection: Connection) {
         }
     }
 
-    private var newUserId = 0
-
     // Create new user
-    suspend fun create(user: User): Int = withContext(Dispatchers.IO) {
+    override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)
-        statement.setString(1, user.userDate)
-        statement.setString(2, user.userEmail)
-        statement.setString(3, user.userPhone)
-        statement.setString(4, user.userPwd)
+        obj as User
+        statement.setString(1, obj.userDate)
+        statement.setString(2, obj.userEmail)
+        statement.setString(3, obj.userPhone)
+        statement.setString(4, obj.userPwd)
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -83,7 +82,7 @@ class UserService(private val connection: Connection) {
     }
 
     // Read a user
-    suspend fun read(id: Int): User = withContext(Dispatchers.IO) {
+    override suspend fun read(id: Int): User = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(SELECT_USER_BY_ID)
         statement.setInt(1, id)
         val resultSet = statement.executeQuery()
@@ -105,24 +104,25 @@ class UserService(private val connection: Connection) {
     }
 
     // Update a user
-    suspend fun update(id: Int, user: User) = withContext(Dispatchers.IO) {
+    override suspend fun update( id: Int, obj: Any ) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(UPDATE_USER)
+        obj as User
         statement.setInt(0, id)
-        statement.setString(1, user.userDate)
-        statement.setString(2, user.userEmail)
-        statement.setString(3, user.userPhone)
-        statement.setString(4, user.userPwd)
+        statement.setString(1, obj.userDate)
+        statement.setString(2, obj.userEmail)
+        statement.setString(3, obj.userPhone)
+        statement.setString(4, obj.userPwd)
         statement.executeUpdate()
     }
 
     // Delete a user
-    suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
+    override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(DELETE_USER)
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
-    suspend fun list(): List<User> = withContext(Dispatchers.IO) {
+    override suspend fun list(): List<User> = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(LIST_USER)
         val resultSet = statement.executeQuery()
 

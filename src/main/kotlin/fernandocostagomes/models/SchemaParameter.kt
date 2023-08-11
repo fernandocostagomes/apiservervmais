@@ -7,8 +7,11 @@ import java.sql.SQLException
 import java.sql.Statement
 
 @Serializable
-data class Parameter(val codeParameter: Int, val nameParameter: String, val valueParameter: String)
-class ParameterService(private val connection: Connection) {
+data class Parameter(
+    val codeParameter: Int,
+    val nameParameter: String,
+    val valueParameter: String)
+class ServiceParameter(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "parameter"
         private const val COLUMN_ID = "id_parameter"
@@ -41,6 +44,8 @@ class ParameterService(private val connection: Connection) {
                 "WHERE $COLUMN_ID = ?;"
 
         private const val DELETE_PARAMETER = "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;"
+
+        private const val LIST_PARAMETER = "SELECT * FROM $TABLE}"
     }
 
     init {
@@ -53,11 +58,12 @@ class ParameterService(private val connection: Connection) {
     }
 
     // Create new parameter
-    suspend fun create(parameter: Parameter): Int = withContext(Dispatchers.IO) {
+    override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(INSERT_PARAMETER, Statement.RETURN_GENERATED_KEYS)
-        statement.setInt(1, parameter.codeParameter)
-        statement.setString(2, parameter.nameParameter)
-        statement.setString(3, parameter.valueParameter)
+        obj as Parameter
+        statement.setInt(1, obj.codeParameter)
+        statement.setString(2, obj.nameParameter)
+        statement.setString(3, obj.valueParameter)
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -69,7 +75,7 @@ class ParameterService(private val connection: Connection) {
     }
 
     // Read a parameter
-    suspend fun read(id: Int): Parameter = withContext(Dispatchers.IO) {
+    override suspend fun read(id: Int): Parameter = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(SELECT_PARAMETER_BY_ID)
         statement.setInt(1, id)
         val resultSet = statement.executeQuery()
@@ -85,19 +91,44 @@ class ParameterService(private val connection: Connection) {
     }
 
     // Update a parameter
-    suspend fun update(id: Int, parameter: Parameter) = withContext(Dispatchers.IO) {
+    override suspend fun update( id: Int, obj: Any ) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(UPDATE_PARAMETER)
+        obj as Parameter
         statement.setInt(0, id)
-        statement.setInt(1, parameter.codeParameter)
-        statement.setString(2, parameter.nameParameter)
-        statement.setString(3, parameter.valueParameter)
+        statement.setInt(1, obj.codeParameter)
+        statement.setString(2, obj.nameParameter)
+        statement.setString(3, obj.valueParameter)
         statement.executeUpdate()
     }
 
     // Delete a parameter
-    suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
+    override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(DELETE_PARAMETER)
         statement.setInt(1, id)
         statement.executeUpdate()
+    }
+
+    // List all parameters
+    override suspend fun list(): List<Parameter> = withContext(Dispatchers.IO) {
+        val statement = connection.prepareStatement( LIST_PARAMETER )
+        val resultSet = statement.executeQuery()
+
+        val parameterList = mutableListOf<Parameter>()
+
+        while (resultSet.next()) {
+
+            val codeParameter = resultSet.getInt( COLUMN_CODE )
+            val nameParameter = resultSet.getString( COLUMN_NAME )
+            val valueParameter = resultSet.getString( COLUMN_VALUE )
+
+            val parameter = Parameter(codeParameter, nameParameter, valueParameter)
+            parameterList.add( parameter )
+        }
+
+        if (parameterList.isNotEmpty()) {
+            return@withContext parameterList
+        } else {
+            throw Exception("No records found")
+        }
     }
 }

@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
+import java.util.Objects
 
 @Serializable
 data class Address(
@@ -14,7 +15,7 @@ data class Address(
     val numberAddress: String,
     val cityAddress: String,
     val stateAddress: String)
-class AddressService(private val connection: Connection) {
+class ServiceAddress(private val connection: Connection) : SchemaInterface{
     companion object {
         private const val TABLE = "address"
         private const val COLUMN_ID = "address_id"
@@ -63,6 +64,8 @@ class AddressService(private val connection: Connection) {
                 "WHERE $COLUMN_ID = ?;"
 
         private const val DELETE_ADDRESS = "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;"
+
+        private const val LIST_ADDRESS = "SELECT * FROM $TABLE"
     }
 
     init {
@@ -75,14 +78,15 @@ class AddressService(private val connection: Connection) {
     }
 
     // Create new address
-    suspend fun create(address: Address): Int = withContext(Dispatchers.IO) {
+    override suspend fun create(obj: Any): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(INSERT_ADDRESS, Statement.RETURN_GENERATED_KEYS)
-        statement.setString(1, address.nameAddress)
-        statement.setInt(2, address.codeAddress)
-        statement.setString(3, address.addressAddress)
-        statement.setString(4, address.numberAddress)
-        statement.setString(5, address.cityAddress)
-        statement.setString(6, address.stateAddress)
+        obj as Address
+        statement.setString(1, obj.nameAddress)
+        statement.setInt(2, obj.codeAddress)
+        statement.setString(3, obj.addressAddress)
+        statement.setString(4, obj.numberAddress)
+        statement.setString(5, obj.cityAddress)
+        statement.setString(6, obj.stateAddress)
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -94,7 +98,7 @@ class AddressService(private val connection: Connection) {
     }
 
     // Read an address
-    suspend fun read(id: Int): Address = withContext(Dispatchers.IO) {
+    override suspend fun read(id: Int): Address = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(SELECT_ADDRESS_BY_ID)
         statement.setInt(1, id)
         val resultSet = statement.executeQuery()
@@ -113,22 +117,56 @@ class AddressService(private val connection: Connection) {
     }
 
     // Update a address
-    suspend fun update(id: Int, address: Address) = withContext(Dispatchers.IO) {
+    override suspend fun update(id: Int, obj: Any) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(UPDATE_ADDRESS)
+        obj as Address
         statement.setInt(0, id)
-        statement.setString(1, address.nameAddress)
-        statement.setInt(2, address.codeAddress)
-        statement.setString(3, address.addressAddress)
-        statement.setString(4, address.numberAddress)
-        statement.setString(5, address.cityAddress)
-        statement.setString(6, address.stateAddress)
+        statement.setString(1, obj.nameAddress)
+        statement.setInt(2, obj.codeAddress)
+        statement.setString(3, obj.addressAddress)
+        statement.setString(4, obj.numberAddress)
+        statement.setString(5, obj.cityAddress)
+        statement.setString(6, obj.stateAddress)
         statement.executeUpdate()
     }
 
     // Delete a address
-    suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(DELETE_ADDRESS)
+    override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
+        val statement = connection.prepareStatement( DELETE_ADDRESS )
         statement.setInt(1, id)
         statement.executeUpdate()
+    }
+
+    // List all address
+    override suspend fun list(): List<Address> = withContext(Dispatchers.IO) {
+        val statement = connection.prepareStatement( LIST_ADDRESS )
+        val resultSet = statement.executeQuery()
+
+        val addressList = mutableListOf<Address>()
+
+        while (resultSet.next()) {
+            val nameAddress = resultSet.getString( COLUMN_NAME )
+            val codeAddress = resultSet.getInt( COLUMN_CODE )
+            val addressAddress = resultSet.getString( COLUMN_ADDRESS )
+            val numberAddress = resultSet.getString( COLUMN_NUMBER )
+            val cityAddress = resultSet.getString( COLUMN_CITY )
+            val stateAddress = resultSet.getString( COLUMN_STATE )
+
+            val address = Address(
+                nameAddress,
+                codeAddress,
+                addressAddress,
+                numberAddress,
+                cityAddress,
+                stateAddress
+            )
+            addressList.add( address )
+        }
+
+        if (addressList.isNotEmpty()) {
+            return@withContext addressList
+        } else {
+            throw Exception("No records found")
+        }
     }
 }

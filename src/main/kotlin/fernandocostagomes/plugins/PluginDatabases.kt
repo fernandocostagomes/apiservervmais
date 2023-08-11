@@ -10,15 +10,15 @@ fun Application.configureDatabases() {
 
     val dbConnection: Connection = connectToPostgres(embedded = true)
 
-    val addressService = AddressService(dbConnection)
-    val groupService = GroupService(dbConnection)
-    val parameterService = ParameterService(dbConnection)
-    val userService = UserService(dbConnection)
+    val serviceAddress = ServiceAddress(dbConnection)
+    val serviceGroup = ServiceGroup(dbConnection)
+    val serviceParameter = ServiceParameter(dbConnection)
+    val serviceUser = ServiceUser(dbConnection)
 
-    configureRoutingAddress(addressService)
-    configureRoutingGroup(groupService)
-    configureRoutingParameter(parameterService)
-    configureRoutingUser(userService)
+    configureRoutingAddress(serviceAddress)
+    configureRoutingGroup(serviceGroup)
+    configureRoutingParameter(serviceParameter)
+    configureRoutingUser(serviceUser)
 }
 
 /**
@@ -55,10 +55,7 @@ fun connectToPostgres(embedded: Boolean): Connection {
     return if (embedded) {
         DriverManager.getConnection("jdbc:postgresql://$url:$port/$db", user, pwd)
     } else {
-//        val url = environment.config.property("postgres.url").getString()
-//        val user = environment.config.property("postgres.user").getString()
-//        val password = environment.config.property("postgres.password").getString()
-
+        //val url = environment.config.property("postgres.url").getString()
         DriverManager.getConnection(url, user, pwd)
     }
 }

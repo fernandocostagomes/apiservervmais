@@ -12,7 +12,7 @@ data class Group(
     val groupPwd: String,
     val groupDate: String,
     val userId: Int)
-class GroupService(private val connection: Connection) {
+class ServiceGroup(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "group"
         private const val COLUMN_ID = "group_id"
@@ -61,15 +61,14 @@ class GroupService(private val connection: Connection) {
         }
     }
 
-    private var newGroupId = 0
-
     // Create new group
-    suspend fun create(group: Group): Int = withContext(Dispatchers.IO) {
+    override suspend fun create(obj: Any): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(INSERT_GROUP, Statement.RETURN_GENERATED_KEYS)
-        statement.setString(1, group.groupName)
-        statement.setString(2, group.groupPwd)
-        statement.setString(3, group.groupDate)
-        statement.setInt(4, group.userId)
+        obj as Group
+        statement.setString(1, obj.groupName)
+        statement.setString(2, obj.groupPwd)
+        statement.setString(3, obj.groupDate)
+        statement.setInt(4, obj.userId)
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -81,7 +80,7 @@ class GroupService(private val connection: Connection) {
     }
 
     // Read a group
-    suspend fun read(id: Int): Group = withContext(Dispatchers.IO) {
+    override suspend fun read(id: Int): Group = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(SELECT_GROUP_BY_ID)
         statement.setInt(1, id)
         val resultSet = statement.executeQuery()
@@ -98,24 +97,25 @@ class GroupService(private val connection: Connection) {
     }
 
     // Update a group
-    suspend fun update(id: Int, group: Group) = withContext(Dispatchers.IO) {
+    override suspend fun update(id: Int, obj: Any) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(UPDATE_GROUP)
+        obj as Group
         statement.setInt(0, id)
-        statement.setString(1, group.groupName)
-        statement.setString(2, group.groupPwd)
-        statement.setString(3, group.groupDate)
-        statement.setInt(4, group.userId)
+        statement.setString(1, obj.groupName)
+        statement.setString(2, obj.groupPwd)
+        statement.setString(3, obj.groupDate)
+        statement.setInt(4, obj.userId)
         statement.executeUpdate()
     }
 
     // Delete a group
-    suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
+    override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(DELETE_GROUP)
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
-    suspend fun list(): List<Group> = withContext(Dispatchers.IO) {
+    override suspend fun list(): List<Group> = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(LIST_GROUP)
         val resultSet = statement.executeQuery()
 
