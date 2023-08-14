@@ -5,6 +5,7 @@ val logbackVersion: String by project
 
 val postgresVersion: String by project
 val h2Version: String by project
+val swagger_codegen_version: String by project
 
 plugins {
     kotlin("jvm") version "1.9.0"
@@ -44,6 +45,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jvm")
     implementation("io.ktor:ktor-server-auth-jwt-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("io.swagger.codegen.v3:swagger-codegen-generators:$swagger_codegen_version")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
