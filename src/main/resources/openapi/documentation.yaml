@@ -63,6 +63,91 @@ paths:
               examples:
                 Example#1:
                   value: "Hello World!"
+
+    get:
+      description: "Listar todos os parametros, retorna uma lista de objetos Parameter."
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+
+    get:
+      description: "Listar um parametro, recebe o id do parametro e retorna o objeto Parameter."
+      parameters:
+        - name: "id"
+          in: "query"
+          description: "Id"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+
+    put:
+      description: "Atualizar um parametro, recebe o id do parametro e o objeto Parameter e retorna o id do objeto atualizado."
+      parameters:
+        - name: "id"
+          in: "query"
+          description: "Id"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Parameter"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
   /:
     get:
       description: "Hello World!"
