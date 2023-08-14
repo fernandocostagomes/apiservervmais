@@ -6,8 +6,8 @@ class SchemaUtils {
         const val RECORD_NOT_FOUND = "Record not found"
         const val UNABLE_NEW_ID_INSERTED = "Unable to retrieve the id of the newly inserted role"
         fun createTable(tableName: String, columnNames: List<String>): String {
-            val columns = columnNames.joinToString(", ") { columnName ->
-                "`$columnName`"
+            val columns = columnNames.joinToString() { columnName ->
+                columnName
             }
 
             return "CREATE TABLE IF NOT EXISTS $tableName ( $columns );"

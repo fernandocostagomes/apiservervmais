@@ -26,7 +26,7 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
 
         private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
-        private const val COLUMN_DESCRIPTION_QUERY = "$COLUMN_DESCRIPTION VARCHAR(30));"
+        private const val COLUMN_DESCRIPTION_QUERY = "$COLUMN_DESCRIPTION VARCHAR(30), "
         private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20), "
         private const val COLUMN_ROLE_QUERY = "$COLUMN_ROLE INTEGER NOT NULL, "
         private const val COLUMN_ACTION_QUERY = "$COLUMN_ACTION INTEGER NOT NULL"
