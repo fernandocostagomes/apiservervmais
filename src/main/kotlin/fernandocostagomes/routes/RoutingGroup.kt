@@ -1,7 +1,7 @@
 package fernandocostagomes.routes
 
-import fernandocostagomes.models.Group
-import fernandocostagomes.models.ServiceGroup
+import fernandocostagomes.schemas.Group
+import fernandocostagomes.schemas.ServiceGroup
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*

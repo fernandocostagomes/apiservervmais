@@ -1,6 +1,6 @@
 package fernandocostagomes.plugins
 
-import fernandocostagomes.models.*
+import fernandocostagomes.schemas.*
 import fernandocostagomes.routes.*
 import io.ktor.server.application.*
 import java.sql.Connection

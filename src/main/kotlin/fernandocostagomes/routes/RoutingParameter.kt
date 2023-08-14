@@ -1,12 +1,13 @@
 package fernandocostagomes.routes
 
-import fernandocostagomes.models.Parameter
-import fernandocostagomes.models.ServiceParameter
+import fernandocostagomes.schemas.Parameter
+import fernandocostagomes.schemas.ServiceParameter
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.swagger.v3.oas.annotations.parameters.RequestBody
 
 fun Application.configureRoutingParameter(serviceParameter: ServiceParameter){
 
@@ -14,9 +15,13 @@ fun Application.configureRoutingParameter(serviceParameter: ServiceParameter){
 
         // Create parameter
         post( parameterConst ) {
-            val parameter = call.receive<Parameter>()
-            val id = serviceParameter.create(parameter)
-            call.respond(HttpStatusCode.Created, id)
+            try {
+                val parameter = call.receive<Parameter>()
+                val id = serviceParameter.create(parameter)
+                call.respond(HttpStatusCode.Created, id)
+            }catch (e: Exception){
+                call.respond(HttpStatusCode.BadRequest)
+            }
         }
 
         // Delete parameter

@@ -1,7 +1,7 @@
 package fernandocostagomes.routes
 
-import fernandocostagomes.models.Permission
-import fernandocostagomes.models.ServicePermission
+import fernandocostagomes.schemas.Permission
+import fernandocostagomes.schemas.ServicePermission
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*

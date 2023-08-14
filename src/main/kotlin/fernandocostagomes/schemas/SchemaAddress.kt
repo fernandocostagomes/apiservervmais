@@ -1,4 +1,4 @@
-package fernandocostagomes.models
+package fernandocostagomes.schemas
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -116,7 +116,7 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         }
     }
 
-    // Update a address
+    // Update an address
     override suspend fun update(id: Int, obj: Any) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(UPDATE_ADDRESS)
         obj as Address
@@ -130,7 +130,7 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         statement.executeUpdate()
     }
 
-    // Delete a address
+    // Delete an address
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement( DELETE_ADDRESS )
         statement.setInt(1, id)

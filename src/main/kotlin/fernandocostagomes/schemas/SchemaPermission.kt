@@ -1,4 +1,4 @@
-package fernandocostagomes.models
+package fernandocostagomes.schemas
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

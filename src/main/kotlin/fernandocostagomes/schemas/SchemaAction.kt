@@ -1,5 +1,6 @@
-package fernandocostagomes.models
+package fernandocostagomes.schemas
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
 import java.sql.Connection
@@ -69,7 +70,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         }
     }
 
-    // Read a action
+    // Read an action
     override suspend fun read(id: Int): Action = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(SELECT_ACTION_BY_ID)
         statement.setInt(1, id)
@@ -84,7 +85,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         }
     }
 
-    // Update a action
+    // Update an action
     override suspend fun update( id: Int, obj: Any ) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(UPDATE_ACTION)
         obj as Action
@@ -94,7 +95,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         statement.executeUpdate()
     }
 
-    // Delete a action
+    // Delete an action
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(DELETE_ACTION)
         statement.setInt(1, id)
