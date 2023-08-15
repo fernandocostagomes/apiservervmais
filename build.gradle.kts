@@ -11,6 +11,7 @@ plugins {
     kotlin("jvm") version "1.9.0"
     id("io.ktor.plugin") version "2.3.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
+    id("org.gretty") version "4.0.3"
 }
 
 group = "fernandocostagomes"
@@ -25,6 +26,18 @@ application {
 
 repositories {
     mavenCentral()
+}
+
+gretty {
+    servletContainer = "jetty11"
+    contextPath = "/"
+    logbackConfigFile = "src/main/resources/logback.xml"
+}
+
+afterEvaluate {
+    tasks.getByName("run") {
+        dependsOn("appRun")
+    }
 }
 
 dependencies {
@@ -47,6 +60,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("io.swagger.codegen.v3:swagger-codegen-generators:$swagger_codegen_version")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("io.ktor:ktor-server-servlet-jakarta:$ktorVersion")
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
