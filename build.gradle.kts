@@ -5,13 +5,14 @@ val logbackVersion: String by project
 
 val postgresVersion: String by project
 val h2Version: String by project
-val swagger_codegen_version: String by project
+val swaggerCodegenVersion: String by project
 
 plugins {
     kotlin("jvm") version "1.9.0"
     id("io.ktor.plugin") version "2.3.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
     id("org.gretty") version "4.0.3"
+    id("war")
 }
 
 group = "fernandocostagomes"
@@ -58,7 +59,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jvm")
     implementation("io.ktor:ktor-server-auth-jwt-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
-    implementation("io.swagger.codegen.v3:swagger-codegen-generators:$swagger_codegen_version")
+    implementation("io.swagger.codegen.v3:swagger-codegen-generators:$swaggerCodegenVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("io.ktor:ktor-server-servlet-jakarta:$ktorVersion")
 
