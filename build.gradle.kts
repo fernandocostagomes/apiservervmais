@@ -11,8 +11,6 @@ plugins {
     kotlin("jvm") version "1.9.0"
     id("io.ktor.plugin") version "2.3.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
-    id("org.gretty") version "4.0.3"
-    id("war")
 }
 
 group = "fernandocostagomes"
@@ -27,18 +25,6 @@ application {
 
 repositories {
     mavenCentral()
-}
-
-gretty {
-    servletContainer = "jetty11"
-    contextPath = "/"
-    logbackConfigFile = "src/main/resources/logback.xml"
-}
-
-afterEvaluate {
-    tasks.getByName("run") {
-        dependsOn("appRun")
-    }
 }
 
 dependencies {
@@ -66,3 +52,19 @@ dependencies {
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
 }
+
+
+//ktor {
+//    docker {
+//        jreVersion.set(io.ktor.plugin.features.JreVersion.JRE_17)
+//        localImageName.set("apiservervmais")
+//        imageTag.set("0.0.1-apiservervmais")
+//        portMappings.set(listOf(
+//            io.ktor.plugin.features.DockerPortMapping(
+//                80,
+//                8080,
+//                io.ktor.plugin.features.DockerPortMappingProtocol.TCP
+//            )
+//        ))
+//    }
+//}
