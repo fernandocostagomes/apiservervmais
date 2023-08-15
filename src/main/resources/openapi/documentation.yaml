@@ -6,148 +6,148 @@ info:
 servers:
   - url: "http://portainer.fernandocostagomes:8080"
 paths:
-  /parameter:
-    post:
-      description: "Criar um novo parametro, recebe um objeto Parameter e retorna o id do objeto criado."
-      parameters:
-        - name: "name"
-          in: "query"
-          description: "Name"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
-        "400":
-          description: "Bad Request"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
-    delete:
-      description: "Deletar um parametro, recebe o id do parametro e retorna o id do objeto deletado."
-      parameters:
-        - name: "id"
-          in: "query"
-          description: "Id"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
-        "400":
-          description: "Bad Request"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
-
-    get:
-      description: "Listar todos os parametros, retorna uma lista de objetos Parameter."
-      responses:
-        "200":
-          description: "OK"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
-        "400":
-          description: "Bad Request"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
-
-    get:
-      description: "Listar um parametro, recebe o id do parametro e retorna o objeto Parameter."
-      parameters:
-        - name: "id"
-          in: "query"
-          description: "Id"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
-        "400":
-          description: "Bad Request"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
-
-    put:
-      description: "Atualizar um parametro, recebe o id do parametro e o objeto Parameter e retorna o id do objeto atualizado."
-      parameters:
-        - name: "id"
-          in: "query"
-          description: "Id"
-          required: true
-          schema:
-            type: "string"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Parameter"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
-        "400":
-          description: "Bad Request"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
+#  /parameter:
+#    post:
+#      description: "Criar um novo parametro, recebe um objeto Parameter e retorna o id do objeto criado."
+#      parameters:
+#        - name: "name"
+#          in: "query"
+#          description: "Name"
+#          required: true
+#          schema:
+#            type: "string"
+#      responses:
+#        "200":
+#          description: "OK"
+#          content:
+#            text/plain:
+#              schema:
+#                type: "string"
+#              examples:
+#                Example#1:
+#                  value: "Hello World!"
+#        "400":
+#          description: "Bad Request"
+#          content:
+#            text/plain:
+#              schema:
+#                type: "string"
+#              examples:
+#                Example#1:
+#                  value: "Hello World!"
+#    delete:
+#      description: "Deletar um parametro, recebe o id do parametro e retorna o id do objeto deletado."
+#      parameters:
+#        - name: "id"
+#          in: "query"
+#          description: "Id"
+#          required: true
+#          schema:
+#            type: "string"
+#      responses:
+#        "200":
+#          description: "OK"
+#          content:
+#            text/plain:
+#              schema:
+#                type: "string"
+#              examples:
+#                Example#1:
+#                  value: "Hello World!"
+#        "400":
+#          description: "Bad Request"
+#          content:
+#            text/plain:
+#              schema:
+#                type: "string"
+#              examples:
+#                Example#1:
+#                  value: "Hello World!"
+#
+#    get:
+#      description: "Listar todos os parametros, retorna uma lista de objetos Parameter."
+#      responses:
+#        "200":
+#          description: "OK"
+#          content:
+#            text/plain:
+#              schema:
+#                type: "string"
+#              examples:
+#                Example#1:
+#                  value: "Hello World!"
+#        "400":
+#          description: "Bad Request"
+#          content:
+#            text/plain:
+#              schema:
+#                type: "string"
+#              examples:
+#                Example#1:
+#                  value: "Hello World!"
+#
+#    get:
+#      description: "Listar um parametro, recebe o id do parametro e retorna o objeto Parameter."
+#      parameters:
+#        - name: "id"
+#          in: "query"
+#          description: "Id"
+#          required: true
+#          schema:
+#            type: "string"
+#      responses:
+#        "200":
+#          description: "OK"
+#          content:
+#            text/plain:
+#              schema:
+#                type: "string"
+#              examples:
+#                Example#1:
+#                  value: "Hello World!"
+#        "400":
+#          description: "Bad Request"
+#          content:
+#            text/plain:
+#              schema:
+#                type: "string"
+#              examples:
+#                Example#1:
+#                  value: "Hello World!"
+#
+#    put:
+#      description: "Atualizar um parametro, recebe o id do parametro e o objeto Parameter e retorna o id do objeto atualizado."
+#      parameters:
+#        - name: "id"
+#          in: "query"
+#          description: "Id"
+#          required: true
+#          schema:
+#            type: "string"
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: "#/components/schemas/Parameter"
+#      responses:
+#        "200":
+#          description: "OK"
+#          content:
+#            text/plain:
+#              schema:
+#                type: "string"
+#              examples:
+#                Example#1:
+#                  value: "Hello World!"
+#        "400":
+#          description: "Bad Request"
+#          content:
+#            text/plain:
+#              schema:
+#                type: "string"
+#              examples:
+#                Example#1:
+#                  value: "Hello World!"
   /:
     get:
       description: "Hello World!"
