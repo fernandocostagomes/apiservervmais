@@ -18,33 +18,19 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         private const val COLUMN_NAME = "v_action_name"
         private const val COLUMN_DESCRIPTION = "v_action_description"
 
-        private const val CREATE_TABLE_ACTION =
-                "CREATE TABLE IF NOT EXISTS " +
-                        "$TABLE (" +
-                        "$COLUMN_ID SERIAL PRIMARY KEY, " +                        
-                        "$COLUMN_NAME VARCHAR(20), " +
-                        "$COLUMN_DESCRIPTION VARCHAR(30));"
+        private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
+        private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
+        private const val COLUMN_DESCRIPTION_QUERY = "$COLUMN_DESCRIPTION VARCHAR(30)"
 
-        private const val SELECT_ACTION_BY_ID = "SELECT " +
-                "$COLUMN_NAME, " +
-                "$COLUMN_DESCRIPTION FROM $TABLE WHERE $COLUMN_ID = ?;"
+        val listColumnsQuery = listOf( COLUMN_ID_QUERY, COLUMN_NAME_QUERY, COLUMN_DESCRIPTION_QUERY )
 
-        private const val INSERT_ACTION = "INSERT INTO " +
-                "$TABLE (" +
-                "$COLUMN_NAME, " +
-                "$COLUMN_DESCRIPTION) VALUES (?, ?);"
-
-        private const val UPDATE_ACTION = "UPDATE " +
-                "$TABLE SET " +
-                "$COLUMN_NAME = ?, " +
-                "$COLUMN_DESCRIPTION = ? " +
-                "WHERE $COLUMN_ID = ?;"
+        val listColumns = listOf( COLUMN_ID, COLUMN_NAME, COLUMN_DESCRIPTION )
     }
 
     init {
         try {
             val statement = connection.createStatement()
-            statement.executeUpdate(CREATE_TABLE_ACTION)
+            statement.executeUpdate(SchemaUtils.createTable( TABLE, listColumnsQuery))
         } catch (e: SQLException) {
             println(e.toString())
         }
@@ -52,7 +38,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
 
     // Create new action
     override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(INSERT_ACTION, Statement.RETURN_GENERATED_KEYS)
+        val statement = connection.prepareStatement(SchemaUtils.insertQuery( TABLE, listColumns ), Statement.RETURN_GENERATED_KEYS)
         obj as Action
         statement.setString(1, obj.nameAction)
         statement.setString(2, obj.descriptionAction)
@@ -68,7 +54,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
 
     // Read an action
     override suspend fun read(id: Int): Action = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SELECT_ACTION_BY_ID)
+        val statement = connection.prepareStatement( SchemaUtils.selectQuery( TABLE, COLUMN_ID, listColumns ) )
         statement.setInt(1, id)
         val resultSet = statement.executeQuery()
 
@@ -83,7 +69,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
 
     // Update an action
     override suspend fun update( id: Int, obj: Any ) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(UPDATE_ACTION)
+        val statement = connection.prepareStatement( SchemaUtils.updateQuery( TABLE, listColumns, COLUMN_ID ) )
         obj as Action
         statement.setInt(0, id)
         statement.setString(2, obj.nameAction)

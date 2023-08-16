@@ -6,6 +6,7 @@ val logbackVersion: String by project
 val postgresVersion: String by project
 val h2Version: String by project
 val swaggerCodegenVersion: String by project
+val mockkVersion: String by project
 
 plugins {
     kotlin("jvm") version "1.9.0"
@@ -51,6 +52,7 @@ dependencies {
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
 

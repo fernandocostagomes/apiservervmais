@@ -31,11 +31,11 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
         private const val COLUMN_ROLE_QUERY = "$COLUMN_ROLE INTEGER NOT NULL, "
         private const val COLUMN_ACTION_QUERY = "$COLUMN_ACTION INTEGER NOT NULL"
 
-        private val listColumns = listOf(COLUMN_ID, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_DATE, COLUMN_ROLE,
-            COLUMN_ACTION)
-
-        private val listColumnsQuery = listOf(COLUMN_ID_QUERY, COLUMN_NAME_QUERY, COLUMN_DESCRIPTION_QUERY,
+        val listColumnsQuery = listOf(COLUMN_ID_QUERY, COLUMN_NAME_QUERY, COLUMN_DESCRIPTION_QUERY,
             COLUMN_DATE_QUERY, COLUMN_ROLE_QUERY, COLUMN_ACTION_QUERY)
+
+        val listColumns = listOf(COLUMN_ID, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_DATE, COLUMN_ROLE,
+            COLUMN_ACTION)
     }
 
     init {

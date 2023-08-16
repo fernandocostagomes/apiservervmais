@@ -7,7 +7,8 @@ import java.sql.SQLException
 import java.sql.Statement
 
 @Serializable
-data class Role(    
+data class Role(
+    val idRole: Int,
     val nameRole: String,
     val descriptionRole: String)
 class ServiceRole(private val connection: Connection): SchemaInterface {
@@ -21,9 +22,9 @@ class ServiceRole(private val connection: Connection): SchemaInterface {
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
         private const val COLUMN_DESCRIPTION_QUERY = "$COLUMN_DESCRIPTION VARCHAR(30)"
 
-        private val listColumns = listOf(COLUMN_ID, COLUMN_NAME, COLUMN_DESCRIPTION)
+        val listColumns = listOf(COLUMN_ID, COLUMN_NAME, COLUMN_DESCRIPTION)
 
-        private val listColumnsQuery = listOf(COLUMN_ID_QUERY, COLUMN_NAME_QUERY, COLUMN_DESCRIPTION_QUERY)
+        val listColumnsQuery = listOf(COLUMN_ID_QUERY, COLUMN_NAME_QUERY, COLUMN_DESCRIPTION_QUERY)
     }
 
     init {
@@ -58,9 +59,10 @@ class ServiceRole(private val connection: Connection): SchemaInterface {
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
+            val idRole = resultSet.getInt( COLUMN_ID )
             val name = resultSet.getString( COLUMN_NAME )
             val description = resultSet.getString( COLUMN_DESCRIPTION )
-            return@withContext Role(name, description)
+            return@withContext Role(idRole, name, description)
         } else {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
@@ -92,10 +94,11 @@ class ServiceRole(private val connection: Connection): SchemaInterface {
         val roleList = mutableListOf<Role>()
 
         while (resultSet.next()) {
+            val idRole = resultSet.getInt( COLUMN_ID )
             val nameRole = resultSet.getString( COLUMN_NAME )
             val descriptionRole = resultSet.getString( COLUMN_DESCRIPTION )
 
-            val role = Role( nameRole, descriptionRole )
+            val role = Role( idRole, nameRole, descriptionRole )
             roleList.add( role )
         }
 
