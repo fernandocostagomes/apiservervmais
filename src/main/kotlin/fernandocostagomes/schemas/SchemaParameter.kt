@@ -42,10 +42,6 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
                 "$COLUMN_NAME = ?, " +
                 "$COLUMN_VALUE = ? " +
                 "WHERE $COLUMN_ID = ?;"
-
-        private const val DELETE_PARAMETER = "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;"
-
-        private const val LIST_PARAMETER = "SELECT * FROM $TABLE}"
     }
 
     init {
@@ -103,14 +99,14 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
 
     // Delete a parameter
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(DELETE_PARAMETER)
+        val statement = connection.prepareStatement( "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;" )
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
     // List all parameters
     override suspend fun list(): List<Parameter> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement( LIST_PARAMETER )
+        val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
         val resultSet = statement.executeQuery()
 
         val parameterList = mutableListOf<Parameter>()

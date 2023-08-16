@@ -46,10 +46,6 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
                 "$COLUMN_NAME = ?," +
                 "$COLUMN_PWD = ?," +
                 "$COLUMN_DATE = ? WHERE $COLUMN_ID = ?"
-
-        private const val DELETE_GROUP = "DELETE FROM $TABLE WHERE $COLUMN_ID = ?"
-
-        private const val LIST_GROUP = "SELECT * FROM $TABLE"
     }
 
     init {
@@ -110,13 +106,13 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
 
     // Delete a group
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(DELETE_GROUP)
+        val statement = connection.prepareStatement( "DELETE FROM $TABLE WHERE $COLUMN_ID = ?" )
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
     override suspend fun list(): List<Group> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(LIST_GROUP)
+        val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
         val resultSet = statement.executeQuery()
 
         val groupList = mutableListOf<Group>()

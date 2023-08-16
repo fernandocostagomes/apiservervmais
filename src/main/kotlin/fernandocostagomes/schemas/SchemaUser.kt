@@ -49,10 +49,6 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
                 "$COLUMN_EMAIL = ?," +
                 "$COLUMN_PHONE = ?," +
                 "$COLUMN_PWD = ? WHERE $COLUMN_ID = ?"
-
-        private const val DELETE_USER = "DELETE FROM $TABLE WHERE $COLUMN_ID = ?"
-
-        private const val LIST_USER = "SELECT * FROM $TABLE"
     }
 
     init {
@@ -118,13 +114,13 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
     // Delete a user
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(DELETE_USER)
+        val statement = connection.prepareStatement( "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;" )
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
     override suspend fun list(): List<User> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(LIST_USER)
+        val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
         val resultSet = statement.executeQuery()
 
         val userList = mutableListOf<User>()

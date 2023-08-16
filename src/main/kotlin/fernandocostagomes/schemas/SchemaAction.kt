@@ -39,10 +39,6 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
                 "$COLUMN_NAME = ?, " +
                 "$COLUMN_DESCRIPTION = ? " +
                 "WHERE $COLUMN_ID = ?;"
-
-        private const val DELETE_ACTION = "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;"
-
-        private const val LIST_ACTION = "SELECT * FROM $TABLE}"
     }
 
     init {
@@ -97,14 +93,14 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
 
     // Delete an action
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(DELETE_ACTION)
+        val statement = connection.prepareStatement( "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;" )
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
     // List all actions
     override suspend fun list(): List<Action> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement( LIST_ACTION )
+        val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
         val resultSet = statement.executeQuery()
 
         val actionList = mutableListOf<Action>()

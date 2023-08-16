@@ -86,8 +86,7 @@ class ServiceRole(private val connection: Connection): SchemaInterface {
 
     // List all roles
     override suspend fun list(): List<Role> = withContext(Dispatchers.IO) {
-        val listRole = "SELECT * FROM $TABLE}"
-        val statement = connection.prepareStatement( listRole )
+        val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
         val resultSet = statement.executeQuery()
 
         val roleList = mutableListOf<Role>()

@@ -106,7 +106,7 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
 
     // List all permissions
     override suspend fun list(): List<Permission> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement( "SELECT * FROM $TABLE}" )
+        val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
         val resultSet = statement.executeQuery()
 
         val permissionList = mutableListOf<Permission>()

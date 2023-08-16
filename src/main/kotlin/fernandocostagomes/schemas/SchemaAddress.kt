@@ -62,10 +62,6 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
                 "$COLUMN_CITY = ? " +
                 "$COLUMN_STATE = ? " +
                 "WHERE $COLUMN_ID = ?;"
-
-        private const val DELETE_ADDRESS = "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;"
-
-        private const val LIST_ADDRESS = "SELECT * FROM $TABLE"
     }
 
     init {
@@ -132,14 +128,14 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
 
     // Delete an address
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement( DELETE_ADDRESS )
+        val statement = connection.prepareStatement( "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;" )
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
     // List all address
     override suspend fun list(): List<Address> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement( LIST_ADDRESS )
+        val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
         val resultSet = statement.executeQuery()
 
         val addressList = mutableListOf<Address>()
