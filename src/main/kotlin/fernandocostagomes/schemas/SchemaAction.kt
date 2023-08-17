@@ -38,10 +38,13 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
 
     // Create new action
     override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SchemaUtils.insertQuery( TABLE, listColumns ), Statement.RETURN_GENERATED_KEYS)
+        val query = SchemaUtils.insertQuery( TABLE, listColumns )
+        val statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
+        print("SchemaAction: $query : $obj")
         obj as Action
         statement.setString(1, obj.nameAction)
         statement.setString(2, obj.descriptionAction)
+        print("SchemaAction: $statement")
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
