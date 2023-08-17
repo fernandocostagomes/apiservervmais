@@ -16,16 +16,16 @@ class SchemaUtils {
 
         fun selectQuery(tableName: String, primaryKeyColumn: String, columnNames: List<String>): String {
             val columns = columnNames.joinToString(", ") { columnName ->
-                "`$columnName`"
+                columnName
             }
 
-            return "SELECT $columns FROM $tableName WHERE `$primaryKeyColumn` = ?;"
+            return "SELECT $columns FROM $tableName WHERE $primaryKeyColumn = ?;"
         }
 
         fun insertQuery( tableName: String, columnNames: List<String> ): String {
             val tableId = tableName + "_" + "id"
             val columns = columnNames.filter { !it.contains( tableId ) }.joinToString(", ") { columnName ->
-                "`$columnName`"
+                columnName
             }
 
             val values = columnNames.filter { !it.contains( tableId ) }.joinToString(", ") {
@@ -37,10 +37,10 @@ class SchemaUtils {
         fun updateQuery(tableName: String, columnNames: List<String>, primaryKeyColumn: String): String {
             val setClause = columnNames.filter { !it.contains( tableName + "_" + "id" ) }
                 .joinToString(", ") { columnName ->
-                "`$columnName` = ?"
+                "$columnName = ?"
             }
 
-            return "UPDATE $tableName SET $setClause WHERE `$primaryKeyColumn` = ?;"
+            return "UPDATE $tableName SET $setClause WHERE $primaryKeyColumn = ?;"
         }
     }
 }

@@ -59,10 +59,10 @@ class SchemaUtilsTest {
             }
 
             val queryExpected = when(table) {
-                "role" -> "INSERT INTO role ( `v_role_name`, `v_role_description` ) VALUES ( ?, ? );"
-                "permission" -> "INSERT INTO permission ( `v_permission_name`, `v_permission_description`, " +
-                        "`v_permission_date`, `v_role_id`, `v_action_id` ) VALUES ( ?, ?, ?, ?, ? );"
-                "action" -> "INSERT INTO action ( `v_action_name`, `v_action_description` ) VALUES ( ?, ? );"
+                "role" -> "INSERT INTO role ( v_role_name, v_role_description ) VALUES ( ?, ? );"
+                "permission" -> "INSERT INTO permission ( v_permission_name, v_permission_description, " +
+                        "v_permission_date, v_role_id, v_action_id ) VALUES ( ?, ?, ?, ?, ? );"
+                "action" -> "INSERT INTO action ( v_action_name, v_action_description ) VALUES ( ?, ? );"
                 else -> ""
             }
             testInsertQuery(table, columnNames, queryExpected)
@@ -80,10 +80,10 @@ class SchemaUtilsTest {
             }
 
             val queryExpected = when(table) {
-                "role" -> "SELECT `v_role_id`, `v_role_name`, `v_role_description` FROM role WHERE `v_role_id` = ?;"
-                "permission" -> "SELECT `v_permission_id`, `v_permission_name`, `v_permission_description`, " +
-                        "`v_permission_date`, `v_role_id`, `v_action_id` FROM permission WHERE `v_permission_id` = ?;"
-                "action" -> "SELECT `v_action_id`, `v_action_name`, `v_action_description` FROM action WHERE `v_action_id` = ?;"
+                "role" -> "SELECT v_role_id, v_role_name, v_role_description FROM role WHERE v_role_id = ?;"
+                "permission" -> "SELECT v_permission_id, v_permission_name, v_permission_description, " +
+                        "v_permission_date, v_role_id, v_action_id FROM permission WHERE v_permission_id = ?;"
+                "action" -> "SELECT v_action_id, v_action_name, v_action_description FROM action WHERE v_action_id = ?;"
                 else -> ""
             }
             testSelectQuery(table, columnNames, "v_${table}_id", queryExpected)
@@ -101,10 +101,10 @@ class SchemaUtilsTest {
             }
 
             val queryExpected = when(table) {
-                "role" -> "UPDATE role SET `v_role_name` = ?, `v_role_description` = ? WHERE `v_role_id` = ?;"
-                "permission" -> "UPDATE permission SET `v_permission_name` = ?, `v_permission_description` = ?, " +
-                        "`v_permission_date` = ?, `v_role_id` = ?, `v_action_id` = ? WHERE `v_permission_id` = ?;"
-                "action" -> "UPDATE action SET `v_action_name` = ?, `v_action_description` = ? WHERE `v_action_id` = ?;"
+                "role" -> "UPDATE role SET v_role_name = ?, v_role_description = ? WHERE v_role_id = ?;"
+                "permission" -> "UPDATE permission SET v_permission_name = ?, v_permission_description = ?, " +
+                        "v_permission_date = ?, v_role_id = ?, v_action_id = ? WHERE v_permission_id = ?;"
+                "action" -> "UPDATE action SET v_action_name = ?, v_action_description = ? WHERE v_action_id = ?;"
                 else -> ""
             }
             testUpdateQuery(table, columnNames, "v_${table}_id", queryExpected)
