@@ -5,6 +5,8 @@ val logbackVersion: String by project
 
 val postgresVersion: String by project
 val h2Version: String by project
+val swaggerCodegenVersion: String by project
+val mockkVersion: String by project
 
 plugins {
     kotlin("jvm") version "1.9.0"
@@ -44,8 +46,27 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jvm")
     implementation("io.ktor:ktor-server-auth-jwt-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("io.swagger.codegen.v3:swagger-codegen-generators:$swaggerCodegenVersion")
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("io.ktor:ktor-server-servlet-jakarta:$ktorVersion")
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 }
+
+
+//ktor {
+//    docker {
+//        jreVersion.set(io.ktor.plugin.features.JreVersion.JRE_17)
+//        localImageName.set("apiservervmais")
+//        imageTag.set("0.0.1-apiservervmais")
+//        portMappings.set(listOf(
+//            io.ktor.plugin.features.DockerPortMapping(
+//                80,
+//                8080,
+//                io.ktor.plugin.features.DockerPortMappingProtocol.TCP
+//            )
+//        ))
+//    }
+//}

@@ -1,4 +1,4 @@
-package fernandocostagomes.models
+package fernandocostagomes.schemas
 
 interface SchemaInterface {
     suspend fun create(obj: Any): Int

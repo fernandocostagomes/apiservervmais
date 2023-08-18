@@ -1,4 +1,4 @@
-package fernandocostagomes.models
+package fernandocostagomes.schemas
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,16 +26,16 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
 
         private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
-        private const val COLUMN_DESCRIPTION_QUERY = "$COLUMN_DESCRIPTION VARCHAR(30));"
+        private const val COLUMN_DESCRIPTION_QUERY = "$COLUMN_DESCRIPTION VARCHAR(30), "
         private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20), "
         private const val COLUMN_ROLE_QUERY = "$COLUMN_ROLE INTEGER NOT NULL, "
         private const val COLUMN_ACTION_QUERY = "$COLUMN_ACTION INTEGER NOT NULL"
 
-        private val listColumns = listOf(COLUMN_ID, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_DATE, COLUMN_ROLE,
-            COLUMN_ACTION)
-
-        private val listColumnsQuery = listOf(COLUMN_ID_QUERY, COLUMN_NAME_QUERY, COLUMN_DESCRIPTION_QUERY,
+        val listColumnsQuery = listOf(COLUMN_ID_QUERY, COLUMN_NAME_QUERY, COLUMN_DESCRIPTION_QUERY,
             COLUMN_DATE_QUERY, COLUMN_ROLE_QUERY, COLUMN_ACTION_QUERY)
+
+        val listColumns = listOf(COLUMN_ID, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_DATE, COLUMN_ROLE,
+            COLUMN_ACTION)
     }
 
     init {
@@ -106,7 +106,7 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
 
     // List all permissions
     override suspend fun list(): List<Permission> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement( "SELECT * FROM $TABLE}" )
+        val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
         val resultSet = statement.executeQuery()
 
         val permissionList = mutableListOf<Permission>()

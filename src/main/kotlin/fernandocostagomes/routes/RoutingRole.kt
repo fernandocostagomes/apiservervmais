@@ -1,7 +1,7 @@
 package fernandocostagomes.routes
 
-import fernandocostagomes.models.Role
-import fernandocostagomes.models.ServiceRole
+import fernandocostagomes.schemas.Role
+import fernandocostagomes.schemas.ServiceRole
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*

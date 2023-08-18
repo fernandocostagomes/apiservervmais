@@ -1,7 +1,7 @@
 package fernandocostagomes.routes
 
-import fernandocostagomes.models.Address
-import fernandocostagomes.models.ServiceAddress
+import fernandocostagomes.schemas.Address
+import fernandocostagomes.schemas.ServiceAddress
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*

@@ -1,6 +1,6 @@
 package fernandocostagomes.routes
-import fernandocostagomes.models.User
-import fernandocostagomes.models.ServiceUser
+import fernandocostagomes.schemas.User
+import fernandocostagomes.schemas.ServiceUser
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*

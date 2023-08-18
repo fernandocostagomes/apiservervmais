@@ -1,5 +1,6 @@
-package fernandocostagomes.models
+package fernandocostagomes.schemas
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
 import java.sql.Connection
@@ -50,6 +51,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         obj as Action
         statement.setString(1, obj.nameAction)
         statement.setString(2, obj.descriptionAction)
+        print("SchemaAction: $statement")
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
