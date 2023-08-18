@@ -21,44 +21,38 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         private const val COLUMN_PHONE = "v_user_phone"
         private const val COLUMN_PWD = "v_user_pwd"
 
-        private const val CREATE_TABLE_USER =
-            "CREATE TABLE IF NOT EXISTS " +
-                "$TABLE (" +
-                "$COLUMN_ID SERIAL PRIMARY KEY, " +
-                "$COLUMN_DATE VARCHAR(20), " +
-                "$COLUMN_EMAIL VARCHAR(50) NOT NULL, " +
-                "$COLUMN_PHONE VARCHAR(11) NOT NULL, " +
-                "$COLUMN_PWD VARCHAR(8) NOT NULL);"
+        private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
+        private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20), "
+        private const val COLUMN_EMAIL_QUERY = "$COLUMN_EMAIL VARCHAR(50) NOT NULL, "
+        private const val COLUMN_PHONE_QUERY = "$COLUMN_PHONE VARCHAR(11) NOT NULL, "
+        private const val COLUMN_PWD_QUERY = "$COLUMN_PWD VARCHAR(8) NOT NULL"
 
-        private const val SELECT_USER_BY_ID = "SELECT " +
-                "$COLUMN_DATE, " +
-                "$COLUMN_EMAIL, " +
-                "$COLUMN_PHONE, " +
-                "$COLUMN_PWD " +
-                "FROM $TABLE WHERE $COLUMN_ID = ?"
+        val listColumnsQuery = listOf(
+            COLUMN_ID_QUERY,
+            COLUMN_DATE_QUERY,
+            COLUMN_EMAIL_QUERY,
+            COLUMN_PHONE_QUERY,
+            COLUMN_PWD_QUERY
+        )
 
-        private const val INSERT_USER = "INSERT INTO $TABLE (" +
-                "$COLUMN_DATE, " +
-                "$COLUMN_EMAIL, " +
-                "$COLUMN_PHONE, " +
-                "$COLUMN_PWD) " +
-                "VALUES (?, ?, ?, ?)"
-
-        private const val UPDATE_USER = "UPDATE $TABLE SET " +
-                "$COLUMN_DATE = ?," +
-                "$COLUMN_EMAIL = ?," +
-                "$COLUMN_PHONE = ?," +
-                "$COLUMN_PWD = ? WHERE $COLUMN_ID = ?"
-
-        private const val DELETE_USER = "DELETE FROM $TABLE WHERE $COLUMN_ID = ?"
-
-        private const val LIST_USER = "SELECT * FROM $TABLE"
+        val listColumns = listOf(
+            COLUMN_ID,
+            COLUMN_DATE,
+            COLUMN_EMAIL,
+            COLUMN_PHONE,
+            COLUMN_PWD
+        )
     }
 
     init {
         try {
             val statement = connection.createStatement()
-            statement.executeUpdate(CREATE_TABLE_USER)
+            statement.executeUpdate(
+                SchemaUtils.createTable(
+                    TABLE,
+                    listColumnsQuery
+                )
+            )
         } catch (e: SQLException) {
             println(e.toString())
         }
@@ -66,7 +60,11 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
     // Create new user
     override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)
+        val statement = connection.prepareStatement(
+            SchemaUtils.insertQuery(
+                TABLE,
+                listColumnsQuery
+            ), Statement.RETURN_GENERATED_KEYS)
         obj as User
         statement.setString(1, obj.userDate)
         statement.setString(2, obj.userEmail)
@@ -84,7 +82,13 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
     // Read a user
     override suspend fun read(id: Int): User = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SELECT_USER_BY_ID)
+        val statement = connection.prepareStatement(
+            SchemaUtils.selectQuery(
+                TABLE,
+                COLUMN_ID,
+                listColumns
+            )
+        )
         statement.setInt(1, id)
         val resultSet = statement.executeQuery()
 
@@ -106,7 +110,13 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
     // Update a user
     override suspend fun update( id: Int, obj: Any ) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(UPDATE_USER)
+        val statement = connection.prepareStatement(
+            SchemaUtils.updateQuery(
+                TABLE,
+                listColumns,
+                COLUMN_ID
+            )
+        )
         obj as User
         statement.setInt(0, id)
         statement.setString(1, obj.userDate)
@@ -118,13 +128,13 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
     // Delete a user
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(DELETE_USER)
+        val statement = connection.prepareStatement( "DELETE FROM $TABLE WHERE $COLUMN_ID = ?" )
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
     override suspend fun list(): List<User> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(LIST_USER)
+        val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
         val resultSet = statement.executeQuery()
 
         val userList = mutableListOf<User>()

@@ -21,41 +21,33 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
         private const val COLUMN_DATE = "v_group_date"
         private const val COLUMN_USER_ID = "v_user_id"
 
-        private const val CREATE_TABLE_GROUP = "CREATE TABLE IF NOT EXISTS " +
-                "$TABLE (" +
-                "$COLUMN_ID SERIAL PRIMARY KEY, " +
-                "$COLUMN_NAME VARCHAR(20), " +
-                "$COLUMN_PWD VARCHAR(8) NOT NULL, " +
-                "$COLUMN_DATE VARCHAR(16)NOT NULL, " +
-                "$COLUMN_USER_ID INTEGER)"
+        private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
+        private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
+        private const val COLUMN_PWD_QUERY = "$COLUMN_PWD VARCHAR(8) NOT NULL, "
+        private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(16)NOT NULL, "
+        private const val COLUMN_USER_ID_QUERY = "$COLUMN_USER_ID INTEGER"
 
-        private const val SELECT_GROUP_BY_ID = "SELECT " +
-                "$COLUMN_NAME, " +
-                "$COLUMN_PWD, " +
-                "$COLUMN_DATE, " +
-                "$COLUMN_USER_ID " +
-                "FROM $TABLE WHERE $COLUMN_ID = ?"
+        val listColumnsQuery = listOf(
+            COLUMN_ID_QUERY,
+            COLUMN_NAME_QUERY,
+            COLUMN_PWD_QUERY,
+            COLUMN_DATE_QUERY,
+            COLUMN_USER_ID_QUERY
+        )
 
-        private const val INSERT_GROUP = "INSERT INTO $TABLE (" +
-                "$COLUMN_NAME, " +
-                "$COLUMN_PWD, " +
-                "$COLUMN_DATE, " +
-                "$COLUMN_USER_ID) VALUES (?, ?, ?, ?)"
-
-        private const val UPDATE_GROUP = "UPDATE $TABLE SET " +
-                "$COLUMN_NAME = ?," +
-                "$COLUMN_PWD = ?," +
-                "$COLUMN_DATE = ? WHERE $COLUMN_ID = ?"
-
-        private const val DELETE_GROUP = "DELETE FROM $TABLE WHERE $COLUMN_ID = ?"
-
-        private const val LIST_GROUP = "SELECT * FROM $TABLE"
+        val listColumns = listOf(
+            COLUMN_ID,
+            COLUMN_NAME,
+            COLUMN_PWD,
+            COLUMN_DATE,
+            COLUMN_USER_ID
+        )
     }
 
     init {
         try {
             val statement = connection.createStatement()
-            statement.executeUpdate(CREATE_TABLE_GROUP)
+            statement.executeUpdate( SchemaUtils.createTable(TABLE, listColumnsQuery))
         } catch (e: SQLException) {
             println(e.toString())
         }
@@ -63,7 +55,11 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
 
     // Create new group
     override suspend fun create(obj: Any): Int = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(INSERT_GROUP, Statement.RETURN_GENERATED_KEYS)
+        val statement = connection.prepareStatement(
+            SchemaUtils.insertQuery(
+                TABLE,
+                listColumnsQuery
+            ), Statement.RETURN_GENERATED_KEYS)
         obj as Group
         statement.setString(1, obj.groupName)
         statement.setString(2, obj.groupPwd)
@@ -81,7 +77,13 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
 
     // Read a group
     override suspend fun read(id: Int): Group = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SELECT_GROUP_BY_ID)
+        val statement = connection.prepareStatement(
+            SchemaUtils.selectQuery(
+                TABLE,
+                COLUMN_ID,
+                listColumns
+            )
+        )
         statement.setInt(1, id)
         val resultSet = statement.executeQuery()
 
@@ -98,7 +100,13 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
 
     // Update a group
     override suspend fun update(id: Int, obj: Any) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(UPDATE_GROUP)
+        val statement = connection.prepareStatement(
+            SchemaUtils.updateQuery(
+                TABLE,
+                listColumns,
+                COLUMN_ID
+            )
+        )
         obj as Group
         statement.setInt(0, id)
         statement.setString(1, obj.groupName)
@@ -110,13 +118,13 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
 
     // Delete a group
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(DELETE_GROUP)
+        val statement = connection.prepareStatement( "DELETE FROM $TABLE WHERE $COLUMN_ID = ?" )
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
     override suspend fun list(): List<Group> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(LIST_GROUP)
+        val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
         val resultSet = statement.executeQuery()
 
         val groupList = mutableListOf<Group>()

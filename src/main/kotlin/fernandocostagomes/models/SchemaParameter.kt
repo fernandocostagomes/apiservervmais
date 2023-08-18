@@ -19,39 +19,35 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         private const val COLUMN_NAME = "v_parameter_name"
         private const val COLUMN_VALUE = "v_parameter_value"
 
-        private const val CREATE_TABLE_PARAMETER =
-                "CREATE TABLE IF NOT EXISTS " +
-                        "$TABLE (" +
-                        "$COLUMN_ID SERIAL PRIMARY KEY, " +
-                        "$COLUMN_CODE INTEGER NOT NULL, " +
-                        "$COLUMN_NAME VARCHAR(20), " +
-                        "$COLUMN_VALUE VARCHAR(20));"
+        private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
+        private const val COLUMN_CODE_QUERY = "$COLUMN_CODE INTEGER NOT NULL, "
+        private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
+        private const val COLUMN_VALUE_QUERY = "$COLUMN_VALUE VARCHAR(20)"
 
-        private const val SELECT_PARAMETER_BY_ID = "SELECT " +
-                "$COLUMN_CODE, " +
-                "$COLUMN_NAME, " +
-                "$COLUMN_VALUE FROM $TABLE WHERE $COLUMN_ID = ?;"
+        val listColumnsQuery = listOf(
+            COLUMN_ID_QUERY,
+            COLUMN_CODE_QUERY,
+            COLUMN_NAME_QUERY,
+            COLUMN_VALUE_QUERY
+        )
 
-        private const val INSERT_PARAMETER = "INSERT INTO $TABLE (" +
-                "$COLUMN_CODE, " +
-                "$COLUMN_NAME, " +
-                "$COLUMN_VALUE) VALUES (?, ?, ?);"
-
-        private const val UPDATE_PARAMETER = "UPDATE $TABLE SET " +
-                "$COLUMN_CODE = ?," +
-                "$COLUMN_NAME = ?, " +
-                "$COLUMN_VALUE = ? " +
-                "WHERE $COLUMN_ID = ?;"
-
-        private const val DELETE_PARAMETER = "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;"
-
-        private const val LIST_PARAMETER = "SELECT * FROM $TABLE}"
+        val listColumns = listOf(
+            COLUMN_ID,
+            COLUMN_CODE,
+            COLUMN_NAME,
+            COLUMN_VALUE
+        )
     }
 
     init {
         try {
             val statement = connection.createStatement()
-            statement.executeUpdate(CREATE_TABLE_PARAMETER)
+            statement.executeUpdate(
+                SchemaUtils.createTable(
+                    TABLE,
+                    listColumnsQuery
+                )
+            )
         } catch (e: SQLException) {
             println(e.toString())
         }
@@ -59,7 +55,12 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
 
     // Create new parameter
     override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(INSERT_PARAMETER, Statement.RETURN_GENERATED_KEYS)
+        val statement = connection.prepareStatement(
+            SchemaUtils.insertQuery(
+                TABLE,
+                listColumnsQuery
+            ),
+            Statement.RETURN_GENERATED_KEYS)
         obj as Parameter
         statement.setInt(1, obj.codeParameter)
         statement.setString(2, obj.nameParameter)
@@ -76,7 +77,13 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
 
     // Read a parameter
     override suspend fun read(id: Int): Parameter = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SELECT_PARAMETER_BY_ID)
+        val statement = connection.prepareStatement(
+            SchemaUtils.selectQuery(
+                TABLE,
+                COLUMN_ID,
+                listColumns
+            )
+        )
         statement.setInt(1, id)
         val resultSet = statement.executeQuery()
 
@@ -92,7 +99,13 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
 
     // Update a parameter
     override suspend fun update( id: Int, obj: Any ) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(UPDATE_PARAMETER)
+        val statement = connection.prepareStatement(
+            SchemaUtils.updateQuery(
+                TABLE,
+                listColumns,
+                COLUMN_ID
+            )
+        )
         obj as Parameter
         statement.setInt(0, id)
         statement.setInt(1, obj.codeParameter)
@@ -103,14 +116,16 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
 
     // Delete a parameter
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(DELETE_PARAMETER)
+        val statement = connection.prepareStatement( "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;" )
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
     // List all parameters
     override suspend fun list(): List<Parameter> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement( LIST_PARAMETER )
+        val statement = connection.prepareStatement(
+            "SELECT * FROM $TABLE;"
+        )
         val resultSet = statement.executeQuery()
 
         val parameterList = mutableListOf<Parameter>()

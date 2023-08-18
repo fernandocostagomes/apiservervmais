@@ -26,52 +26,44 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         private const val COLUMN_CITY = "v_address_city"
         private const val COLUMN_STATE = "v_address_state"
 
-        private const val CREATE_TABLE_ADDRESS =
-                "CREATE TABLE IF NOT EXISTS " +
-                        "$TABLE (" +
-                        "$COLUMN_ID SERIAL PRIMARY KEY, " +
-                        "$COLUMN_NAME VARCHAR(20), " +
-                        "$COLUMN_CODE INTEGER NOT NULL, " +
-                        "$COLUMN_ADDRESS VARCHAR(40)," +
-                        "$COLUMN_NUMBER VARCHAR(8)," +
-                        "$COLUMN_CITY VARCHAR(30)," +
-                        "$COLUMN_STATE VARCHAR(30));"
+        private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
+        private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
+        private const val COLUMN_CODE_QUERY = "$COLUMN_CODE INTEGER NOT NULL, "
+        private const val COLUMN_ADDRESS_QUERY = "$COLUMN_ADDRESS VARCHAR(40), "
+        private const val COLUMN_NUMBER_QUERY = "$COLUMN_NUMBER VARCHAR(8), "
+        private const val COLUMN_CITY_QUERY = "$COLUMN_CITY VARCHAR(30), "
+        private const val COLUMN_STATE_QUERY = "$COLUMN_STATE VARCHAR(30)"
 
-        private const val SELECT_ADDRESS_BY_ID = "SELECT " +
-                "$COLUMN_NAME, " +
-                "$COLUMN_CODE, " +
-                "$COLUMN_ADDRESS, " +
-                "$COLUMN_NUMBER, " +
-                "$COLUMN_CITY, " +
-                "$COLUMN_STATE " +
-                "FROM $TABLE WHERE $COLUMN_ID = ?;"
+        val listColumnsQuery = listOf(
+            COLUMN_ID_QUERY,
+            COLUMN_NAME_QUERY,
+            COLUMN_CODE_QUERY,
+            COLUMN_ADDRESS_QUERY,
+            COLUMN_NUMBER_QUERY,
+            COLUMN_CITY_QUERY,
+            COLUMN_STATE_QUERY
+        )
 
-        private const val INSERT_ADDRESS = "INSERT INTO $TABLE (" +
-                "$COLUMN_NAME, " +
-                "$COLUMN_CODE, " +
-                "$COLUMN_ADDRESS, " +
-                "$COLUMN_NUMBER, " +
-                "$COLUMN_CITY, " +
-                "$COLUMN_STATE) VALUES (?, ?, ?, ?, ?, ?);"
-
-        private const val UPDATE_ADDRESS = "UPDATE $TABLE SET " +
-                "$COLUMN_NAME = ?," +
-                "$COLUMN_CODE = ?, " +
-                "$COLUMN_ADDRESS = ? " +
-                "$COLUMN_NUMBER = ? " +
-                "$COLUMN_CITY = ? " +
-                "$COLUMN_STATE = ? " +
-                "WHERE $COLUMN_ID = ?;"
-
-        private const val DELETE_ADDRESS = "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;"
-
-        private const val LIST_ADDRESS = "SELECT * FROM $TABLE"
+        val listColumns = listOf(
+            COLUMN_ID,
+            COLUMN_NAME,
+            COLUMN_CODE,
+            COLUMN_ADDRESS,
+            COLUMN_NUMBER,
+            COLUMN_CITY,
+            COLUMN_STATE
+        )
     }
 
     init {
         try {
             val statement = connection.createStatement()
-            statement.executeUpdate(CREATE_TABLE_ADDRESS)
+            statement.executeUpdate(
+                SchemaUtils.createTable(
+                    TABLE,
+                    listColumnsQuery
+                )
+            )
         } catch (e: SQLException) {
             println(e.toString())
         }
@@ -79,7 +71,12 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
 
     // Create new address
     override suspend fun create(obj: Any): Int = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(INSERT_ADDRESS, Statement.RETURN_GENERATED_KEYS)
+        val statement = connection.prepareStatement(
+            SchemaUtils.insertQuery(
+                TABLE,
+                listColumns
+            )
+            , Statement.RETURN_GENERATED_KEYS)
         obj as Address
         statement.setString(1, obj.nameAddress)
         statement.setInt(2, obj.codeAddress)
@@ -99,7 +96,13 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
 
     // Read an address
     override suspend fun read(id: Int): Address = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SELECT_ADDRESS_BY_ID)
+        val statement = connection.prepareStatement(
+            SchemaUtils.selectQuery(
+                TABLE,
+                COLUMN_ID,
+                listColumns
+            )
+        )
         statement.setInt(1, id)
         val resultSet = statement.executeQuery()
 
@@ -118,7 +121,12 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
 
     // Update a address
     override suspend fun update(id: Int, obj: Any) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(UPDATE_ADDRESS)
+        val statement = connection.prepareStatement(
+            SchemaUtils.updateQuery(
+                TABLE,
+                listColumns,
+                COLUMN_ID )
+        )
         obj as Address
         statement.setInt(0, id)
         statement.setString(1, obj.nameAddress)
@@ -130,16 +138,16 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         statement.executeUpdate()
     }
 
-    // Delete a address
+    // Delete an address
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement( DELETE_ADDRESS )
+        val statement = connection.prepareStatement( "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;" )
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
     // List all address
     override suspend fun list(): List<Address> = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement( LIST_ADDRESS )
+        val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
         val resultSet = statement.executeQuery()
 
         val addressList = mutableListOf<Address>()
