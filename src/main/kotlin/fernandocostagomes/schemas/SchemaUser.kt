@@ -21,7 +21,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         private const val TABLE = "v_user"
         private const val COLUMN_ID = "v_user_id"
         private const val COLUMN_EMAIL = "v_user_email"
-        private cons val COLUMN_NAME = "v_user_name"
+        private const val COLUMN_NAME = "v_user_name"
         private const val COLUMN_PWD = "v_user_pwd"
         private const val COLUMN_PHONE = "v_user_phone"
         private const val COLUMN_NICK = "v_user_nick"
@@ -111,7 +111,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             val idUser = resultSet.getInt(COLUMN_ID)
             val emailUser = resultSet.getString(COLUMN_EMAIL)
             val nameUser = resultSet.getString(COLUMN_NAME)
-            val passwordUser = resultSet.getString(COLUMN_PWD)
+            val pwdUser = resultSet.getString(COLUMN_PWD)
             val phoneUser = resultSet.getString(COLUMN_PHONE)
             val nickUser = resultSet.getString(COLUMN_NICK)
             val dateUser = resultSet.getString(COLUMN_DATE)
@@ -120,10 +120,10 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
                 idUser,
                 emailUser,
                 nameUser,
-                pwdUser)
+                pwdUser,
                 phoneUser,
                 nickUser,
-                dateUser,
+                dateUser)
         } else {
             throw Exception("Record not found")
         }
@@ -170,18 +170,15 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             val phoneUser = resultSet.getString(COLUMN_PHONE)
             val nickUser = resultSet.getString(COLUMN_NICK)
             val dateUser = resultSet.getString(COLUMN_DATE)
-            val emailUser = resultSet.getString(COLUMN_EMAIL)
-            val phoneUser = resultSet.getString(COLUMN_PHONE)
-            val pwdUser = resultSet.getString(COLUMN_PWD)
 
             val user = User(
                 idUser,
                 emailUser,
                 nameUser,
-                pwdUser)
+                pwdUser,
                 phoneUser,
                 nickUser,
-                dateUser,
+                dateUser
             )
 
             userList.add(user)
