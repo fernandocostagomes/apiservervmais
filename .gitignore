@@ -38,3 +38,11 @@ gradle/*
 
 .gradle
 *.lock
+.gradle/7.5.1/checksums/md5-checksums.bin
+.gradle/7.5.1/checksums/sha1-checksums.bin
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup/outputFiles.bin
+.idea/libraries/Gradle__net_bytebuddy_byte_buddy_1_10_9.xml
+.idea/libraries/Gradle__net_bytebuddy_byte_buddy_agent_1_10_9.xml
+.idea/modules/fernandocostagomes.apiservervmais.main.iml
+.idea/modules/fernandocostagomes.apiservervmais.test.iml
