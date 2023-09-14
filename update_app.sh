@@ -10,4 +10,13 @@ gradle clean
 gradle build
 
 # Passo 4: Construir a imagem do Docker
-docker buildx . -t fcg_webapp
+docker buildx build . -t fcg_webapp
+
+# Passo 5: Parar o container fcg_webapp
+docker stop fcg_webapp
+
+# Passo 6: Remover o container fcg_webapp
+docker rm fcg_webapp
+
+# Passo 7: Rodar o compose que para executar o container fcg_webapp
+docker-compose up -d --file docker-compose.fcg_webapp.yml

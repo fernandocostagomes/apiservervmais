@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+  fcg_webapp:
+    container_name: fcg_webapp
+    image: fcg_webapp
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - fcg_data:/var/lib/fcg_data
+    networks:
+      fcg_network:
+        ipv4_address: 172.20.0.30
+
+volumes:
+  fcg_data: { }
+
+networks:
+  fcg_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.20.0.0/16"
