@@ -19,4 +19,4 @@ docker stop fcg_webapp
 docker rm fcg_webapp
 
 # Passo 7: Rodar o compose que para executar o container fcg_webapp
-docker-compose up -d --file docker-compose.fcg_webapp.yml
+docker-compose up -d --file docker-compose.fcg_webapp.yml --force-recreate
