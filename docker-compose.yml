@@ -1,0 +1,55 @@
+version: '3'
+services:
+  postgres:
+    container_name: fcg_postgres
+    image: postgres:latest
+    hostname: fcg_postgres
+    environment:
+      POSTGRES_USER: userfcgpostgres
+      POSTGRES_PASSWORD: pwduserpostgres
+      POSTGRES_DB: dbfcgvmais
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - fcg_data:/var/lib/fcg_data
+    networks:
+      fcg_network:
+        ipv4_address: 172.20.0.10
+
+  pgadmin:
+    container_name: fcg_pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@fcg.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8081:80"
+    volumes:
+      - fcg_data:/var/lib/fcg_data
+    restart: always
+    networks:
+      fcg_network:
+        ipv4_address: 172.20.0.20
+
+  fcg_webapp:
+    container_name: fcg_webapp
+    image: fcg_webapp
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - fcg_data:/var/lib/fcg_data
+    networks:
+      fcg_network:
+        ipv4_address: 172.20.0.30
+
+volumes:
+  fcg_data: {}
+
+networks:
+  fcg_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.20.0.0/16"
