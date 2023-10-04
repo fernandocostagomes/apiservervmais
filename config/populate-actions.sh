@@ -1,1 +1,1 @@
-python populate-actions.py
+python init_db.py
