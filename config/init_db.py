@@ -27,9 +27,9 @@ def populate_actions():
 
         # Verifica se a solicitação foi bem-sucedida
         if response.status_code == 201:
-            print(f"A ação {action['name']} foi inserida com sucesso!")
+            print(f"A ação {action['nameAction']} foi inserida com sucesso!")
         else:
-            print(f"Ocorreu um erro ao inserir a ação {action['name']}.")
+            print(f"Ocorreu um erro ao inserir a ação {action['nameAction']}.")
 
 if __name__ == "__main__":
     populate_actions()
