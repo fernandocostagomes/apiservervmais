@@ -12,25 +12,25 @@ import java.sql.Statement
 
 class ServiceActionTest {
 
-//    private val mockConnection = mockk<Connection>()
-//    private val mockStatement = mockk<PreparedStatement>(relaxed = true)
-//    @Test
-//    fun createTest() {
-//        val mockGeneratedKeys = mockk<ResultSet>()
-//        every { mockConnection.createStatement() } returns mockStatement
-//        every { mockConnection.prepareStatement(any(), eq(Statement.RETURN_GENERATED_KEYS)) } returns mockStatement
-//        every { mockStatement.executeUpdate() } returns 1
-//        every { mockStatement.generatedKeys } returns mockGeneratedKeys
-//        every { mockGeneratedKeys.next() } returns true
-//        every { mockGeneratedKeys.getInt(1) } returns 1
-//
-//        val serviceAction = ServiceAction(mockConnection)
-//        val action = Action("Test Action", "Test Description")
-//        val result = runBlocking { serviceAction.create(action) }
-//
-//        assertEquals(1, result)
-//    }
-//
+    private val mockConnection = mockk<Connection>()
+    private val mockStatement = mockk<PreparedStatement>(relaxed = true)
+    @Test
+    fun createTest() {
+        val mockGeneratedKeys = mockk<ResultSet>()
+        every { mockConnection.createStatement() } returns mockStatement
+        every { mockConnection.prepareStatement(any(), eq(Statement.RETURN_GENERATED_KEYS)) } returns mockStatement
+        every { mockStatement.executeUpdate() } returns 1
+        every { mockStatement.generatedKeys } returns mockGeneratedKeys
+        every { mockGeneratedKeys.next() } returns true
+        every { mockGeneratedKeys.getInt(1) } returns 1
+
+        val serviceAction = ServiceAction(mockConnection)
+        val action = Action("Test Action", "Test Description")
+        val result = runBlocking { serviceAction.create(action) }
+
+        assertEquals(1, result)
+    }
+
 //    @Test
 //    fun readTest() {
 //
