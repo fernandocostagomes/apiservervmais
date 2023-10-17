@@ -62,7 +62,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             statement.executeUpdate(
                 SchemaUtils.createTable(
                     TABLE,
-                    listColumnsQuery
+                    listColumns
                 )
             )
         } catch (e: SQLException) {

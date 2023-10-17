@@ -58,7 +58,7 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
         val statement = connection.prepareStatement(
             SchemaUtils.insertQuery(
                 TABLE,
-                listColumnsQuery
+                listColumns
             ), Statement.RETURN_GENERATED_KEYS)
         obj as Group
         statement.setString(1, obj.groupName)

@@ -58,7 +58,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         val statement = connection.prepareStatement(
             SchemaUtils.insertQuery(
                 TABLE,
-                listColumnsQuery
+                listColumns
             ),
             Statement.RETURN_GENERATED_KEYS)
         obj as Parameter
