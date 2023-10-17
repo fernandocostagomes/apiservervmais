@@ -107,6 +107,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
 
         while (resultSet.next()) {
 
+            val idAction = resultSet.getInt( COLUMN_ID )
             val nameAction = resultSet.getString( COLUMN_NAME )
             val valueAction = resultSet.getString( COLUMN_DESCRIPTION )
 

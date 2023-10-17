@@ -6,15 +6,15 @@ def populate_actions():
 
     # Define as ações a serem inseridas
     actions = [
-        {"nameAction": "Criar um novo usuário", "descriptionAction": "Cria um novo usuário no sistema"},
-        {"nameAction": "Editar um usuário existente", "descriptionAction": "Edita um usuário existente no sistema"},
-        {"nameAction": "Excluir um usuário", "descriptionAction": "Exclui um usuário existente do sistema"},
-        {"nameAction": "Logar em um usuário", "descriptionAction": "Faz login em um usuário no sistema"},
-        {"nameAction": "Deslogar um usuário", "descriptionAction": "Desloga um usuário do sistema"},
-        {"nameAction": "Listar todos os usuários", "descriptionAction": "Lista todos os usuários do sistema"},
-        {"nameAction": "Pesquisar um usuário por nome", "descriptionAction": "Pesquisa um usuário pelo nome no sistema"},
-        {"nameAction": "Atribuir uma permissão a um usuário", "descriptionAction": "Atribui uma permissão a um usuário no sistema"},
-        {"nameAction": "Remover uma permissão de um usuário", "descriptionAction": "Remove uma permissão de um usuário no sistema"},
+        {"nameAction": "Create user", "descriptionAction": "Cria novo usuário no sistema."},
+        {"nameAction": "Edite user", "descriptionAction": "Edita usuário no sistema."},
+        {"nameAction": "Remove user", "descriptionAction": "Exclui usuário do sistema."},
+        {"nameAction": "Login user", "descriptionAction": "Faz login usuário no sistema."},
+        {"nameAction": "Logout user", "descriptionAction": "Desloga usuário do sistema."},
+        {"nameAction": "List users", "descriptionAction": "Lista usuários do sistema."},
+        {"nameAction": "Find user", "descriptionAction": "Pesquisa usuário pelo nome."},
+        {"nameAction": "Setar perm. user", "descriptionAction": "Atribui permissão a usuário."},
+        {"nameAction": "Remove perm. user", "descriptionAction": "Remove permissão de usuário."},
     ]
 
     # Faz uma solicitação HTTP POST para a API
