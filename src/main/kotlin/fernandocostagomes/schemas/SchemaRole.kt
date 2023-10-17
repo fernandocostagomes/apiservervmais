@@ -8,7 +8,6 @@ import java.sql.Statement
 
 @Serializable
 data class Role(
-    val idRole: Int,
     val nameRole: String,
     val descriptionRole: String)
 class ServiceRole(private val connection: Connection): SchemaInterface {
@@ -59,10 +58,9 @@ class ServiceRole(private val connection: Connection): SchemaInterface {
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val idRole = resultSet.getInt( COLUMN_ID )
             val name = resultSet.getString( COLUMN_NAME )
             val description = resultSet.getString( COLUMN_DESCRIPTION )
-            return@withContext Role(idRole, name, description)
+            return@withContext Role( name, description)
         } else {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
@@ -94,11 +92,11 @@ class ServiceRole(private val connection: Connection): SchemaInterface {
         val roleList = mutableListOf<Role>()
 
         while (resultSet.next()) {
-            val idRole = resultSet.getInt( COLUMN_ID )
+
             val nameRole = resultSet.getString( COLUMN_NAME )
             val descriptionRole = resultSet.getString( COLUMN_DESCRIPTION )
 
-            val role = Role( idRole, nameRole, descriptionRole )
+            val role = Role( nameRole, descriptionRole )
             roleList.add( role )
         }
 
