@@ -62,7 +62,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             statement.executeUpdate(
                 SchemaUtils.createTable(
                     TABLE,
-                    listColumns
+                    listColumnsQuery
                 )
             )
         } catch (e: SQLException) {
@@ -75,7 +75,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         val statement = connection.prepareStatement(
             SchemaUtils.insertQuery(
                 TABLE,
-                listColumnsQuery
+                listColumns
             ), Statement.RETURN_GENERATED_KEYS)
         obj as User
         statement.setString(1, obj.userEmail)
