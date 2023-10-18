@@ -1,7 +1,7 @@
 package fernandocostagomes.schemas
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import java.sql.Connection
 import java.sql.SQLException
@@ -9,7 +9,7 @@ import java.sql.Statement
 
 @Serializable
 data class Action(
-    val idAction: Int,
+    val idAction: Int = 0,
     val nameAction: String,
     val descriptionAction: String)
 class ServiceAction(private val connection: Connection): SchemaInterface {
