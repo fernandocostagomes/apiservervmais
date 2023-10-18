@@ -10,15 +10,51 @@ def populate_actions():
 
     # Define as ações a serem inseridas
     actions = [
-        {"nameAction": "Create user", "descriptionAction": "Cria novo usuário no sistema."},
-        {"nameAction": "Edite user", "descriptionAction": "Edita usuário no sistema."},
-        {"nameAction": "Remove user", "descriptionAction": "Exclui usuário do sistema."},
-        {"nameAction": "Login user", "descriptionAction": "Faz login usuário no sistema."},
-        {"nameAction": "Logout user", "descriptionAction": "Desloga usuário do sistema."},
-        {"nameAction": "List users", "descriptionAction": "Lista usuários do sistema."},
-        {"nameAction": "Find user", "descriptionAction": "Pesquisa usuário pelo nome."},
-        {"nameAction": "Setar perm. user", "descriptionAction": "Atribui permissão a usuário."},
-        {"nameAction": "Remove perm. user", "descriptionAction": "Remove permissão de usuário."},
+        {
+            "nameAction": "Create user",
+            "descriptionAction": "Cria novo usuário no sistema.",
+            "dateAction": "2023-10-17"
+        },
+        {
+            "nameAction": "Edite user",
+            "descriptionAction": "Edita usuário no sistema.",
+            "dateAction": "2023-10-17"
+        },
+        {
+            "nameAction": "Remove user", "descriptionAction":
+            "Exclui usuário do sistema.",
+            "dateAction": "2023-10-17"
+        },
+        {
+            "nameAction": "Login user",
+            "descriptionAction": "Faz login usuário no sistema.",
+            "dateAction": "2023-10-17"
+        },
+        {
+            "nameAction": "Logout user",
+            "descriptionAction": "Desloga usuário do sistema.",
+            "dateAction": "2023-10-17"
+        },
+        {
+            "nameAction": "List users",
+            "descriptionAction": "Lista usuários do sistema.",
+            "dateAction": "2023-10-17"
+        },
+        {
+            "nameAction": "Find user",
+            "descriptionAction": "Pesquisa usuário pelo nome.",
+            "dateAction": "2023-10-17"
+        },
+        {
+            "nameAction": "Setar perm. user",
+            "descriptionAction": "Atribui permissão a usuário.",
+            "dateAction": "2023-10-17"
+        },
+        {
+            "nameAction": "Remove perm. user",
+            "descriptionAction": "Remove permissão de usuário.",
+            "dateAction": "2023-10-17"
+        },
     ]
 
     # Faz uma solicitação HTTP POST para a API
@@ -33,8 +69,8 @@ def populate_actions():
         if response.status_code == 201:
             print(f"A ação {action['nameAction']} foi inserida com sucesso!")
         else:
-            print(f"Ocorreu um erro ao inserir a ação {action['nameAction']}.")
-
+            print(f"Ocorreu um erro ao inserir a ação {action['nameAction']} "
+                  f"Status response:  {response.status_code}")
 
 def populate_users():
     """ Popula a tabela de usuários com dados de exemplo. """
@@ -110,5 +146,5 @@ def populate_parameters():
 
 if __name__ == "__main__":
     populate_actions()
-    populate_users()
-    populate_parameters()
+    # populate_users()
+    # populate_parameters()

@@ -24,7 +24,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
         private const val COLUMN_DESCRIPTION_QUERY = "$COLUMN_DESCRIPTION VARCHAR(30)"
-        private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20) NOT NULL"
+        private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20)"
 
         val listColumns = listOf(
             COLUMN_ID,
@@ -58,7 +58,6 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         statement.setString(1, obj.nameAction)
         statement.setString(2, obj.descriptionAction)
         statement.setString(3, SchemaUtils.getCurrentDate())
-        print("SchemaAction: $statement")
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
