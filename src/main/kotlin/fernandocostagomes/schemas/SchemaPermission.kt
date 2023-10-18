@@ -101,8 +101,8 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
         statement.setString(1, obj.namePermission)
         statement.setString(2, obj.descriptionPermission)
         statement.setString(3, obj.datePermission)
-        statement.setInt(4, obj.rolePermission)
-        statement.setInt(5, obj.actionPermission)
+        statement.setInt(4, obj.idRolePermission)
+        statement.setInt(5, obj.idActionPermission)
         statement.executeUpdate()
     }
 

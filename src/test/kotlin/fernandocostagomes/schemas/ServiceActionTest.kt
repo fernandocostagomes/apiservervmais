@@ -25,7 +25,7 @@ class ServiceActionTest {
         every { mockGeneratedKeys.getInt(1) } returns 1
 
         val serviceAction = ServiceAction(mockConnection)
-        val action = Action("Test Action", "Test Description")
+        val action = Action(1, "Test Action", "Test Description")
         val result = runBlocking { serviceAction.create(action) }
 
         assertEquals(1, result)
