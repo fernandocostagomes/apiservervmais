@@ -60,9 +60,9 @@ def populate_actions():
     # Faz uma solicitação HTTP POST para a API
     for action in actions:
         response = requests.post(
-            url="http://portainer.fernandocostagomes.com:8080/action",
+            f"{base_url}/action",
             data=json.dumps(action),
-            headers=application_json
+            headers={"Content-Type": "application/json"},
         )
 
         # Verifica se a solicitação foi bem-sucedida
@@ -99,11 +99,12 @@ def populate_users():
     ]
 
     for user in users:
-        response = requests.post(
-            f"{base_url}/user",
-            data=json.dumps(user),
-            headers={"Content-Type": "application/json"},
-        )
+        response = (
+            requests.post(
+                f"{base_url}/user",
+                data=json.dumps(user),
+                headers={"Content-Type": "application/json"},
+        ))
 
         if response.status_code == 201:
             print(f"Usuário {user['userEmail']} inserido com sucesso!")
@@ -120,13 +121,13 @@ def populate_parameters():
         {
             "codeParameter": "100",
             "nameParameter": "Parameter100",
-            "descriptionParameter": "Parametro de teste codigo 100",
+            "valueParameter": "100",
             "dataParameter": "2023-10-17",
         },
         {
             "codeParameter": "200",
             "nameParameter": "Parameter200",
-            "descriptionParameter": "Parametro de teste codigo 200",
+            "valueParameter": "200",
             "dataParameter": "2023-10-17",
         },
     ]
@@ -146,5 +147,5 @@ def populate_parameters():
 
 if __name__ == "__main__":
     populate_actions()
-    # populate_users()
-    # populate_parameters()
+    populate_users()
+    populate_parameters()

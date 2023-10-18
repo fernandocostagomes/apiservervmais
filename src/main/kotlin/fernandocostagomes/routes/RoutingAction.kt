@@ -2,7 +2,6 @@ package fernandocostagomes.routes
 
 import fernandocostagomes.schemas.Action
 import fernandocostagomes.schemas.ServiceAction
-import io.ktor.client.utils.EmptyContent.status
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*

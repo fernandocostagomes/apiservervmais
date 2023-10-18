@@ -26,7 +26,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         private const val COLUMN_CODE_QUERY = "$COLUMN_CODE VARCHAR(10), "
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
         private const val COLUMN_VALUE_QUERY = "$COLUMN_VALUE VARCHAR(20)"
-        private const val COLUMN_DATA_QUERY = "$COLUMN_DATA VARCHAR(16) NOT NULL"
+        private const val COLUMN_DATA_QUERY = "$COLUMN_DATA VARCHAR(20) NOT NULL"
 
         val listColumnsQuery = listOf(
             COLUMN_ID_QUERY,

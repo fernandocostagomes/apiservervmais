@@ -1,4 +1,5 @@
 package fernandocostagomes.routes
+
 import fernandocostagomes.schemas.User
 import fernandocostagomes.schemas.ServiceUser
 import io.ktor.http.*

@@ -44,7 +44,12 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
     init {
         try {
             val statement = connection.createStatement()
-            statement.executeUpdate(SchemaUtils.createTable( TABLE, listColumnsQuery ))
+            statement.executeUpdate(
+                SchemaUtils.createTable(
+                    TABLE,
+                    listColumnsQuery
+                )
+            )
         } catch (e: SQLException) {
             println(e.toString())
         }
