@@ -9,7 +9,7 @@ import java.sql.Statement
 
 @Serializable
 data class Address(
-    val idAddress: Int,
+    val idAddress: Int = 0,
     val nameAddress: String,
     val zipcodeAddress: String,
     val addressAddress: String,

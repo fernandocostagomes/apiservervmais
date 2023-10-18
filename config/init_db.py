@@ -145,7 +145,73 @@ def populate_parameters():
             print(f"Erro ao inserir parametro {parameter['nameParameter']}.")
 
 
+def populate_address():
+    """ Popula a tabela de address com dados de exemplo. """
+
+    # Define os dados dos address a serem inseridos
+
+    addresses = [
+        {
+            "nameAddress": "Casa",
+            "zipcodeAddress": "72.304-116",
+            "addressAddress": "QN 122 conj 15 lote 01 bloco A",
+            "numberAddress": "1308",
+            "cityAddress": "Samambaia",
+            "stateAddress": "DF",
+            "idUserAddress": getUserByEmail("fernandocostagomes@gmail.com"),
+            "dateAddress": "2023-10-17",
+        },
+        {
+            "nameAddress": "Trabalho",
+            "zipcodeAddress": "72.910-901",
+            "addressAddress": "SCN Quadra 1 Ed. Esplanada Rossi",
+            "numberAddress": "S/N",
+            "cityAddress": "Asa Norte",
+            "stateAddress": "DF",
+            "idUserAddress": getUserByEmail("fernandocostagomes@gmail.com"),
+            "dateAddress": "2023-10-17",
+        },
+        {
+            "nameAddress": "Casa",
+            "zipcodeAddress": "71.882-108",
+            "addressAddress": "QC 03 conj 8 lote 3 Bloco A",
+            "numberAddress": "104",
+            "cityAddress": "Riacho Fundo II",
+            "stateAddress": "DF",
+            "idUserAddress": getUserByEmail("rafaelcostafernandes2015@gmail.com"),
+            "dateAddress": "2023-10-17",
+        },
+    ]
+
+    for address in addresses:
+        response = requests.post(
+            f"{base_url}/address",
+            data=json.dumps(address),
+            headers=application_json,
+        )
+
+        if response.status_code == 201:
+            print(f"Address {address['nameAddress']} inserido com sucesso!")
+        else:
+            print(f"Erro ao inserir address {address['nameAddress']}.")
+
+
+def getUserByEmail(email):
+
+    response = requests.get(base_url + f"/useremail/{email}")
+    # Verifica se a solicitação foi bem-sucedida
+    if response.status_code == 200:
+        print(f"O usuário {email} foi encontrado com sucesso!")
+        data = json.loads(response.text)
+        return data["userId"]
+    else:
+        print(f"Ocorreu um erro ao buscar o usuário {email} "
+              f"Status response:  {response.status_code}")
+        return None
+
 if __name__ == "__main__":
-    populate_actions()
-    populate_users()
-    populate_parameters()
+    # populate_actions()
+    # populate_users()
+    # populate_parameters()
+    populate_address()
+
