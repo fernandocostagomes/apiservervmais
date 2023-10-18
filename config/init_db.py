@@ -122,13 +122,13 @@ def populate_parameters():
             "codeParameter": "100",
             "nameParameter": "Parameter100",
             "valueParameter": "100",
-            "dataParameter": "2023-10-17",
+            "dateParameter": "2023-10-17",
         },
         {
             "codeParameter": "200",
             "nameParameter": "Parameter200",
             "valueParameter": "200",
-            "dataParameter": "2023-10-17",
+            "dateParameter": "2023-10-17",
         },
     ]
 
