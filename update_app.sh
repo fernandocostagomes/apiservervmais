@@ -11,5 +11,3 @@ gradle build
 
 # Passo 4: Construir a imagem do Docker
 docker buildx build . -t fcg_webapp
-
-docker-compose up --no-deps fcg_webapp
