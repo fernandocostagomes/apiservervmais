@@ -8,10 +8,11 @@ import java.sql.Statement
 
 @Serializable
 data class Parameter(
-    val idParameter: Int,
+    val idParameter: Int = 0,
     val codeParameter: Int,
     val nameParameter: String,
-    val valueParameter: String)
+    val valueParameter: String,
+    val dataParameter: String)
 class ServiceParameter(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_parameter"
@@ -19,24 +20,28 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         private const val COLUMN_CODE = "v_parameter_code"
         private const val COLUMN_NAME = "v_parameter_name"
         private const val COLUMN_VALUE = "v_parameter_value"
+        private const val COLUMN_DATA = "v_parameter_data"
 
         private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
         private const val COLUMN_CODE_QUERY = "$COLUMN_CODE INTEGER NOT NULL, "
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
         private const val COLUMN_VALUE_QUERY = "$COLUMN_VALUE VARCHAR(20)"
+        private const val COLUMN_DATA_QUERY = "$COLUMN_DATA VARCHAR(16) NOT NULL"
 
         val listColumnsQuery = listOf(
             COLUMN_ID_QUERY,
             COLUMN_CODE_QUERY,
             COLUMN_NAME_QUERY,
-            COLUMN_VALUE_QUERY
+            COLUMN_VALUE_QUERY,
+            COLUMN_DATA_QUERY
         )
 
         val listColumns = listOf(
             COLUMN_ID,
             COLUMN_CODE,
             COLUMN_NAME,
-            COLUMN_VALUE
+            COLUMN_VALUE,
+            COLUMN_DATA
         )
     }
 
@@ -66,6 +71,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         statement.setInt(1, obj.codeParameter)
         statement.setString(2, obj.nameParameter)
         statement.setString(3, obj.valueParameter)
+        statement.setString(4, SchemaUtils.getCurrentDate())
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -93,11 +99,13 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
             val codeParameter = resultSet.getInt("code_parameter")
             val nameParameter = resultSet.getString("name_parameter")
             val valueParameter = resultSet.getString("value_parameter")
+            val dataParameter = resultSet.getString("data_parameter")
             return@withContext Parameter(
                 idParameter,
                 codeParameter,
                 nameParameter,
-                valueParameter
+                valueParameter,
+                dataParameter
             )
         } else {
             throw Exception("Record not found")
@@ -118,6 +126,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         statement.setInt(1, obj.codeParameter)
         statement.setString(2, obj.nameParameter)
         statement.setString(3, obj.valueParameter)
+        statement.setString(4, SchemaUtils.getCurrentDate())
         statement.executeUpdate()
     }
 
@@ -142,12 +151,14 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
             val codeParameter = resultSet.getInt( COLUMN_CODE )
             val nameParameter = resultSet.getString( COLUMN_NAME )
             val valueParameter = resultSet.getString( COLUMN_VALUE )
+            val dataParameter = resultSet.getString( COLUMN_DATA )
 
             val parameter = Parameter(
                 idParameter,
                 codeParameter,
                 nameParameter,
-                valueParameter
+                valueParameter,
+                dataParameter
             )
             parameterList.add( parameter )
         }

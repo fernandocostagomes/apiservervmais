@@ -1,5 +1,8 @@
 package fernandocostagomes.schemas
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 class SchemaUtils {
     companion object {
 
@@ -41,6 +44,14 @@ class SchemaUtils {
             }
 
             return "UPDATE $tableName SET $setClause WHERE $primaryKeyColumn = ?;"
+        }
+
+        // Metodo que retorna a data atual.
+        fun getCurrentDate(): String {
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+            val formatted = current.format(formatter)
+            return formatted
         }
     }
 }

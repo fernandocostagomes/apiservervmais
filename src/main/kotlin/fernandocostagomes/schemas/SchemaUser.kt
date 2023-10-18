@@ -14,6 +14,7 @@ data class User(
     val userPwd: String,
     val userPhone: String,
     val userNick: String,
+    val userBirthday: String,
     val userDate: String)
 
 class ServiceUser(private val connection: Connection) : SchemaInterface {
@@ -25,6 +26,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         private const val COLUMN_PWD = "v_user_pwd"
         private const val COLUMN_PHONE = "v_user_phone"
         private const val COLUMN_NICK = "v_user_nick"
+        private const val COLUMN_BIRTHDAY = "v_user_birthday"
         private const val COLUMN_DATE = "v_user_date"
 
 
@@ -34,6 +36,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         private const val COLUMN_PWD_QUERY = "$COLUMN_PWD VARCHAR(8) NOT NULL, "
         private const val COLUMN_PHONE_QUERY = "$COLUMN_PHONE VARCHAR(13) NOT NULL, "
         private const val COLUMN_NICK_QUERY = "$COLUMN_NICK VARCHAR(20), "
+        private const val COLUMN_BIRTHDAY_QUERY = "$COLUMN_BIRTHDAY VARCHAR(20), "
         private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20)"
 
         val listColumnsQuery = listOf(
@@ -43,6 +46,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             COLUMN_PWD_QUERY,
             COLUMN_PHONE_QUERY,
             COLUMN_NICK_QUERY,
+            COLUMN_BIRTHDAY_QUERY,
             COLUMN_DATE_QUERY
         )
 
@@ -53,6 +57,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             COLUMN_PWD,
             COLUMN_PHONE,
             COLUMN_NICK,
+            COLUMN_BIRTHDAY,
             COLUMN_DATE
         )
     }
@@ -84,7 +89,8 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         statement.setString(3, obj.userPwd)
         statement.setString(4, obj.userPhone)
         statement.setString(5, obj.userNick)
-        statement.setString(6, obj.userDate)
+        statement.setString(6, obj.userBirthday)
+        statement.setString(7, SchemaUtils.getCurrentDate())
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -114,6 +120,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             val pwdUser = resultSet.getString(COLUMN_PWD)
             val phoneUser = resultSet.getString(COLUMN_PHONE)
             val nickUser = resultSet.getString(COLUMN_NICK)
+            val birthdayUser = resultSet.getString(COLUMN_BIRTHDAY)
             val dateUser = resultSet.getString(COLUMN_DATE)
 
             return@withContext User(
@@ -123,6 +130,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
                 pwdUser,
                 phoneUser,
                 nickUser,
+                birthdayUser,
                 dateUser)
         } else {
             throw Exception("Record not found")
@@ -145,7 +153,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         statement.setString(3, obj.userPwd)
         statement.setString(4, obj.userPhone)
         statement.setString(5, obj.userNick)
-        statement.setString(6, obj.userDate)
+        statement.setString(6, SchemaUtils.getCurrentDate())
         statement.executeUpdate()
     }
 
@@ -169,6 +177,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             val pwdUser = resultSet.getString(COLUMN_PWD)
             val phoneUser = resultSet.getString(COLUMN_PHONE)
             val nickUser = resultSet.getString(COLUMN_NICK)
+            val birthday = resultSet.getString(COLUMN_BIRTHDAY)
             val dateUser = resultSet.getString(COLUMN_DATE)
 
             userList.add(
@@ -179,6 +188,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
                     pwdUser,
                     phoneUser,
                     nickUser,
+                    birthday,
                     dateUser
                 )
             )
