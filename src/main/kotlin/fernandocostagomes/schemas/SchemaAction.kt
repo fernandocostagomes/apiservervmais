@@ -11,28 +11,33 @@ import java.sql.Statement
 data class Action(
     val idAction: Int = 0,
     val nameAction: String,
-    val descriptionAction: String)
+    val descriptionAction: String,
+    val dateAction: String)
 class ServiceAction(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_action"
         private const val COLUMN_ID = "v_action_id"
         private const val COLUMN_NAME = "v_action_name"
         private const val COLUMN_DESCRIPTION = "v_action_description"
+        private const val COLUMN_DATE = "v_action_date"
 
         private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
         private const val COLUMN_DESCRIPTION_QUERY = "$COLUMN_DESCRIPTION VARCHAR(30)"
+        private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20) NOT NULL"
 
         val listColumns = listOf(
             COLUMN_ID,
             COLUMN_NAME,
-            COLUMN_DESCRIPTION
+            COLUMN_DESCRIPTION,
+            COLUMN_DATE
         )
 
         val listColumnsQuery = listOf(
             COLUMN_ID_QUERY,
             COLUMN_NAME_QUERY,
-            COLUMN_DESCRIPTION_QUERY
+            COLUMN_DESCRIPTION_QUERY,
+            COLUMN_DATE_QUERY
         )
     }
 
@@ -52,6 +57,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         obj as Action
         statement.setString(1, obj.nameAction)
         statement.setString(2, obj.descriptionAction)
+        statement.setString(3, SchemaUtils.getCurrentDate())
         print("SchemaAction: $statement")
         statement.executeUpdate()
 
@@ -59,7 +65,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
         } else {
-            throw Exception("Unable to retrieve the id of the newly inserted action")
+            throw Exception(SchemaUtils.UNABLE_NEW_ID_INSERTED)
         }
     }
 
@@ -75,9 +81,15 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
             val idAction = resultSet.getInt(COLUMN_ID)
             val nameAction = resultSet.getString(COLUMN_NAME)
             val descriptionAction = resultSet.getString(COLUMN_DESCRIPTION)
-            return@withContext Action(idAction, nameAction, descriptionAction )
+            val dateAction = resultSet.getString(COLUMN_DATE)
+            return@withContext Action(
+                idAction,
+                nameAction,
+                descriptionAction,
+                dateAction
+            )
         } else {
-            throw Exception("Record not found")
+            throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
     }
 
@@ -90,6 +102,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         statement.setInt(0, id)
         statement.setString(1, obj.nameAction)
         statement.setString(2, obj.descriptionAction)
+        statement.setString(3, SchemaUtils.getCurrentDate())
         statement.executeUpdate()
     }
 
@@ -112,15 +125,22 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
             val idAction = resultSet.getInt( COLUMN_ID )
             val nameAction = resultSet.getString( COLUMN_NAME )
             val valueAction = resultSet.getString( COLUMN_DESCRIPTION )
+            val dateAction = resultSet.getString( COLUMN_DATE )
 
-            val action = Action( idAction, nameAction, valueAction )
-            actionList.add( action )
+            actionList.add(
+                Action(
+                    idAction,
+                    nameAction,
+                    valueAction,
+                    dateAction
+                )
+            )
         }
 
         if (actionList.isNotEmpty()) {
             return@withContext actionList
         } else {
-            throw Exception("No records found")
+            throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
     }
 }
