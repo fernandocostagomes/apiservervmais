@@ -8,10 +8,11 @@ import java.sql.Statement
 
 @Serializable
 data class Group(
-    val groupName: String,
-    val groupPwd: String,
-    val groupDate: String,
-    val userId: Int)
+    val idGroup: Int,
+    val nameGroup: String,
+    val pwdGroup: String,
+    val dateGroup: String,
+    val idUserGroup: Int)
 class ServiceGroup(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_group"
@@ -61,10 +62,10 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
                 listColumns
             ), Statement.RETURN_GENERATED_KEYS)
         obj as Group
-        statement.setString(1, obj.groupName)
-        statement.setString(2, obj.groupPwd)
-        statement.setString(3, obj.groupDate)
-        statement.setInt(4, obj.userId)
+        statement.setString(1, obj.nameGroup)
+        statement.setString(2, obj.pwdGroup)
+        statement.setString(3, obj.dateGroup)
+        statement.setInt(4, obj.idUserGroup)
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -88,11 +89,18 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val name = resultSet.getString(COLUMN_NAME)
-            val pwd = resultSet.getString(COLUMN_PWD)
-            val date = resultSet.getString(COLUMN_DATE)
+            val idGroup = resultSet.getInt(COLUMN_ID)
+            val nameGroup = resultSet.getString(COLUMN_NAME)
+            val pwdGroup = resultSet.getString(COLUMN_PWD)
+            val dateGroup = resultSet.getString(COLUMN_DATE)
             val idUser = resultSet.getInt(COLUMN_USER_ID)
-            return@withContext Group(name, pwd, date, idUser)
+            return@withContext Group(
+                idGroup,
+                nameGroup,
+                pwdGroup,
+                dateGroup,
+                idUser
+            )
         } else {
             throw Exception("Record not found")
         }
@@ -109,10 +117,10 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
         )
         obj as Group
         statement.setInt(0, id)
-        statement.setString(1, obj.groupName)
-        statement.setString(2, obj.groupPwd)
-        statement.setString(3, obj.groupDate)
-        statement.setInt(4, obj.userId)
+        statement.setString(1, obj.nameGroup)
+        statement.setString(2, obj.pwdGroup)
+        statement.setString(3, obj.dateGroup)
+        statement.setInt(4, obj.idUserGroup)
         statement.executeUpdate()
     }
 
@@ -130,12 +138,19 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
         val groupList = mutableListOf<Group>()
 
         while (resultSet.next()) {
-            val name = resultSet.getString(COLUMN_NAME)
-            val pwd = resultSet.getString(COLUMN_PWD)
-            val date = resultSet.getString(COLUMN_DATE)
+            val idGroup = resultSet.getInt(COLUMN_ID)
+            val nameGroup = resultSet.getString(COLUMN_NAME)
+            val pwdGroup = resultSet.getString(COLUMN_PWD)
+            val dateGroup = resultSet.getString(COLUMN_DATE)
             val idUser = resultSet.getInt(COLUMN_USER_ID)
 
-            val group = Group(name, pwd, date, idUser)
+            val group = Group(
+                idGroup,
+                nameGroup,
+                pwdGroup,
+                dateGroup,
+                idUser
+            )
             groupList.add(group)
         }
 

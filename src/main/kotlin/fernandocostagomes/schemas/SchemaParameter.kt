@@ -8,6 +8,7 @@ import java.sql.Statement
 
 @Serializable
 data class Parameter(
+    val idParameter: Int,
     val codeParameter: Int,
     val nameParameter: String,
     val valueParameter: String)
@@ -88,10 +89,16 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val code = resultSet.getInt("code_parameter")
-            val name = resultSet.getString("name_parameter")
-            val value = resultSet.getString("value_parameter")
-            return@withContext Parameter(code, name, value)
+            val idParameter = resultSet.getInt("id_parameter")
+            val codeParameter = resultSet.getInt("code_parameter")
+            val nameParameter = resultSet.getString("name_parameter")
+            val valueParameter = resultSet.getString("value_parameter")
+            return@withContext Parameter(
+                idParameter,
+                codeParameter,
+                nameParameter,
+                valueParameter
+            )
         } else {
             throw Exception("Record not found")
         }
@@ -131,12 +138,17 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         val parameterList = mutableListOf<Parameter>()
 
         while (resultSet.next()) {
-
+            val idParameter = resultSet.getInt( COLUMN_ID )
             val codeParameter = resultSet.getInt( COLUMN_CODE )
             val nameParameter = resultSet.getString( COLUMN_NAME )
             val valueParameter = resultSet.getString( COLUMN_VALUE )
 
-            val parameter = Parameter(codeParameter, nameParameter, valueParameter)
+            val parameter = Parameter(
+                idParameter,
+                codeParameter,
+                nameParameter,
+                valueParameter
+            )
             parameterList.add( parameter )
         }
 

@@ -8,13 +8,14 @@ import java.sql.SQLException
 import java.sql.Statement
 
 @Serializable
-data class Action(    
+data class Action(
+    val idAction: Int,
     val nameAction: String,
     val descriptionAction: String)
 class ServiceAction(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_action"
-        private const val COLUMN_ID = "v_action_id"        
+        private const val COLUMN_ID = "v_action_id"
         private const val COLUMN_NAME = "v_action_name"
         private const val COLUMN_DESCRIPTION = "v_action_description"
 
@@ -71,9 +72,10 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val name = resultSet.getString(COLUMN_NAME)
-            val description = resultSet.getString(COLUMN_DESCRIPTION)
-            return@withContext Action( name, description )
+            val idAction = resultSet.getInt(COLUMN_ID)
+            val nameAction = resultSet.getString(COLUMN_NAME)
+            val descriptionAction = resultSet.getString(COLUMN_DESCRIPTION)
+            return@withContext Action(idAction, nameAction, descriptionAction )
         } else {
             throw Exception("Record not found")
         }
@@ -86,8 +88,8 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         )
         obj as Action
         statement.setInt(0, id)
-        statement.setString(2, obj.nameAction)
-        statement.setString(3, obj.descriptionAction)
+        statement.setString(1, obj.nameAction)
+        statement.setString(2, obj.descriptionAction)
         statement.executeUpdate()
     }
 
@@ -111,7 +113,7 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
             val nameAction = resultSet.getString( COLUMN_NAME )
             val valueAction = resultSet.getString( COLUMN_DESCRIPTION )
 
-            val action = Action( nameAction, valueAction)
+            val action = Action( idAction, nameAction, valueAction )
             actionList.add( action )
         }
 

@@ -9,8 +9,9 @@ import java.sql.Statement
 
 @Serializable
 data class Address(
+    val idAddress: Int,
     val nameAddress: String,
-    val codeAddress: Int,
+    val zipcodeAddress: String,
     val addressAddress: String,
     val numberAddress: String,
     val cityAddress: String,
@@ -20,7 +21,7 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         private const val TABLE = "v_address"
         private const val COLUMN_ID = "v_address_id"
         private const val COLUMN_NAME = "v_address_name"
-        private const val COLUMN_CODE = "v_address_code"
+        private const val COLUMN_ZIPCODE = "v_address_zipcode"
         private const val COLUMN_ADDRESS = "v_address_address"
         private const val COLUMN_NUMBER = "v_address_number"
         private const val COLUMN_CITY = "v_address_city"
@@ -28,7 +29,7 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
 
         private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
-        private const val COLUMN_CODE_QUERY = "$COLUMN_CODE INTEGER NOT NULL, "
+        private const val COLUMN_ZIPCODE_QUERY = "$COLUMN_ZIPCODE VARCHAR(10), "
         private const val COLUMN_ADDRESS_QUERY = "$COLUMN_ADDRESS VARCHAR(40), "
         private const val COLUMN_NUMBER_QUERY = "$COLUMN_NUMBER VARCHAR(8), "
         private const val COLUMN_CITY_QUERY = "$COLUMN_CITY VARCHAR(30), "
@@ -37,7 +38,7 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         val listColumnsQuery = listOf(
             COLUMN_ID_QUERY,
             COLUMN_NAME_QUERY,
-            COLUMN_CODE_QUERY,
+            COLUMN_ZIPCODE_QUERY,
             COLUMN_ADDRESS_QUERY,
             COLUMN_NUMBER_QUERY,
             COLUMN_CITY_QUERY,
@@ -47,7 +48,7 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         val listColumns = listOf(
             COLUMN_ID,
             COLUMN_NAME,
-            COLUMN_CODE,
+            COLUMN_ZIPCODE,
             COLUMN_ADDRESS,
             COLUMN_NUMBER,
             COLUMN_CITY,
@@ -79,7 +80,7 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
             , Statement.RETURN_GENERATED_KEYS)
         obj as Address
         statement.setString(1, obj.nameAddress)
-        statement.setInt(2, obj.codeAddress)
+        statement.setString(2, obj.zipcodeAddress)
         statement.setString(3, obj.addressAddress)
         statement.setString(4, obj.numberAddress)
         statement.setString(5, obj.cityAddress)
@@ -107,13 +108,22 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val name = resultSet.getString( COLUMN_NAME )
-            val code = resultSet.getInt( COLUMN_CODE )
-            val address = resultSet.getString( COLUMN_ADDRESS)
-            val number = resultSet.getString( COLUMN_NUMBER )
-            val city = resultSet.getString( COLUMN_CITY )
-            val state = resultSet.getString( COLUMN_STATE )
-            return@withContext Address(name, code, address, number, city, state)
+            val idAddress = resultSet.getInt( COLUMN_ID )
+            val nameAddress = resultSet.getString( COLUMN_NAME )
+            val codeAddress = resultSet.getString( COLUMN_ZIPCODE )
+            val addressAddress = resultSet.getString( COLUMN_ADDRESS)
+            val numberAddress = resultSet.getString( COLUMN_NUMBER )
+            val cityAddress = resultSet.getString( COLUMN_CITY )
+            val stateAddress = resultSet.getString( COLUMN_STATE )
+            return@withContext Address(
+                idAddress,
+                nameAddress,
+                codeAddress,
+                addressAddress,
+                numberAddress,
+                cityAddress,
+                stateAddress
+            )
         } else {
             throw Exception("Record not found")
         }
@@ -128,9 +138,8 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
                 COLUMN_ID )
         )
         obj as Address
-        statement.setInt(0, id)
         statement.setString(1, obj.nameAddress)
-        statement.setInt(2, obj.codeAddress)
+        statement.setString(2, obj.zipcodeAddress)
         statement.setString(3, obj.addressAddress)
         statement.setString(4, obj.numberAddress)
         statement.setString(5, obj.cityAddress)
@@ -153,14 +162,16 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         val addressList = mutableListOf<Address>()
 
         while (resultSet.next()) {
+            val idAddress = resultSet.getInt( COLUMN_ID )
             val nameAddress = resultSet.getString( COLUMN_NAME )
-            val codeAddress = resultSet.getInt( COLUMN_CODE )
+            val codeAddress = resultSet.getString( COLUMN_ZIPCODE )
             val addressAddress = resultSet.getString( COLUMN_ADDRESS )
             val numberAddress = resultSet.getString( COLUMN_NUMBER )
             val cityAddress = resultSet.getString( COLUMN_CITY )
             val stateAddress = resultSet.getString( COLUMN_STATE )
 
             val address = Address(
+                idAddress,
                 nameAddress,
                 codeAddress,
                 addressAddress,

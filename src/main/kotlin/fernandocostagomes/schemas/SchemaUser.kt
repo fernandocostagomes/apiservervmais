@@ -8,6 +8,7 @@ import java.sql.Statement
 
 @Serializable
 data class User(
+    val userId: Int = 0,
     val userEmail: String,
     val userName: String,
     val userPwd: String,
@@ -116,6 +117,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             val dateUser = resultSet.getString(COLUMN_DATE)
 
             return@withContext User(
+                idUser,
                 emailUser,
                 nameUser,
                 pwdUser,
@@ -161,6 +163,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         val userList = mutableListOf<User>()
 
         while (resultSet.next()) {
+            val idUser = resultSet.getInt(COLUMN_ID)
             val emailUser = resultSet.getString(COLUMN_EMAIL)
             val nameUser = resultSet.getString(COLUMN_NAME)
             val pwdUser = resultSet.getString(COLUMN_PWD)
@@ -168,16 +171,17 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             val nickUser = resultSet.getString(COLUMN_NICK)
             val dateUser = resultSet.getString(COLUMN_DATE)
 
-            val user = User(
-                emailUser,
-                nameUser,
-                pwdUser,
-                phoneUser,
-                nickUser,
-                dateUser
+            userList.add(
+                User(
+                    idUser,
+                    emailUser,
+                    nameUser,
+                    pwdUser,
+                    phoneUser,
+                    nickUser,
+                    dateUser
+                )
             )
-
-            userList.add(user)
         }
 
         if (userList.isNotEmpty()) {

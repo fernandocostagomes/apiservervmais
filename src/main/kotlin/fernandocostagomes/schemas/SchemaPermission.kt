@@ -9,11 +9,12 @@ import java.sql.Statement
 
 @Serializable
 data class Permission(
+    val idPermission: Int,
     val namePermission: String,
     val descriptionPermission: String,
     val datePermission: String,
-    val rolePermission: Int,
-    val actionPermission: Int)
+    val idRolePermission: Int,
+    val idActionPermission: Int)
 class ServicePermission(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_permission"
@@ -54,8 +55,8 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
         statement.setString(1, obj.namePermission)
         statement.setString(2, obj.descriptionPermission)
         statement.setString(3, obj.datePermission)
-        statement.setInt(4, obj.rolePermission)
-        statement.setInt(5, obj.actionPermission)
+        statement.setInt(4, obj.idRolePermission)
+        statement.setInt(5, obj.idActionPermission)
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -73,12 +74,20 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val name = resultSet.getString( COLUMN_NAME )
-            val description = resultSet.getString( COLUMN_DESCRIPTION )
-            val date = resultSet.getString( COLUMN_DATE )
-            val role = resultSet.getInt( COLUMN_ROLE )
-            val action = resultSet.getInt( COLUMN_ACTION )
-            return@withContext Permission( name, description, date, role, action )
+            val idPermission = resultSet.getInt( COLUMN_ID )
+            val namePermission = resultSet.getString( COLUMN_NAME )
+            val descriptionPermission = resultSet.getString( COLUMN_DESCRIPTION )
+            val datePermission = resultSet.getString( COLUMN_DATE )
+            val idRolePermission = resultSet.getInt( COLUMN_ROLE )
+            val idActionPermission = resultSet.getInt( COLUMN_ACTION )
+            return@withContext Permission(
+                idPermission,
+                namePermission,
+                descriptionPermission,
+                datePermission,
+                idRolePermission,
+                idActionPermission
+            )
         } else {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
@@ -113,19 +122,23 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
 
         while (resultSet.next()) {
 
+            val idPermission = resultSet.getInt( COLUMN_ID )
             val namePermission = resultSet.getString( COLUMN_NAME )
             val descriptionPermission = resultSet.getString( COLUMN_DESCRIPTION )
             val datePermission = resultSet.getString( COLUMN_DATE )
-            val rolePermission = resultSet.getInt( COLUMN_ROLE )
-            val actionPermission = resultSet.getInt( COLUMN_ACTION )
+            val idRolePermission = resultSet.getInt( COLUMN_ROLE )
+            val idActionPermission = resultSet.getInt( COLUMN_ACTION )
 
-            val permission = Permission(
-                namePermission,
-                descriptionPermission,
-                datePermission,
-                rolePermission,
-                actionPermission )
-            permissionList.add( permission )
+            permissionList.add(
+                Permission(
+                    idPermission,
+                    namePermission,
+                    descriptionPermission,
+                    datePermission,
+                    idRolePermission,
+                    idActionPermission
+                )
+            )
         }
 
         if (permissionList.isNotEmpty()) {
