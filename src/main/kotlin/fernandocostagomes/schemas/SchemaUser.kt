@@ -82,7 +82,8 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             SchemaUtils.insertQuery(
                 TABLE,
                 listColumns
-            ), Statement.RETURN_GENERATED_KEYS)
+            ),
+            Statement.RETURN_GENERATED_KEYS)
         obj as User
         statement.setString(1, obj.userEmail)
         statement.setString(2, obj.userName)
@@ -97,7 +98,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
         } else {
-            throw Exception("Unable to retrieve the id of the newly inserted user")
+            throw Exception(SchemaUtils.UNABLE_NEW_ID_INSERTED)
         }
     }
 
@@ -133,7 +134,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
                 birthdayUser,
                 dateUser)
         } else {
-            throw Exception("Record not found")
+            throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
     }
 
@@ -197,7 +198,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         if (userList.isNotEmpty()) {
             return@withContext userList
         } else {
-            throw Exception("No records found")
+            throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
     }
 }

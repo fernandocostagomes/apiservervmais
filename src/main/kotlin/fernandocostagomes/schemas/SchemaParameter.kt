@@ -9,7 +9,7 @@ import java.sql.Statement
 @Serializable
 data class Parameter(
     val idParameter: Int = 0,
-    val codeParameter: Int,
+    val codeParameter: String,
     val nameParameter: String,
     val valueParameter: String,
     val dataParameter: String = SchemaUtils.getCurrentDate())
@@ -68,7 +68,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
             ),
             Statement.RETURN_GENERATED_KEYS)
         obj as Parameter
-        statement.setInt(1, obj.codeParameter)
+        statement.setString(1, obj.codeParameter)
         statement.setString(2, obj.nameParameter)
         statement.setString(3, obj.valueParameter)
         statement.setString(4, SchemaUtils.getCurrentDate())
@@ -78,7 +78,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
         } else {
-            throw Exception("Unable to retrieve the id of the newly inserted parameter")
+            throw Exception(SchemaUtils.UNABLE_NEW_ID_INSERTED)
         }
     }
 
@@ -96,7 +96,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
 
         if (resultSet.next()) {
             val idParameter = resultSet.getInt("id_parameter")
-            val codeParameter = resultSet.getInt("code_parameter")
+            val codeParameter = resultSet.getString("code_parameter")
             val nameParameter = resultSet.getString("name_parameter")
             val valueParameter = resultSet.getString("value_parameter")
             val dataParameter = resultSet.getString("data_parameter")
@@ -108,7 +108,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
                 dataParameter
             )
         } else {
-            throw Exception("Record not found")
+            throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
     }
 
@@ -123,7 +123,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         )
         obj as Parameter
         statement.setInt(0, id)
-        statement.setInt(1, obj.codeParameter)
+        statement.setString(1, obj.codeParameter)
         statement.setString(2, obj.nameParameter)
         statement.setString(3, obj.valueParameter)
         statement.setString(4, SchemaUtils.getCurrentDate())
@@ -148,7 +148,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
 
         while (resultSet.next()) {
             val idParameter = resultSet.getInt( COLUMN_ID )
-            val codeParameter = resultSet.getInt( COLUMN_CODE )
+            val codeParameter = resultSet.getString( COLUMN_CODE )
             val nameParameter = resultSet.getString( COLUMN_NAME )
             val valueParameter = resultSet.getString( COLUMN_VALUE )
             val dataParameter = resultSet.getString( COLUMN_DATA )
@@ -166,7 +166,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         if (parameterList.isNotEmpty()) {
             return@withContext parameterList
         } else {
-            throw Exception("No records found")
+            throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
     }
 }
