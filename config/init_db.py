@@ -198,7 +198,7 @@ def populate_address():
 
 def getUserByEmail(email):
 
-    response = requests.get(base_url + f"/useremail/{email}")
+    response = requests.get(base_url + f"/user/email/{email}")
     # Verifica se a solicitação foi bem-sucedida
     if response.status_code == 200:
         print(f"O usuário {email} foi encontrado com sucesso!")
@@ -210,8 +210,8 @@ def getUserByEmail(email):
         return None
 
 if __name__ == "__main__":
-    # populate_actions()
-    # populate_users()
-    # populate_parameters()
+    populate_actions()
+    populate_users()
+    populate_parameters()
     populate_address()
 
