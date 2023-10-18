@@ -202,4 +202,40 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
     }
+
+    // Read a user for email.
+    suspend fun read(email: String): User = withContext(Dispatchers.IO) {
+        val statement = connection.prepareStatement(
+            SchemaUtils.selectQuery(
+                TABLE,
+                COLUMN_EMAIL,
+                listColumns
+            )
+        )
+        statement.setString(1, email)
+        val resultSet = statement.executeQuery()
+
+        if (resultSet.next()) {
+            val idUser = resultSet.getInt(COLUMN_ID)
+            val emailUser = resultSet.getString(COLUMN_EMAIL)
+            val nameUser = resultSet.getString(COLUMN_NAME)
+            val pwdUser = resultSet.getString(COLUMN_PWD)
+            val phoneUser = resultSet.getString(COLUMN_PHONE)
+            val nickUser = resultSet.getString(COLUMN_NICK)
+            val birthdayUser = resultSet.getString(COLUMN_BIRTHDAY)
+            val dateUser = resultSet.getString(COLUMN_DATE)
+
+            return@withContext User(
+                idUser,
+                emailUser,
+                nameUser,
+                pwdUser,
+                phoneUser,
+                nickUser,
+                birthdayUser,
+                dateUser)
+        } else {
+            throw Exception(SchemaUtils.RECORD_NOT_FOUND)
+        }
+    }
 }

@@ -43,6 +43,17 @@ fun Application.configureRoutingUser(serviceUser: ServiceUser){
             }
         }
 
+        // Read user for email
+        get( userMoreEmail ) {
+            val email = call.parameters[ emailConst ]?: throw IllegalArgumentException( invalidConst )
+            try {
+                val user = serviceUser.read(email)
+                call.respond(HttpStatusCode.OK, user)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
         // Update user
         put( userMoreIdConst ) {
             val id = call.parameters[ idConst ]?.toInt() ?: throw IllegalArgumentException( invalidConst )

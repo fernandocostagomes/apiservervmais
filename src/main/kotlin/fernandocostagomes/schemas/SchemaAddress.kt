@@ -15,7 +15,9 @@ data class Address(
     val addressAddress: String,
     val numberAddress: String,
     val cityAddress: String,
-    val stateAddress: String)
+    val stateAddress: String,
+    val idUserAddress: Int,
+    val dateAddress: String)
 class ServiceAddress(private val connection: Connection) : SchemaInterface{
     companion object {
         private const val TABLE = "v_address"
@@ -26,6 +28,8 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         private const val COLUMN_NUMBER = "v_address_number"
         private const val COLUMN_CITY = "v_address_city"
         private const val COLUMN_STATE = "v_address_state"
+        private const val COLUMN_USER_ID = "v_user_id"
+        private const val COLUMN_DATE = "v_address_date"
 
         private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
@@ -33,7 +37,10 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         private const val COLUMN_ADDRESS_QUERY = "$COLUMN_ADDRESS VARCHAR(40), "
         private const val COLUMN_NUMBER_QUERY = "$COLUMN_NUMBER VARCHAR(8), "
         private const val COLUMN_CITY_QUERY = "$COLUMN_CITY VARCHAR(30), "
-        private const val COLUMN_STATE_QUERY = "$COLUMN_STATE VARCHAR(30)"
+        private const val COLUMN_STATE_QUERY = "$COLUMN_STATE VARCHAR(30),"
+        private const val COLUMN_USER_ID_QUERY = "$COLUMN_USER_ID INTEGER, "
+        private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20)"
+
 
         val listColumnsQuery = listOf(
             COLUMN_ID_QUERY,
@@ -42,7 +49,9 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
             COLUMN_ADDRESS_QUERY,
             COLUMN_NUMBER_QUERY,
             COLUMN_CITY_QUERY,
-            COLUMN_STATE_QUERY
+            COLUMN_STATE_QUERY,
+            COLUMN_USER_ID_QUERY,
+            COLUMN_DATE_QUERY
         )
 
         val listColumns = listOf(
@@ -52,7 +61,9 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
             COLUMN_ADDRESS,
             COLUMN_NUMBER,
             COLUMN_CITY,
-            COLUMN_STATE
+            COLUMN_STATE,
+            COLUMN_USER_ID,
+            COLUMN_DATE
         )
     }
 
@@ -85,13 +96,15 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         statement.setString(4, obj.numberAddress)
         statement.setString(5, obj.cityAddress)
         statement.setString(6, obj.stateAddress)
+        statement.setInt(7, obj.idUserAddress)
+        statement.setString(8, SchemaUtils.getCurrentDate())
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
         } else {
-            throw Exception("Unable to retrieve the id of the newly inserted address")
+            throw Exception(SchemaUtils.UNABLE_NEW_ID_INSERTED)
         }
     }
 
@@ -115,6 +128,8 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
             val numberAddress = resultSet.getString( COLUMN_NUMBER )
             val cityAddress = resultSet.getString( COLUMN_CITY )
             val stateAddress = resultSet.getString( COLUMN_STATE )
+            val idUserAddress = resultSet.getInt( COLUMN_USER_ID )
+            val dateAddress = resultSet.getString( COLUMN_DATE )
             return@withContext Address(
                 idAddress,
                 nameAddress,
@@ -122,10 +137,12 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
                 addressAddress,
                 numberAddress,
                 cityAddress,
-                stateAddress
+                stateAddress,
+                idUserAddress,
+                dateAddress
             )
         } else {
-            throw Exception("Record not found")
+            throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
     }
 
@@ -144,6 +161,8 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         statement.setString(4, obj.numberAddress)
         statement.setString(5, obj.cityAddress)
         statement.setString(6, obj.stateAddress)
+        statement.setInt(7, obj.idUserAddress)
+        statement.setString(8, SchemaUtils.getCurrentDate())
         statement.executeUpdate()
     }
 
@@ -169,6 +188,8 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
             val numberAddress = resultSet.getString( COLUMN_NUMBER )
             val cityAddress = resultSet.getString( COLUMN_CITY )
             val stateAddress = resultSet.getString( COLUMN_STATE )
+            val idUserAddress = resultSet.getInt( COLUMN_USER_ID )
+            val dateAddress = resultSet.getString( COLUMN_DATE )
 
             val address = Address(
                 idAddress,
@@ -177,7 +198,9 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
                 addressAddress,
                 numberAddress,
                 cityAddress,
-                stateAddress
+                stateAddress,
+                idUserAddress,
+                dateAddress
             )
             addressList.add( address )
         }
@@ -185,7 +208,7 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
         if (addressList.isNotEmpty()) {
             return@withContext addressList
         } else {
-            throw Exception("No records found")
+            throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
     }
 }

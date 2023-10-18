@@ -25,7 +25,7 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
         private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
         private const val COLUMN_PWD_QUERY = "$COLUMN_PWD VARCHAR(8) NOT NULL, "
-        private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(16)NOT NULL, "
+        private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20)NOT NULL, "
         private const val COLUMN_USER_ID_QUERY = "$COLUMN_USER_ID INTEGER"
 
         val listColumnsQuery = listOf(

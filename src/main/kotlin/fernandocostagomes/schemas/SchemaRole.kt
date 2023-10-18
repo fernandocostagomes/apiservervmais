@@ -10,21 +10,34 @@ import java.sql.Statement
 data class Role(
     val idRole: Int = 0,
     val nameRole: String,
-    val descriptionRole: String)
+    val descriptionRole: String,
+    val dateRole: String)
 class ServiceRole(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_role"
         private const val COLUMN_ID = "v_role_id"
         private const val COLUMN_NAME = "v_role_name"
         private const val COLUMN_DESCRIPTION = "v_role_description"
+        private const val COLUMN_DATE = "v_role_date"
 
         private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(20), "
-        private const val COLUMN_DESCRIPTION_QUERY = "$COLUMN_DESCRIPTION VARCHAR(30)"
+        private const val COLUMN_DESCRIPTION_QUERY = "$COLUMN_DESCRIPTION VARCHAR(30),"
+        private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20)"
 
-        val listColumns = listOf(COLUMN_ID, COLUMN_NAME, COLUMN_DESCRIPTION)
+        val listColumns = listOf(
+            COLUMN_ID,
+            COLUMN_NAME,
+            COLUMN_DESCRIPTION,
+            COLUMN_DATE
+        )
 
-        val listColumnsQuery = listOf(COLUMN_ID_QUERY, COLUMN_NAME_QUERY, COLUMN_DESCRIPTION_QUERY)
+        val listColumnsQuery = listOf(
+            COLUMN_ID_QUERY,
+            COLUMN_NAME_QUERY,
+            COLUMN_DESCRIPTION_QUERY,
+            COLUMN_DATE_QUERY
+        )
     }
 
     init {
@@ -40,8 +53,9 @@ class ServiceRole(private val connection: Connection): SchemaInterface {
         val statement = connection.prepareStatement(
             SchemaUtils.insertQuery(TABLE, listColumns ), Statement.RETURN_GENERATED_KEYS)
         obj as Role
-        statement.setString(2, obj.nameRole)
-        statement.setString(3, obj.descriptionRole)
+        statement.setString(1, obj.nameRole)
+        statement.setString(2, obj.descriptionRole)
+        statement.setString(3, SchemaUtils.getCurrentDate())
         statement.executeUpdate()
 
         val generatedKeys = statement.generatedKeys
@@ -62,10 +76,12 @@ class ServiceRole(private val connection: Connection): SchemaInterface {
             val idRole = resultSet.getInt( COLUMN_ID )
             val nameRole = resultSet.getString( COLUMN_NAME )
             val descriptionRole = resultSet.getString( COLUMN_DESCRIPTION )
+            val dateRole = resultSet.getString( COLUMN_DATE )
             return@withContext Role(
                 idRole,
                 nameRole,
-                descriptionRole
+                descriptionRole,
+                dateRole
             )
         } else {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
@@ -79,6 +95,7 @@ class ServiceRole(private val connection: Connection): SchemaInterface {
         statement.setInt(0, id)
         statement.setString(1, obj.nameRole)
         statement.setString(2, obj.descriptionRole)
+        statement.setString(3, SchemaUtils.getCurrentDate())
         statement.executeUpdate()
     }
 
@@ -101,12 +118,14 @@ class ServiceRole(private val connection: Connection): SchemaInterface {
             val idRole = resultSet.getInt( COLUMN_ID )
             val nameRole = resultSet.getString( COLUMN_NAME )
             val descriptionRole = resultSet.getString( COLUMN_DESCRIPTION )
+            val dateRole = resultSet.getString( COLUMN_DATE )
 
             roleList.add(
                 Role(
                     idRole,
                     nameRole,
-                    descriptionRole
+                    descriptionRole,
+                    dateRole
                 )
             )
         }

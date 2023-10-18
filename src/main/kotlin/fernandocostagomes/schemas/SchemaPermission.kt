@@ -1,5 +1,6 @@
 package fernandocostagomes.schemas
 
+import fernandocostagomes.schemas.SchemaUtils.Companion.getCurrentDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -9,7 +10,7 @@ import java.sql.Statement
 
 @Serializable
 data class Permission(
-    val idPermission: Int,
+    val idPermission: Int = 0,
     val namePermission: String,
     val descriptionPermission: String,
     val datePermission: String,
@@ -54,7 +55,7 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
         obj as Permission
         statement.setString(1, obj.namePermission)
         statement.setString(2, obj.descriptionPermission)
-        statement.setString(3, obj.datePermission)
+        statement.setString(3, getCurrentDate())
         statement.setInt(4, obj.idRolePermission)
         statement.setInt(5, obj.idActionPermission)
         statement.executeUpdate()
@@ -100,7 +101,7 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
         statement.setInt(0, id)
         statement.setString(1, obj.namePermission)
         statement.setString(2, obj.descriptionPermission)
-        statement.setString(3, obj.datePermission)
+        statement.setString(3, getCurrentDate())
         statement.setInt(4, obj.idRolePermission)
         statement.setInt(5, obj.idActionPermission)
         statement.executeUpdate()

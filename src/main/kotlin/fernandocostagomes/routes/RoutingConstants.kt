@@ -2,6 +2,7 @@ package fernandocostagomes.routes
 
 const val idConst = "id"
 const val invalidConst = "Invalid ID"
+const val emailConst = "email"
 
 const val addressConst = "/address"
 const val addressMoreIdConst = "/address/{id}"
@@ -14,6 +15,7 @@ const val parameterMoreIdConst = "/parameter/{id}"
 
 const val userConst = "/user"
 const val userMoreIdConst = "/user/{id}"
+const val userMoreEmail = "/user/{email}"
 
 const val actionConst = "/action"
 const val actionMoreIdConst = "/action/{id}"
