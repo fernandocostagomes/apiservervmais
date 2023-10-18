@@ -49,9 +49,8 @@ class SchemaUtils {
         // Metodo que retorna a data atual.
         fun getCurrentDate(): String {
             val current = LocalDateTime.now()
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-            val formatted = current.format(formatter)
-            return formatted
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            return current.format(formatter)
         }
     }
 }

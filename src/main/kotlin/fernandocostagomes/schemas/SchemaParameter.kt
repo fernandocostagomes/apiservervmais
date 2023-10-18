@@ -12,7 +12,7 @@ data class Parameter(
     val codeParameter: Int,
     val nameParameter: String,
     val valueParameter: String,
-    val dataParameter: String)
+    val dataParameter: String = SchemaUtils.getCurrentDate())
 class ServiceParameter(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_parameter"

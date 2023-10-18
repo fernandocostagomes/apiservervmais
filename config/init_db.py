@@ -48,6 +48,7 @@ def populate_users():
             "userPwd": "senha123",
             "userPhone": "5561985141904",
             "userNick": "Nando",
+            "userBirthday": "28/05/1980",
             "userDate": "2023-10-17",
         },
         {
@@ -56,6 +57,7 @@ def populate_users():
             "userPwd": "senha456",
             "userPhone": "5561999888951",
             "userNick": "Rafa",
+            "userBirthday": "08/09/2011",
             "userDate": "2023-10-17",
         },
     ]
@@ -83,11 +85,13 @@ def populate_parameters():
             "codeParameter": "100",
             "nameParameter": "Parameter100",
             "descriptionParameter": "Parametro de teste codigo 100",
+            "dataParameter": "2023-10-17",
         },
         {
             "codeParameter": "200",
             "nameParameter": "Parameter200",
             "descriptionParameter": "Parametro de teste codigo 200",
+            "dataParameter": "2023-10-17",
         },
     ]
 
