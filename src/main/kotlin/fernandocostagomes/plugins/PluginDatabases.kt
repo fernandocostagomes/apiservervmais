@@ -50,7 +50,7 @@ fun Application.configureDatabases() {
  * */
 fun connectToPostgres(embedded: Boolean): Connection {
 
-    val url = "172.20.0.10"
+    val url = "fcg_postgres"
     val db = "dbfcgvmais"
     val port = "5432"
     val user = "userfcgpostgres"

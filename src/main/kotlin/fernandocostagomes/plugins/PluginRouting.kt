@@ -7,7 +7,7 @@ import io.ktor.server.application.*
 fun Application.configureRouting() {
     routing {
         get("/") {
-            call.respondText("ApiServer V+!")
+            call.respondText("ApiServer V+ atualizada!")
         }
     }
 }
