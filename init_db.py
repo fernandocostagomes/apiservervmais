@@ -17,7 +17,7 @@ else:
 
 def populate_actions():
     """ Popula a tabela action com as ações definidas na API.   """
-    for action in actions:
+    for action in getArray("actions"):
         response = requests.post(
             f"{full_url}/action",
             data=json.dumps(action),
@@ -33,7 +33,7 @@ def populate_actions():
 
 def populate_users():
     """ Popula a tabela de usuários com dados de exemplo. """
-    for user in users:
+    for user in getArray("users"):
         response = (
             requests.post(
                 f"{full_url}/user",
@@ -48,7 +48,7 @@ def populate_users():
 
 def populate_parameters():
     """ Popula a tabela de parametros com dados de exemplo. """
-    for parameter in parameters:
+    for parameter in getArray("parameters"):
         response = requests.post(
             f"{full_url}/parameter",
             data=json.dumps(parameter),
@@ -60,15 +60,10 @@ def populate_parameters():
         else:
             print(f"Erro ao inserir parametro {parameter['nameParameter']}.")
 
-
+""" Popula a tabela de address com dados de exemplo. """
 def populate_address():
-    """ Popula a tabela de address com dados de exemplo. """
 
-    # Define os dados dos address a serem inseridos
-
-
-
-    for address in addresses:
+    for address in getArray("addresses"):
         response = requests.post(
             f"{full_url}/address",
             data=json.dumps(address),
@@ -81,25 +76,9 @@ def populate_address():
             print(f"Erro ao inserir address {address['nameAddress']}.")
 
 
+""" Popula a tabela de roles com dados de exemplo. """
 def populate_roles():
-    """ Popula a tabela de roles com dados de exemplo. """
-
-    # Define os dados dos roles a serem inseridos
-
-    roles = [
-        {
-            "nameRole": "Admin",
-            "descriptionRole": "Administrador do sistema",
-            "dateRole": "2023-10-17",
-        },
-        {
-            "nameRole": "User",
-            "descriptionRole": "Usuário do sistema",
-            "dateRole": "2023-10-17",
-        },
-    ]
-
-    for role in roles:
+    for role in getArray("roles"):
         response = requests.post(
             f"{full_url}/role",
             data=json.dumps(role),
@@ -111,49 +90,14 @@ def populate_roles():
         else:
             print(f"Erro ao inserir role {role['nameRole']}.")
 
+""" Popula a tabela de permissions com dados de exemplo. """
 def populate_permissions():
-    """ Popula a tabela de permissions com dados de exemplo. """
-
-    # Define os dados dos permissions a serem inseridos
-
-    permissions = [
-        {
-            "namePermission": "Create user",
-            "descriptionPermission": "Cria novo usuário no sistema.",
-            "datePermission": "2023-10-17",
-            "idRolePermission": "1",
-            "idActionPermission": "1",
-        },
-        {
-            "namePermission": "Edite user",
-            "descriptionPermission": "Edita usuário no sistema.",
-            "datePermission": "2023-10-17",
-            "idRolePermission": "1",
-            "idActionPermission": "2",
-        },
-        {
-            "namePermission": "Remove user",
-            "descriptionPermission": "Exclui usuário do sistema.",
-            "datePermission": "2023-10-17",
-            "idRolePermission": "1",
-            "idActionPermission": "3",
-        },
-        {
-            "namePermission": "Login user",
-            "descriptionPermission": "Faz login usuário no sistema.",
-            "datePermission": "2023-10-17",
-            "idRolePermission": "1",
-            "idActionPermission": "4",
-        }
-    ]
-
-    for permission in permissions:
+    for permission in getArray("permissions"):
         response = requests.post(
             f"{full_url}/permission",
             data=json.dumps(permission),
             headers=application_json,
         )
-
         if response.status_code == 201:
             print(f"Permission {permission['namePermission']} inserido com sucesso!")
         else:
@@ -293,6 +237,52 @@ def getArray(name):
             },
         ]
         return addresses
+    elif name == "roles":
+        roles = [
+            {
+                "nameRole": "Admin",
+                "descriptionRole": "Administrador do sistema",
+                "dateRole": "2023-10-17",
+            },
+            {
+                "nameRole": "User",
+                "descriptionRole": "Usuário do sistema",
+                "dateRole": "2023-10-17",
+            },
+        ]
+        return roles
+    elif name == "permissions":
+        permissions = [
+            {
+                "namePermission": "Create user",
+                "descriptionPermission": "Cria novo usuário no sistema.",
+                "datePermission": "2023-10-17",
+                "idRolePermission": "1",
+                "idActionPermission": "1",
+            },
+            {
+                "namePermission": "Edite user",
+                "descriptionPermission": "Edita usuário no sistema.",
+                "datePermission": "2023-10-17",
+                "idRolePermission": "1",
+                "idActionPermission": "2",
+            },
+            {
+                "namePermission": "Remove user",
+                "descriptionPermission": "Exclui usuário do sistema.",
+                "datePermission": "2023-10-17",
+                "idRolePermission": "1",
+                "idActionPermission": "3",
+            },
+            {
+                "namePermission": "Login user",
+                "descriptionPermission": "Faz login usuário no sistema.",
+                "datePermission": "2023-10-17",
+                "idRolePermission": "1",
+                "idActionPermission": "4",
+            }
+        ]
+        return permissions
     else:
         return None
 
