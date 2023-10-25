@@ -67,6 +67,7 @@ def populate_address():
     # Define os dados dos address a serem inseridos
 
 
+
     for address in addresses:
         response = requests.post(
             f"{full_url}/address",
@@ -170,122 +171,130 @@ def getUserByEmail(email):
               f"Status response:  {response.status_code}")
         return None
 
-users = [
-    {
-        "userEmail": "fernandocostagomes@gmail.com",
-        "userName": "Fernando Costa",
-        "userPwd": "senha123",
-        "userPhone": "5561985141904",
-        "userNick": "Nando",
-        "userBirthday": "28/05/1980",
-        "userDate": "2023-10-17",
-    },
-    {
-        "userEmail": "rafaelcostafernandes2015@gmail.com",
-        "userName": "Rafael Costa",
-        "userPwd": "senha456",
-        "userPhone": "5561999888951",
-        "userNick": "Rafa",
-        "userBirthday": "08/09/2011",
-        "userDate": "2023-10-17",
-    },
-]
-
-parameters = [
-    {
-        "codeParameter": "100",
-        "nameParameter": "Parameter100",
-        "valueParameter": "100",
-        "dateParameter": "2023-10-17",
-    },
-    {
-        "codeParameter": "200",
-        "nameParameter": "Parameter200",
-        "valueParameter": "200",
-        "dateParameter": "2023-10-17",
-    },
-]
-
-actions = [
-    {
-        "nameAction": "Create user",
-        "descriptionAction": "Cria novo usuário no sistema.",
-        "dateAction": "2023-10-17"
-    },
-    {
-        "nameAction": "Edite user",
-        "descriptionAction": "Edita usuário no sistema.",
-        "dateAction": "2023-10-17"
-    },
-    {
-        "nameAction": "Remove user", "descriptionAction":
-        "Exclui usuário do sistema.",
-        "dateAction": "2023-10-17"
-    },
-    {
-        "nameAction": "Login user",
-        "descriptionAction": "Faz login usuário no sistema.",
-        "dateAction": "2023-10-17"
-    },
-    {
-        "nameAction": "Logout user",
-        "descriptionAction": "Desloga usuário do sistema.",
-        "dateAction": "2023-10-17"
-    },
-    {
-        "nameAction": "List users",
-        "descriptionAction": "Lista usuários do sistema.",
-        "dateAction": "2023-10-17"
-    },
-    {
-        "nameAction": "Find user",
-        "descriptionAction": "Pesquisa usuário pelo nome.",
-        "dateAction": "2023-10-17"
-    },
-    {
-        "nameAction": "Setar perm. user",
-        "descriptionAction": "Atribui permissão a usuário.",
-        "dateAction": "2023-10-17"
-    },
-    {
-        "nameAction": "Remove perm. user",
-        "descriptionAction": "Remove permissão de usuário.",
-        "dateAction": "2023-10-17"
-    },
-]
-
-addresses = [
-    {
-        "nameAddress": "Casa",
-        "zipcodeAddress": "72.304-116",
-        "addressAddress": "QN 122 conj 15 lote 01 bloco A",
-        "numberAddress": "1308",
-        "cityAddress": "Samambaia",
-        "stateAddress": "DF",
-        "idUserAddress": getUserByEmail("fernandocostagomes@gmail.com"),
-        "dateAddress": "2023-10-17",
-    },
-    {
-        "nameAddress": "Trabalho",
-        "zipcodeAddress": "72.910-901",
-        "addressAddress": "SCN Quadra 1 Ed. Esplanada Rossi",
-        "numberAddress": "S/N",
-        "cityAddress": "Asa Norte",
-        "stateAddress": "DF",
-        "idUserAddress": getUserByEmail("fernandocostagomes@gmail.com"),
-        "dateAddress": "2023-10-17",
-    },
-    {
-        "nameAddress": "Casa",
-        "zipcodeAddress": "71.882-108",
-        "addressAddress": "QC 03 conj 8 lote 3 Bloco A",
-        "numberAddress": "104",
-        "cityAddress": "Riacho Fundo II",
-        "stateAddress": "DF",
-        "idUserAddress": getUserByEmail("rafaelcostafernandes2015@gmail.com"),
-        "dateAddress": "2023-10-17",
-    },
-]
+def getArray(name):
+    if name == "users":
+        users = [
+            {
+                "userEmail": "fernandocostagomes@gmail.com",
+                "userName": "Fernando Costa",
+                "userPwd": "senha123",
+                "userPhone": "5561985141904",
+                "userNick": "Nando",
+                "userBirthday": "28/05/1980",
+                "userDate": "2023-10-17",
+            },
+            {
+                "userEmail": "rafaelcostafernandes2015@gmail.com",
+                "userName": "Rafael Costa",
+                "userPwd": "senha456",
+                "userPhone": "5561999888951",
+                "userNick": "Rafa",
+                "userBirthday": "08/09/2011",
+                "userDate": "2023-10-17",
+            },
+        ]
+        return users
+    elif name == "parameters":
+        parameters = [
+            {
+                "codeParameter": "100",
+                "nameParameter": "Parameter100",
+                "valueParameter": "100",
+                "dateParameter": "2023-10-17",
+            },
+            {
+                "codeParameter": "200",
+                "nameParameter": "Parameter200",
+                "valueParameter": "200",
+                "dateParameter": "2023-10-17",
+            },
+        ]
+        return parameters
+    elif name == "actions":
+        actions = [
+            {
+                "nameAction": "Create user",
+                "descriptionAction": "Cria novo usuário no sistema.",
+                "dateAction": "2023-10-17"
+            },
+            {
+                "nameAction": "Edite user",
+                "descriptionAction": "Edita usuário no sistema.",
+                "dateAction": "2023-10-17"
+            },
+            {
+                "nameAction": "Remove user", "descriptionAction":
+                "Exclui usuário do sistema.",
+                "dateAction": "2023-10-17"
+            },
+            {
+                "nameAction": "Login user",
+                "descriptionAction": "Faz login usuário no sistema.",
+                "dateAction": "2023-10-17"
+            },
+            {
+                "nameAction": "Logout user",
+                "descriptionAction": "Desloga usuário do sistema.",
+                "dateAction": "2023-10-17"
+            },
+            {
+                "nameAction": "List users",
+                "descriptionAction": "Lista usuários do sistema.",
+                "dateAction": "2023-10-17"
+            },
+            {
+                "nameAction": "Find user",
+                "descriptionAction": "Pesquisa usuário pelo nome.",
+                "dateAction": "2023-10-17"
+            },
+            {
+                "nameAction": "Setar perm. user",
+                "descriptionAction": "Atribui permissão a usuário.",
+                "dateAction": "2023-10-17"
+            },
+            {
+                "nameAction": "Remove perm. user",
+                "descriptionAction": "Remove permissão de usuário.",
+                "dateAction": "2023-10-17"
+            },
+        ]
+        return actions
+    elif name == "addresses":
+        addresses = [
+            {
+                "nameAddress": "Casa",
+                "zipcodeAddress": "72.304-116",
+                "addressAddress": "QN 122 conj 15 lote 01 bloco A",
+                "numberAddress": "1308",
+                "cityAddress": "Samambaia",
+                "stateAddress": "DF",
+                "idUserAddress": getUserByEmail("fernandocostagomes@gmail.com"),
+                "dateAddress": "2023-10-17",
+            },
+            {
+                "nameAddress": "Trabalho",
+                "zipcodeAddress": "72.910-901",
+                "addressAddress": "SCN Quadra 1 Ed. Esplanada Rossi",
+                "numberAddress": "S/N",
+                "cityAddress": "Asa Norte",
+                "stateAddress": "DF",
+                "idUserAddress": getUserByEmail("fernandocostagomes@gmail.com"),
+                "dateAddress": "2023-10-17",
+            },
+            {
+                "nameAddress": "Casa",
+                "zipcodeAddress": "71.882-108",
+                "addressAddress": "QC 03 conj 8 lote 3 Bloco A",
+                "numberAddress": "104",
+                "cityAddress": "Riacho Fundo II",
+                "stateAddress": "DF",
+                "idUserAddress": getUserByEmail("rafaelcostafernandes2015@gmail.com"),
+                "dateAddress": "2023-10-17",
+            },
+        ]
+        return addresses
+    else:
+        return None
 
 if __name__ == "__main__":
     populate_actions()
