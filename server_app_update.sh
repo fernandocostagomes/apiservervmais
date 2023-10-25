@@ -37,29 +37,23 @@ echo "### Service: fcg_pgadmin ###"
 docker-compose down --services fcg_pgadmin
 echo "### Container removido. ###"
 
-# Passo 5: Removendo as redes pelo compose.
+# Passo 6: Removendo as redes pelo compose.
 echo "### Removendo as networks criadas pelo compose. ###"
 echo "### Network: fcg_default ###"
 docker network rm fcg_network
 
-
-
-# Passo 5: Construir o container de acordo com o arquivo compose, antes excluindo as redes e parando os
-# containers se estiverem iniciados ou criados.
-echo "###############"
-
-echo "### Construindo o container com 'docker-compose up -d --remove-orphans'. ###"
-docker-compose down --services fcg_webapp
+# Passo 7: Removendo orphans criados pelo compose.
+echo "### Remove orphans com 'docker-compose up -d --remove-orphans'. ###"
 docker-compose up -d --remove-orphans
 echo "### Finalizado. ###"
 
-# Passo 6: Removendo os containers que não estão em uso da aplicacao web.
+# Passo 7: Removendo os containers que não estão em uso da aplicacao web.
 echo "###############"
 echo "### Removendo os containers que não estão em uso da aplicacao web. ###"
 docker container prune -f
 echo "### Finalizado. ###"
 
-# Passo 7: Aguardar 10 segundos para que o container seja iniciado.
+# Passo 8: Aguardar 10 segundos para que o container seja iniciado.
 echo "### Aguardando inicialização dos servidores ###"
 echo "##########"
 sleep 1
@@ -106,5 +100,5 @@ sleep 5
 # anteriores estiverem sido executados com sucesso.
 echo "###############"
 echo "### Populando o banco de dados com 'Python init_db.py'. ###"
-Invoke-Expression "py init_db.py localhost"
+python3 init_db.py localhost
 echo "### Finalizado. ###"
