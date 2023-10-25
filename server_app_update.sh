@@ -24,11 +24,32 @@ echo "### Construindo a imagem do Docker com 'docker buildx build . -t fcg_webap
 docker buildx build . -t fcg_webapp
 echo "### Finalizado. ###"
 
+# Passo 5: Removendo os containers de todos os serviços criados pelo compose.
+echo "###############"
+echo "### Removendo os containers de todos os serviços criados pelo compose. ###"
+echo "### Service: fcg_webapp ###"
+docker-compose down --services fcg_webapp
+echo "### Container removido. ###"
+echo "### Service: fcg_postgres ###"
+docker-compose down --services fcg_postgres
+echo "### Container removido. ###"
+echo "### Service: fcg_pgadmin ###"
+docker-compose down --services fcg_pgadmin
+echo "### Container removido. ###"
+
+# Passo 5: Removendo as redes pelo compose.
+echo "### Removendo as networks criadas pelo compose. ###"
+echo "### Network: fcg_default ###"
+docker network rm fcg_network
+
+
+
 # Passo 5: Construir o container de acordo com o arquivo compose, antes excluindo as redes e parando os
 # containers se estiverem iniciados ou criados.
 echo "###############"
+
 echo "### Construindo o container com 'docker-compose up -d --remove-orphans'. ###"
-docker-compose down
+docker-compose down --services fcg_webapp
 docker-compose up -d --remove-orphans
 echo "### Finalizado. ###"
 
@@ -41,45 +62,45 @@ echo "### Finalizado. ###"
 # Passo 7: Aguardar 10 segundos para que o container seja iniciado.
 echo "### Aguardando inicialização dos servidores ###"
 echo "##########"
-Start-Sleep -s 1
+sleep 1
 echo "#########"
-Start-Sleep -s 1
+sleep 1
 echo "########"
-Start-Sleep -s 1
+sleep 1
 echo "#######"
-Start-Sleep -s 1
+sleep 1
 echo "######"
-Start-Sleep -s 1
+sleep 1
 echo "#####"
-Start-Sleep -s 1
+sleep 1
 echo "####"
-Start-Sleep -s 1
+sleep 1
 echo "###"
-Start-Sleep -s 1
+sleep 1
 echo "##"
-Start-Sleep -s 1
+sleep 1
 echo "#"
-Start-Sleep -s 1
+sleep 1
 echo "##"
-Start-Sleep -s 1
+sleep 1
 echo "###"
-Start-Sleep -s 1
+sleep 1
 echo "####"
-Start-Sleep -s 1
+sleep 1
 echo "#####"
-Start-Sleep -s 1
+sleep 1
 echo "######"
-Start-Sleep -s 1
+sleep 1
 echo "#######"
-Start-Sleep -s 1
+sleep 1
 echo "########"
-Start-Sleep -s 1
+sleep 1
 echo "#########"
-Start-Sleep -s 1
+sleep 1
 echo "##########"
-Start-Sleep -s 1
+sleep 1
 echo "###########"
-Start-Sleep -s 1
+sleep 5
 
 # Passo 8: Popular o banco de dados com o script em python que esta no diretorio /config/init_db.py se os passos
 # anteriores estiverem sido executados com sucesso.
