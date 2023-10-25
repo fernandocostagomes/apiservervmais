@@ -4,7 +4,7 @@
 # Passo 1: Atualizar o repositório local
 echo "###############"
 echo "### Atualizando o repositório local com 'git pull'. ###"
-git pull
+git pull origin main
 echo "### Finalizado. ###"
 
 # Passo 2: Limpar o cache do Gradle
