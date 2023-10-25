@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#Testando o hook
 # Passo 1: Atualizar o repositório local
 echo "###############"
 echo "### Atualizando o repositório local com 'git pull'. ###"
