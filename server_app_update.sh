@@ -1,4 +1,6 @@
 #!/bin/bash
+
+#Testando o hook
 # Passo 1: Atualizar o repositório local
 Write-Output "###############"
 Write-Output "### Atualizando o repositório local com 'git pull'. ###"
