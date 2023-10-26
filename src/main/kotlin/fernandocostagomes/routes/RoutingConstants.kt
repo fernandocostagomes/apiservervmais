@@ -16,6 +16,7 @@ const val parameterMoreIdConst = "/parameter/{id}"
 const val userConst = "/user"
 const val userMoreIdConst = "/user/{id}"
 const val userEmail = "/email/{email}"
+const val userUpdate = "/update/{pwd}"
 
 const val actionConst = "/action"
 const val actionMoreIdConst = "/action/{id}"
