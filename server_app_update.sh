@@ -162,6 +162,7 @@ sleep 1
 echo "######################################################"
 echo "###   Populando banco de dados com 'init_db.py'.   ###"
 echo "######################################################"
+
 python3 init_db.py localhost
 
 echo "###################"
