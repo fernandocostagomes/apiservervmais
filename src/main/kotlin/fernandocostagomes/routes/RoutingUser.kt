@@ -73,9 +73,11 @@ fun Application.configureRoutingUser(serviceUser: ServiceUser){
                 // Ler a saída do processo (opcional)
                 val reader = BufferedReader(InputStreamReader(process.inputStream))
                 var line: String? = reader.readLine()
+                var script = ""
                 while (line != null) {
                     // Faça algo com a saída do script, se necessário
                     line = reader.readLine()
+                    script += line
                 }
 
                 // Aguarde o término do processo

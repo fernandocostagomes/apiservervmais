@@ -1,13 +1,9 @@
 package fernandocostagomes.plugins
 
-import fernandocostagomes.routes.invalidConst
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.joda.time.LocalDateTime
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 fun Application.configureRouting() {
     routing {
