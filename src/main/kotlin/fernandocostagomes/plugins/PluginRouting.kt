@@ -16,7 +16,7 @@ fun Application.configureRouting() {
                      "Head do commit: ${System.getenv("HEAD_COMMIT")}\n" )
         }
 
-        get("update"){
+        get("/update"){
             try {
                 // Carregue o script da pasta "resources"
                 val scriptStream = this::class.java.classLoader.getResourceAsStream("server_app_update.sh")
