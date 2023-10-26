@@ -74,7 +74,7 @@ fun Application.configureRoutingUser(serviceUser: ServiceUser){
                 for (file in files!!) {
                     name += file + "\n"
                 }
-                val scriptPath = "./server_app_update.sh"
+                val scriptPath = "home/apiservervmais/server_app_update.sh"
 
                 // Executar o script shell
                 val process = Runtime.getRuntime().exec("sh $scriptPath")
