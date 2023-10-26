@@ -87,7 +87,7 @@ fun Application.configureRoutingUser(serviceUser: ServiceUser){
                 if (exitCode == 0) {
                     call.respond(HttpStatusCode.OK, "Script executado com sucesso.")
                 } else {
-                    call.respond(HttpStatusCode.InternalServerError, "Erro ao executar o script.")
+                    call.respond(HttpStatusCode.InternalServerError, "Erro ao executar o script.\n$script")
                 }
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError, "Erro ao executar o script: ${e.message}")
