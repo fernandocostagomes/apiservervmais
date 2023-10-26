@@ -5,8 +5,8 @@ services:
     image: postgres:latest
     hostname: fcg_postgres
     environment:
-      POSTGRES_USER: userpostgres
-      POSTGRES_PASSWORD: pwdpostgres
+      POSTGRES_USER: userfcgpostgres
+      POSTGRES_PASSWORD: pwduserpostgres
       POSTGRES_DB: dbfcgvmais
     ports:
       - "5432:5432"
