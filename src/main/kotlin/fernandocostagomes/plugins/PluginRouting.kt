@@ -19,7 +19,7 @@ fun Application.configureRouting() {
             val password = call.parameters["pwd"] ?: throw IllegalArgumentException(invalidConst)
             val senha = "update"
             if (password != senha) {
-                call.respond(HttpStatusCode.NotFound)
+                call.respond("Pwd inválida.")
             }
 
             try {
