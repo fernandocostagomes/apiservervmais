@@ -2,12 +2,14 @@ package fernandocostagomes.routes
 
 import fernandocostagomes.schemas.User
 import fernandocostagomes.schemas.ServiceUser
+import io.ktor.client.plugins.cache.storage.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStreamReader
 
 fun Application.configureRoutingUser(serviceUser: ServiceUser){
@@ -65,6 +67,13 @@ fun Application.configureRoutingUser(serviceUser: ServiceUser){
 
             try {
                 // Caminho para o script shell na raiz do projeto
+                // Array com os nomes dos arquivos da raiz do projeto.
+                val rootPath = System.getProperty("user.dir")
+                val files = File(rootPath).list()
+                var name = ""
+                for (file in files!!) {
+                    name += file + "\n"
+                }
                 val scriptPath = "./server_app_update.sh"
 
                 // Executar o script shell
@@ -87,7 +96,8 @@ fun Application.configureRoutingUser(serviceUser: ServiceUser){
                 if (exitCode == 0) {
                     call.respond(HttpStatusCode.OK, "Script executado com sucesso.")
                 } else {
-                    call.respond(HttpStatusCode.InternalServerError, "Erro ao executar o script.\n$script")
+                    call.respond(HttpStatusCode.InternalServerError, "Erro ao executar o script." +
+                            "\n$script" + "\n$name")
                 }
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError, "Erro ao executar o script: ${e.message}")
