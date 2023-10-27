@@ -4,6 +4,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import java.sql.Connection
+import java.sql.PreparedStatement
+import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
@@ -12,7 +14,7 @@ data class User(
     val userId: Int = 0,
     val userEmail: String,
     val userName: String,
-    val userPwd: String,
+    val userPwd: Int = 0,
     val userPhone: String,
     val userNick: String,
     val userBirthday: String,
@@ -34,7 +36,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
         private const val COLUMN_EMAIL_QUERY = "$COLUMN_EMAIL VARCHAR(50) NOT NULL, "
         private const val COLUMN_NAME_QUERY = "$COLUMN_NAME VARCHAR(30), "
-        private const val COLUMN_PWD_QUERY = "$COLUMN_PWD VARCHAR(8) NOT NULL, "
+        private const val COLUMN_PWD_QUERY = "$COLUMN_PWD INTEGER NOT NULL, "
         private const val COLUMN_PHONE_QUERY = "$COLUMN_PHONE VARCHAR(13) NOT NULL, "
         private const val COLUMN_NICK_QUERY = "$COLUMN_NICK VARCHAR(20), "
         private const val COLUMN_BIRTHDAY_QUERY = "$COLUMN_BIRTHDAY VARCHAR(20), "
@@ -77,6 +79,31 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         }
     }
 
+    private fun getResultSet(pResultSet: ResultSet): User {
+        return User(
+            pResultSet.getInt(COLUMN_ID),
+            pResultSet.getString(COLUMN_EMAIL),
+            pResultSet.getString(COLUMN_NAME),
+            pResultSet.getInt(COLUMN_PWD),
+            pResultSet.getString(COLUMN_PHONE),
+            pResultSet.getString(COLUMN_NICK),
+            pResultSet.getString(COLUMN_BIRTHDAY),
+            pResultSet.getString(COLUMN_DATE)
+        )
+    }
+
+    private fun getPreparedStatement(pPreparedStatement: PreparedStatement,  pObj: Any): PreparedStatement{
+        pObj as User
+        pPreparedStatement.setString(1, pObj.userEmail)
+        pPreparedStatement.setString(2, pObj.userName)
+        pPreparedStatement.setInt(3, pObj.userPwd)
+        pPreparedStatement.setString(4, pObj.userPhone)
+        pPreparedStatement.setString(5, pObj.userNick)
+        pPreparedStatement.setString(6, pObj.userBirthday)
+        pPreparedStatement.setString(7, pObj.userDate)
+        return pPreparedStatement
+    }
+
     // Create new user
     override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(
@@ -84,27 +111,29 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
                 TABLE,
                 listColumns
             ),
-            Statement.RETURN_GENERATED_KEYS)
-        obj as User
-        statement.setString(1, obj.userEmail)
-        statement.setString(2, obj.userName)
-        statement.setString(3, obj.userPwd)
-        statement.setString(4, obj.userPhone)
-        statement.setString(5, obj.userNick)
-        statement.setString(6, obj.userBirthday)
-        statement.setString(7, SchemaUtils.getCurrentDate())
-        statement.executeUpdate()
+            Statement.RETURN_GENERATED_KEYS
+        )
 
-        val generatedKeys = statement.generatedKeys
+        obj as User
+
+        //Criar o usuario primeiro, pega o id dele, cria a senha e retorna e edita o usuario
+
+        val statementPos = getPreparedStatement(statement, obj)
+        statementPos.setInt(3, pwd)
+        statementPos.executeUpdate()
+
+        val generatedKeys = statementPos.generatedKeys
+
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
         } else {
-            throw Exception(SchemaUtils.UNABLE_NEW_ID_INSERTED)
+            throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
         }
     }
 
     // Read a user
     override suspend fun read(id: Int): User = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(
             SchemaUtils.selectQuery(
                 TABLE,
@@ -112,28 +141,13 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
                 listColumns
             )
         )
+
         statement.setInt(1, id)
+
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val idUser = resultSet.getInt(COLUMN_ID)
-            val emailUser = resultSet.getString(COLUMN_EMAIL)
-            val nameUser = resultSet.getString(COLUMN_NAME)
-            val pwdUser = resultSet.getString(COLUMN_PWD)
-            val phoneUser = resultSet.getString(COLUMN_PHONE)
-            val nickUser = resultSet.getString(COLUMN_NICK)
-            val birthdayUser = resultSet.getString(COLUMN_BIRTHDAY)
-            val dateUser = resultSet.getString(COLUMN_DATE)
-
-            return@withContext User(
-                idUser,
-                emailUser,
-                nameUser,
-                pwdUser,
-                phoneUser,
-                nickUser,
-                birthdayUser,
-                dateUser)
+            return@withContext getResultSet( resultSet )
         } else {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
@@ -149,14 +163,10 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             )
         )
         obj as User
-        statement.setInt(0, id)
-        statement.setString(1, obj.userEmail)
-        statement.setString(2, obj.userName)
-        statement.setString(3, obj.userPwd)
-        statement.setString(4, obj.userPhone)
-        statement.setString(5, obj.userNick)
-        statement.setString(6, SchemaUtils.getCurrentDate())
-        statement.executeUpdate()
+
+        val statementPos = getPreparedStatement(statement, obj)
+        statementPos.setInt(0, id)
+        statementPos.executeUpdate()
     }
 
     // Delete a user
@@ -167,33 +177,15 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
     }
 
     override suspend fun list(): List<User> = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
+
         val resultSet = statement.executeQuery()
 
         val userList = mutableListOf<User>()
 
         while (resultSet.next()) {
-            val idUser = resultSet.getInt(COLUMN_ID)
-            val emailUser = resultSet.getString(COLUMN_EMAIL)
-            val nameUser = resultSet.getString(COLUMN_NAME)
-            val pwdUser = resultSet.getString(COLUMN_PWD)
-            val phoneUser = resultSet.getString(COLUMN_PHONE)
-            val nickUser = resultSet.getString(COLUMN_NICK)
-            val birthday = resultSet.getString(COLUMN_BIRTHDAY)
-            val dateUser = resultSet.getString(COLUMN_DATE)
-
-            userList.add(
-                User(
-                    idUser,
-                    emailUser,
-                    nameUser,
-                    pwdUser,
-                    phoneUser,
-                    nickUser,
-                    birthday,
-                    dateUser
-                )
-            )
+            userList.add( getResultSet(resultSet) )
         }
 
         if (userList.isNotEmpty()) {
@@ -212,28 +204,13 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
                 listColumns
             )
         )
+
         statement.setString(1, email)
+
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val idUser = resultSet.getInt(COLUMN_ID)
-            val emailUser = resultSet.getString(COLUMN_EMAIL)
-            val nameUser = resultSet.getString(COLUMN_NAME)
-            val pwdUser = resultSet.getString(COLUMN_PWD)
-            val phoneUser = resultSet.getString(COLUMN_PHONE)
-            val nickUser = resultSet.getString(COLUMN_NICK)
-            val birthdayUser = resultSet.getString(COLUMN_BIRTHDAY)
-            val dateUser = resultSet.getString(COLUMN_DATE)
-
-            return@withContext User(
-                idUser,
-                emailUser,
-                nameUser,
-                pwdUser,
-                phoneUser,
-                nickUser,
-                birthdayUser,
-                dateUser)
+            return@withContext getResultSet( resultSet )
         } else {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }

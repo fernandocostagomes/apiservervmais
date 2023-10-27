@@ -8,6 +8,18 @@ val h2Version: String by project
 val swaggerCodegenVersion: String by project
 val mockkVersion: String by project
 
+tasks{
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        kotlinOptions {
+            jvmTarget = "17"
+        }
+    }
+    withType<JavaCompile>{
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
+    }
+}
+
 plugins {
     kotlin("jvm") version "1.9.0"
     id("io.ktor.plugin") version "2.3.3"
@@ -19,7 +31,6 @@ version = "0.0.1"
 
 application {
     mainClass.set("fernandocostagomes.ApplicationKt")
-
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }

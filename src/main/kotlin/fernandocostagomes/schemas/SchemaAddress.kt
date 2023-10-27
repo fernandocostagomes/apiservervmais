@@ -4,20 +4,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import java.sql.Connection
+import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.sql.Statement
 
 @Serializable
 data class Address(
-    val idAddress: Int = 0,
-    val nameAddress: String,
-    val zipcodeAddress: String,
+    val addressId: Int = 0,
+    val addressName: String,
+    val addressZipcode: String,
     val addressAddress: String,
-    val numberAddress: String,
-    val cityAddress: String,
-    val stateAddress: String,
-    val idUserAddress: Int,
-    val dateAddress: String)
+    val addressNumber: String,
+    val addressCity: String,
+    val addressState: String,
+    val addressUserId: Int,
+    val addressDate: String)
 class ServiceAddress(private val connection: Connection) : SchemaInterface{
     companion object {
         private const val TABLE = "v_address"
@@ -80,27 +81,51 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
             println(e.toString())
         }
     }
+    
+    private fun getResultSet(pResultSet: java.sql.ResultSet): Address {
+        return Address(
+            pResultSet.getInt(COLUMN_ID),
+            pResultSet.getString(COLUMN_NAME),
+            pResultSet.getString(COLUMN_ZIPCODE),
+            pResultSet.getString(COLUMN_ADDRESS),
+            pResultSet.getString(COLUMN_NUMBER),
+            pResultSet.getString(COLUMN_CITY),
+            pResultSet.getString(COLUMN_STATE),
+            pResultSet.getInt(COLUMN_USER_ID),
+            pResultSet.getString(COLUMN_DATE)
+        )
+    }
+    
+    private fun getPreparedStatement(pPreparedStatement: PreparedStatement, pObj: Any): PreparedStatement {        
+        pObj as Address
+        pPreparedStatement.setInt(1, pObj.addressId)
+        pPreparedStatement.setString(2, pObj.addressZipcode)
+        pPreparedStatement.setString(3, pObj.addressAddress)
+        pPreparedStatement.setString(4, pObj.addressNumber)
+        pPreparedStatement.setString(5, pObj.addressCity)
+        pPreparedStatement.setString(6, pObj.addressState)
+        pPreparedStatement.setInt(7, pObj.addressUserId)
+        pPreparedStatement.setString(8, SchemaUtils.getCurrentDate())
+        return pPreparedStatement
+    }
 
     // Create new address
     override suspend fun create(obj: Any): Int = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(
             SchemaUtils.insertQuery(
                 TABLE,
                 listColumns
             )
             , Statement.RETURN_GENERATED_KEYS)
-        obj as Address
-        statement.setString(1, obj.nameAddress)
-        statement.setString(2, obj.zipcodeAddress)
-        statement.setString(3, obj.addressAddress)
-        statement.setString(4, obj.numberAddress)
-        statement.setString(5, obj.cityAddress)
-        statement.setString(6, obj.stateAddress)
-        statement.setInt(7, obj.idUserAddress)
-        statement.setString(8, SchemaUtils.getCurrentDate())
-        statement.executeUpdate()
 
-        val generatedKeys = statement.generatedKeys
+        obj as Address
+
+        val statementPos: PreparedStatement = getPreparedStatement( statement, obj )
+        statementPos.executeUpdate()
+
+        val generatedKeys = statementPos.generatedKeys
+
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
         } else {
@@ -110,6 +135,7 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
 
     // Read an address
     override suspend fun read(id: Int): Address = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(
             SchemaUtils.selectQuery(
                 TABLE,
@@ -117,30 +143,13 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
                 listColumns
             )
         )
+
         statement.setInt(1, id)
+
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val idAddress = resultSet.getInt( COLUMN_ID )
-            val nameAddress = resultSet.getString( COLUMN_NAME )
-            val codeAddress = resultSet.getString( COLUMN_ZIPCODE )
-            val addressAddress = resultSet.getString( COLUMN_ADDRESS)
-            val numberAddress = resultSet.getString( COLUMN_NUMBER )
-            val cityAddress = resultSet.getString( COLUMN_CITY )
-            val stateAddress = resultSet.getString( COLUMN_STATE )
-            val idUserAddress = resultSet.getInt( COLUMN_USER_ID )
-            val dateAddress = resultSet.getString( COLUMN_DATE )
-            return@withContext Address(
-                idAddress,
-                nameAddress,
-                codeAddress,
-                addressAddress,
-                numberAddress,
-                cityAddress,
-                stateAddress,
-                idUserAddress,
-                dateAddress
-            )
+            return@withContext getResultSet( resultSet )            
         } else {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
@@ -148,26 +157,22 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
 
     // Update an address
     override suspend fun update(id: Int, obj: Any) = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(
             SchemaUtils.updateQuery(
                 TABLE,
                 listColumns,
                 COLUMN_ID )
         )
+
         obj as Address
-        statement.setString(1, obj.nameAddress)
-        statement.setString(2, obj.zipcodeAddress)
-        statement.setString(3, obj.addressAddress)
-        statement.setString(4, obj.numberAddress)
-        statement.setString(5, obj.cityAddress)
-        statement.setString(6, obj.stateAddress)
-        statement.setInt(7, obj.idUserAddress)
-        statement.setString(8, SchemaUtils.getCurrentDate())
-        statement.executeUpdate()
+
+        getPreparedStatement( statement, obj ).executeUpdate()
     }
 
     // Delete an address
     override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement( "DELETE FROM $TABLE WHERE $COLUMN_ID = ?;" )
         statement.setInt(1, id)
         statement.executeUpdate()
@@ -175,34 +180,15 @@ class ServiceAddress(private val connection: Connection) : SchemaInterface{
 
     // List all address
     override suspend fun list(): List<Address> = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
+
         val resultSet = statement.executeQuery()
 
         val addressList = mutableListOf<Address>()
 
-        while (resultSet.next()) {
-            val idAddress = resultSet.getInt( COLUMN_ID )
-            val nameAddress = resultSet.getString( COLUMN_NAME )
-            val codeAddress = resultSet.getString( COLUMN_ZIPCODE )
-            val addressAddress = resultSet.getString( COLUMN_ADDRESS )
-            val numberAddress = resultSet.getString( COLUMN_NUMBER )
-            val cityAddress = resultSet.getString( COLUMN_CITY )
-            val stateAddress = resultSet.getString( COLUMN_STATE )
-            val idUserAddress = resultSet.getInt( COLUMN_USER_ID )
-            val dateAddress = resultSet.getString( COLUMN_DATE )
-
-            val address = Address(
-                idAddress,
-                nameAddress,
-                codeAddress,
-                addressAddress,
-                numberAddress,
-                cityAddress,
-                stateAddress,
-                idUserAddress,
-                dateAddress
-            )
-            addressList.add( address )
+        while (resultSet.next()) {            
+            addressList.add( getResultSet( resultSet ) )
         }
 
         if (addressList.isNotEmpty()) {

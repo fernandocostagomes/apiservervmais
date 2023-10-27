@@ -5,17 +5,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import java.sql.Connection
+import java.sql.PreparedStatement
+import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
 @Serializable
 data class Permission(
-    val idPermission: Int = 0,
-    val namePermission: String,
-    val descriptionPermission: String,
-    val datePermission: String,
-    val idRolePermission: Int,
-    val idActionPermission: Int)
+    val permissionId: Int = 0,
+    val permissionName: String,
+    val permissionDescription: String,
+    val permissionDate: String,
+    val permission_roleId: Int,
+    val permission_actionId: Int)
 class ServicePermission(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_permission"
@@ -33,11 +35,23 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
         private const val COLUMN_ROLE_QUERY = "$COLUMN_ROLE INTEGER NOT NULL, "
         private const val COLUMN_ACTION_QUERY = "$COLUMN_ACTION INTEGER NOT NULL"
 
-        val listColumnsQuery = listOf(COLUMN_ID_QUERY, COLUMN_NAME_QUERY, COLUMN_DESCRIPTION_QUERY,
-            COLUMN_DATE_QUERY, COLUMN_ROLE_QUERY, COLUMN_ACTION_QUERY)
+        val listColumnsQuery = listOf(
+            COLUMN_ID_QUERY,
+            COLUMN_NAME_QUERY,
+            COLUMN_DESCRIPTION_QUERY,
+            COLUMN_DATE_QUERY,
+            COLUMN_ROLE_QUERY,
+            COLUMN_ACTION_QUERY
+        )
 
-        val listColumns = listOf(COLUMN_ID, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_DATE, COLUMN_ROLE,
-            COLUMN_ACTION)
+        val listColumns = listOf(
+            COLUMN_ID,
+            COLUMN_NAME,
+            COLUMN_DESCRIPTION,
+            COLUMN_DATE,
+            COLUMN_ROLE,
+            COLUMN_ACTION
+        )
     }
 
     init {
@@ -49,18 +63,42 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
         }
     }
 
+    private fun getResultSet(pResultSet: ResultSet ): Permission {
+        return Permission(
+            pResultSet.getInt( COLUMN_ID ),
+            pResultSet.getString( COLUMN_NAME ),
+            pResultSet.getString( COLUMN_DESCRIPTION ),
+            pResultSet.getString( COLUMN_DATE ),
+            pResultSet.getInt( COLUMN_ROLE ),
+            pResultSet.getInt( COLUMN_ACTION )
+        )
+    }
+
+    private fun getPreparedStatement(pPreparedStatement: PreparedStatement, pObj: Any): PreparedStatement{
+        pObj as Permission
+        pPreparedStatement.setString(1, pObj.permissionName)
+        pPreparedStatement.setString(2, pObj.permissionDescription)
+        pPreparedStatement.setString(3, getCurrentDate())
+        pPreparedStatement.setInt(4, pObj.permission_roleId)
+        pPreparedStatement.setInt(5, pObj.permission_actionId)
+        return pPreparedStatement
+    }
+
     // Create new permission
     override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SchemaUtils.insertQuery(TABLE, listColumns), Statement.RETURN_GENERATED_KEYS)
-        obj as Permission
-        statement.setString(1, obj.namePermission)
-        statement.setString(2, obj.descriptionPermission)
-        statement.setString(3, getCurrentDate())
-        statement.setInt(4, obj.idRolePermission)
-        statement.setInt(5, obj.idActionPermission)
-        statement.executeUpdate()
 
-        val generatedKeys = statement.generatedKeys
+        val statement = connection.prepareStatement(
+            SchemaUtils.insertQuery(TABLE, listColumns),
+            Statement.RETURN_GENERATED_KEYS
+        )
+
+        obj as Permission
+
+        val statementPos = getPreparedStatement( statement, obj )
+        statementPos.executeUpdate()
+
+        val generatedKeys = statementPos.generatedKeys
+
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
         } else {
@@ -70,25 +108,15 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
 
     // Read a permission
     override suspend fun read(id: Int): Permission = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(SchemaUtils.selectQuery(TABLE, COLUMN_ID, listColumns))
+
         statement.setInt(1, id)
+
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val idPermission = resultSet.getInt( COLUMN_ID )
-            val namePermission = resultSet.getString( COLUMN_NAME )
-            val descriptionPermission = resultSet.getString( COLUMN_DESCRIPTION )
-            val datePermission = resultSet.getString( COLUMN_DATE )
-            val idRolePermission = resultSet.getInt( COLUMN_ROLE )
-            val idActionPermission = resultSet.getInt( COLUMN_ACTION )
-            return@withContext Permission(
-                idPermission,
-                namePermission,
-                descriptionPermission,
-                datePermission,
-                idRolePermission,
-                idActionPermission
-            )
+            return@withContext getResultSet( resultSet )
         } else {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
@@ -96,15 +124,14 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
 
     // Update a permission
     override suspend fun update( id: Int, obj: Any ) = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(SchemaUtils.updateQuery(TABLE, listColumns, COLUMN_ID) )
+
         obj as Permission
-        statement.setInt(0, id)
-        statement.setString(1, obj.namePermission)
-        statement.setString(2, obj.descriptionPermission)
-        statement.setString(3, getCurrentDate())
-        statement.setInt(4, obj.idRolePermission)
-        statement.setInt(5, obj.idActionPermission)
-        statement.executeUpdate()
+
+        val statementPos = getPreparedStatement( statement, obj )
+        statementPos.setInt(0, id)
+        statementPos.executeUpdate()
     }
 
     // Delete a permission
@@ -116,30 +143,15 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
 
     // List all permissions
     override suspend fun list(): List<Permission> = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
+
         val resultSet = statement.executeQuery()
 
         val permissionList = mutableListOf<Permission>()
 
         while (resultSet.next()) {
-
-            val idPermission = resultSet.getInt( COLUMN_ID )
-            val namePermission = resultSet.getString( COLUMN_NAME )
-            val descriptionPermission = resultSet.getString( COLUMN_DESCRIPTION )
-            val datePermission = resultSet.getString( COLUMN_DATE )
-            val idRolePermission = resultSet.getInt( COLUMN_ROLE )
-            val idActionPermission = resultSet.getInt( COLUMN_ACTION )
-
-            permissionList.add(
-                Permission(
-                    idPermission,
-                    namePermission,
-                    descriptionPermission,
-                    datePermission,
-                    idRolePermission,
-                    idActionPermission
-                )
-            )
+            permissionList.add( getResultSet(resultSet) )
         }
 
         if (permissionList.isNotEmpty()) {

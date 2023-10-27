@@ -3,16 +3,14 @@ package fernandocostagomes.schemas
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
-import java.sql.Connection
-import java.sql.SQLException
-import java.sql.Statement
+import java.sql.*
 
 @Serializable
 data class Action(
-    val idAction: Int = 0,
-    val nameAction: String,
-    val descriptionAction: String,
-    val dateAction: String)
+    val actionId: Int = 0,
+    val actionName: String,
+    val actionDescription: String,
+    val actionDate: String)
 class ServiceAction(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_action"
@@ -55,17 +53,38 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
         }
     }
 
-    // Create new action
-    override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(
-            SchemaUtils.insertQuery(TABLE, listColumns), Statement.RETURN_GENERATED_KEYS)
-        obj as Action
-        statement.setString(1, obj.nameAction)
-        statement.setString(2, obj.descriptionAction)
-        statement.setString(3, SchemaUtils.getCurrentDate())
-        statement.executeUpdate()
+    private fun getResultset(pResultSet: ResultSet): Action {
+        return Action(
+            pResultSet.getInt( COLUMN_ID ),
+            pResultSet.getString( COLUMN_NAME ),
+            pResultSet.getString( COLUMN_DESCRIPTION ),
+            pResultSet.getString( COLUMN_DATE )
+        )
+    }
 
-        val generatedKeys = statement.generatedKeys
+    private fun getStatement(pStatement: PreparedStatement, pObj: Any): PreparedStatement {
+        pObj as Action
+        pStatement.setString(1, pObj.actionName)
+        pStatement.setString(2, pObj.actionDescription)
+        pStatement.setString(3, SchemaUtils.getCurrentDate())
+        return pStatement
+    }
+
+    // Create new action
+    override suspend fun create( obj: Any ): Int = withContext( Dispatchers.IO ) {
+
+        val statement = connection.prepareStatement(
+            SchemaUtils.insertQuery(TABLE, listColumns),
+            Statement.RETURN_GENERATED_KEYS
+        )
+
+        obj as Action
+
+        val statementPos: PreparedStatement = getStatement( statement, obj )
+        statementPos.executeUpdate()
+
+        val generatedKeys = statementPos.generatedKeys
+
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
         } else {
@@ -74,71 +93,63 @@ class ServiceAction(private val connection: Connection): SchemaInterface {
     }
 
     // Read an action
-    override suspend fun read(id: Int): Action = withContext(Dispatchers.IO) {
+    override suspend fun read(id: Int): Action = withContext( Dispatchers.IO ) {
+
         val statement = connection.prepareStatement(
-            SchemaUtils.selectQuery(TABLE, COLUMN_ID, listColumns)
+            SchemaUtils.selectQuery(
+                TABLE,
+                COLUMN_ID,
+                listColumns
+            )
         )
+
         statement.setInt(1, id)
+
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val idAction = resultSet.getInt(COLUMN_ID)
-            val nameAction = resultSet.getString(COLUMN_NAME)
-            val descriptionAction = resultSet.getString(COLUMN_DESCRIPTION)
-            val dateAction = resultSet.getString(COLUMN_DATE)
-            return@withContext Action(
-                idAction,
-                nameAction,
-                descriptionAction,
-                dateAction
-            )
+            return@withContext getResultset( resultSet )
         } else {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
     }
 
     // Update an action
-    override suspend fun update( id: Int, obj: Any ) = withContext(Dispatchers.IO) {
+    override suspend fun update( id: Int, obj: Any ) = withContext( Dispatchers.IO ) {
+
         val statement = connection.prepareStatement(
-            SchemaUtils.updateQuery(TABLE, listColumns, COLUMN_ID)
+            SchemaUtils.updateQuery(
+                TABLE,
+                listColumns,
+                COLUMN_ID
+            )
         )
+
         obj as Action
-        statement.setInt(0, id)
-        statement.setString(1, obj.nameAction)
-        statement.setString(2, obj.descriptionAction)
-        statement.setString(3, SchemaUtils.getCurrentDate())
-        statement.executeUpdate()
+
+        val statementPos: PreparedStatement = getStatement( statement, obj )
+        statementPos.setInt(0, id)
+        statementPos.executeUpdate()
     }
 
     // Delete an action
-    override suspend fun delete(id: Int) = withContext(Dispatchers.IO) {
+    override suspend fun delete(id: Int) = withContext( Dispatchers.IO ) {
         val statement = connection.prepareStatement("DELETE FROM $TABLE WHERE $COLUMN_ID = ?;")
         statement.setInt(1, id)
         statement.executeUpdate()
     }
 
     // List all actions
-    override suspend fun list(): List<Action> = withContext(Dispatchers.IO) {
+    override suspend fun list(): List<Action> = withContext( Dispatchers.IO ) {
+
         val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
+
         val resultSet = statement.executeQuery()
 
         val actionList = mutableListOf<Action>()
 
         while (resultSet.next()) {
-
-            val idAction = resultSet.getInt( COLUMN_ID )
-            val nameAction = resultSet.getString( COLUMN_NAME )
-            val valueAction = resultSet.getString( COLUMN_DESCRIPTION )
-            val dateAction = resultSet.getString( COLUMN_DATE )
-
-            actionList.add(
-                Action(
-                    idAction,
-                    nameAction,
-                    valueAction,
-                    dateAction
-                )
-            )
+            actionList.add( getResultset( resultSet ) )
         }
 
         if (actionList.isNotEmpty()) {

@@ -2,17 +2,15 @@ package fernandocostagomes.schemas
 
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
-import java.sql.Connection
-import java.sql.SQLException
-import java.sql.Statement
+import java.sql.*
 
 @Serializable
 data class Group(
-    val idGroup: Int,
-    val nameGroup: String,
-    val pwdGroup: String,
-    val dateGroup: String,
-    val idUserGroup: Int)
+    val groupId: Int,
+    val groupName: String,
+    val groupPwd: String,
+    val groupDate: String,
+    val groupUserId: Int)
 class ServiceGroup(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_group"
@@ -54,21 +52,41 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
         }
     }
 
+    private fun getResultset(pResultSet: ResultSet): Group {
+        return Group(
+            pResultSet.getInt(COLUMN_ID),
+            pResultSet.getString(COLUMN_NAME),
+            pResultSet.getString(COLUMN_PWD),
+            pResultSet.getString(COLUMN_DATE),
+            pResultSet.getInt(COLUMN_USER_ID)
+        )
+    }
+
+    private fun getPreparedStatement(pPreparedStatement: PreparedStatement, pObj: Any): PreparedStatement {
+        pObj as Group
+        pPreparedStatement.setString(1, pObj.groupName)
+        pPreparedStatement.setString(2, pObj.groupPwd)
+        pPreparedStatement.setString(3, pObj.groupDate)
+        pPreparedStatement.setInt(4, pObj.groupUserId)
+        return pPreparedStatement
+    }
+
     // Create new group
     override suspend fun create(obj: Any): Int = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(
             SchemaUtils.insertQuery(
                 TABLE,
                 listColumns
             ), Statement.RETURN_GENERATED_KEYS)
-        obj as Group
-        statement.setString(1, obj.nameGroup)
-        statement.setString(2, obj.pwdGroup)
-        statement.setString(3, obj.dateGroup)
-        statement.setInt(4, obj.idUserGroup)
-        statement.executeUpdate()
 
-        val generatedKeys = statement.generatedKeys
+        obj as Group
+
+        val statementPos: PreparedStatement = getPreparedStatement( statement, obj )
+        statementPos.executeUpdate()
+
+        val generatedKeys = statementPos.generatedKeys
+
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
         } else {
@@ -78,6 +96,7 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
 
     // Read a group
     override suspend fun read(id: Int): Group = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(
             SchemaUtils.selectQuery(
                 TABLE,
@@ -85,22 +104,13 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
                 listColumns
             )
         )
+
         statement.setInt(1, id)
+
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val idGroup = resultSet.getInt(COLUMN_ID)
-            val nameGroup = resultSet.getString(COLUMN_NAME)
-            val pwdGroup = resultSet.getString(COLUMN_PWD)
-            val dateGroup = resultSet.getString(COLUMN_DATE)
-            val idUser = resultSet.getInt(COLUMN_USER_ID)
-            return@withContext Group(
-                idGroup,
-                nameGroup,
-                pwdGroup,
-                dateGroup,
-                idUser
-            )
+            return@withContext getResultset( resultSet )
         } else {
             throw Exception("Record not found")
         }
@@ -108,6 +118,7 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
 
     // Update a group
     override suspend fun update(id: Int, obj: Any) = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(
             SchemaUtils.updateQuery(
                 TABLE,
@@ -115,13 +126,12 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
                 COLUMN_ID
             )
         )
+
         obj as Group
-        statement.setInt(0, id)
-        statement.setString(1, obj.nameGroup)
-        statement.setString(2, obj.pwdGroup)
-        statement.setString(3, obj.dateGroup)
-        statement.setInt(4, obj.idUserGroup)
-        statement.executeUpdate()
+
+        val statementPos = getPreparedStatement( statement, obj )
+        statementPos.setInt(0, id)
+        statementPos.executeUpdate()
     }
 
     // Delete a group
@@ -132,26 +142,15 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
     }
 
     override suspend fun list(): List<Group> = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
+
         val resultSet = statement.executeQuery()
 
         val groupList = mutableListOf<Group>()
 
         while (resultSet.next()) {
-            val idGroup = resultSet.getInt(COLUMN_ID)
-            val nameGroup = resultSet.getString(COLUMN_NAME)
-            val pwdGroup = resultSet.getString(COLUMN_PWD)
-            val dateGroup = resultSet.getString(COLUMN_DATE)
-            val idUser = resultSet.getInt(COLUMN_USER_ID)
-
-            val group = Group(
-                idGroup,
-                nameGroup,
-                pwdGroup,
-                dateGroup,
-                idUser
-            )
-            groupList.add(group)
+            groupList.add(getResultset( resultSet ))
         }
 
         if (groupList.isNotEmpty()) {

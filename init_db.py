@@ -283,6 +283,24 @@ def getArray(name):
             }
         ]
         return permissions
+    elif name == "pwd":
+        pwds = [
+            {
+                "idUserPwd": getUserByEmail("fernandocostagomes@gmail.com"),
+                "currentPwd": "senha123",
+                "lastPwd": "senha123",
+                "moreLastPwd": "senha123",
+                "datePwd": "2023-10-17",
+            },
+            {
+                "idUserPwd": getUserByEmail("rafaelcostafernandes2015@gmail.com"),
+                "currentPwd": "senha123",
+                "lastPwd": "senha123456",
+                "moreLastPwd": "senha12345678",
+                "datePwd": "2023-10-17",
+            }
+        ]
+        return pwds
     else:
         return None
 
@@ -293,3 +311,4 @@ if __name__ == "__main__":
     populate_address()
     populate_roles()
     populate_permissions()
+    populate_pwd()

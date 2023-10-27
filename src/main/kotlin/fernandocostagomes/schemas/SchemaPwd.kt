@@ -1,21 +1,22 @@
 package fernandocostagomes.schemas
 
-import fernandocostagomes.schemas.SchemaUtils.Companion.getCurrentDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import java.sql.Connection
+import java.sql.PreparedStatement
+import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
 @Serializable
 data class Pwd(
-    val idPwd: Int = 0,
-    val idUserPwd: Int,
-    val currentPwd: String,
-    val lastPwd: String,
-    val moreLastPwd: String,
-    val datePwd: String)
+    val pwdId: Int = 0,
+    val pwdUserId: Int,
+    val pwdCurrent: String,
+    val pwdLast: String,
+    val pwdMoreLast: String,
+    val pwdDate: String)
 class ServicePwd(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_pwd"
@@ -33,10 +34,23 @@ class ServicePwd(private val connection: Connection): SchemaInterface {
         private const val COLUMN_MORE_LAST_QUERY = "$COLUMN_MORE_LAST VARCHAR(20), "
         private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20)"
 
-        val listColumnsQuery = listOf(COLUMN_ID_QUERY, COLUMN_ID_USER_QUERY,COLUMN_CURRENT_QUERY, COLUMN_LAST_QUERY, 
-            COLUMN_MORE_LAST_QUERY, COLUMN_DATE_QUERY)
+        val listColumnsQuery = listOf(
+            COLUMN_ID_QUERY,
+            COLUMN_ID_USER_QUERY,
+            COLUMN_CURRENT_QUERY,
+            COLUMN_LAST_QUERY,
+            COLUMN_MORE_LAST_QUERY,
+            COLUMN_DATE_QUERY
+        )
 
-        val listColumns = listOf(COLUMN_ID, COLUMN_ID_USER, COLUMN_CURRENT, COLUMN_LAST, COLUMN_MORE_LAST, COLUMN_DATE)
+        val listColumns = listOf(
+            COLUMN_ID,
+            COLUMN_ID_USER,
+            COLUMN_CURRENT,
+            COLUMN_LAST,
+            COLUMN_MORE_LAST,
+            COLUMN_DATE
+        )
     }
 
     init {
@@ -48,18 +62,45 @@ class ServicePwd(private val connection: Connection): SchemaInterface {
         }
     }
 
+    private fun getResultSet(pResultSet: ResultSet): Pwd {
+        return Pwd(
+            pResultSet.getInt(COLUMN_ID),
+            pResultSet.getInt(COLUMN_ID_USER),
+            pResultSet.getString(COLUMN_CURRENT),
+            pResultSet.getString(COLUMN_LAST),
+            pResultSet.getString(COLUMN_MORE_LAST),
+            pResultSet.getString(COLUMN_DATE)
+        )
+    }
+
+    private fun getPreparedStatement(pPreparedStatement: PreparedStatement, pObj: Any): PreparedStatement{
+        pObj as Pwd
+        pPreparedStatement.setInt(1, pObj.pwdUserId)
+        pPreparedStatement.setString(2, pObj.pwdCurrent)
+        pPreparedStatement.setString(3, pObj.pwdLast)
+        pPreparedStatement.setString(4, pObj.pwdMoreLast)
+        pPreparedStatement.setString(5, pObj.pwdDate)
+        return pPreparedStatement
+    }
+
     // Create new pwd
     override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
-        val statement = connection.prepareStatement(SchemaUtils.insertQuery(TABLE, listColumns), Statement.RETURN_GENERATED_KEYS)
-        obj as Pwd
-        statement.setInt(1, obj.idUserPwd )
-        statement.setString(2, obj.currentPwd )
-        statement.setString(3, obj.lastPwd )
-        statement.setString(4, obj.moreLastPwd )
-        statement.setString(5, getCurrentDate() )
-        statement.executeUpdate()
 
-        val generatedKeys = statement.generatedKeys
+        val statement = connection.prepareStatement(
+            SchemaUtils.insertQuery(
+                TABLE,
+                listColumns
+            ),
+            Statement.RETURN_GENERATED_KEYS
+        )
+
+        obj as Pwd
+
+        val statementPos: PreparedStatement = getPreparedStatement( statement, obj )
+        statementPos.executeUpdate()
+
+        val generatedKeys = statementPos.generatedKeys
+
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
         } else {
@@ -69,25 +110,15 @@ class ServicePwd(private val connection: Connection): SchemaInterface {
 
     // Read a pwd
     override suspend fun read(id: Int): Pwd = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(SchemaUtils.selectQuery(TABLE, COLUMN_ID_USER, listColumns))
+
         statement.setInt(1, id)
+
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val idPwd = resultSet.getInt( COLUMN_ID )
-            val idUserPwd = resultSet.getInt( COLUMN_ID_USER )
-            val currentPwd = resultSet.getString( COLUMN_CURRENT )
-            val lastPwd = resultSet.getString( COLUMN_LAST )
-            val moreLastPwd = resultSet.getString( COLUMN_MORE_LAST )
-            val datePwd = resultSet.getString( COLUMN_DATE )
-            return@withContext Pwd(
-                idPwd,
-                idUserPwd,
-                currentPwd,
-                lastPwd,
-                moreLastPwd,
-                datePwd,
-            )
+            return@withContext getResultSet( resultSet )
         } else {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
@@ -95,15 +126,14 @@ class ServicePwd(private val connection: Connection): SchemaInterface {
 
     // Update a pwd
     override suspend fun update( id: Int, obj: Any ) = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(SchemaUtils.updateQuery(TABLE, listColumns, COLUMN_ID) )
+
         obj as Pwd
-        statement.setInt(0, id)
-        statement.setInt(1, obj.idUserPwd )
-        statement.setString(2, obj.currentPwd )
-        statement.setString(3, obj.lastPwd )
-        statement.setString(4, obj.moreLastPwd )
-        statement.setString(5, getCurrentDate() )
-        statement.executeUpdate()
+
+        val statementPos = getPreparedStatement( statement, obj )
+        statementPos.setInt(0, id)
+        statementPos.executeUpdate()
     }
 
     // Delete a pwd
@@ -115,30 +145,15 @@ class ServicePwd(private val connection: Connection): SchemaInterface {
 
     // List all pwds
     override suspend fun list(): List<Pwd> = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement( "SELECT * FROM $TABLE" )
+
         val resultSet = statement.executeQuery()
 
         val pwdList = mutableListOf<Pwd>()
 
         while (resultSet.next()) {
-
-            val idPwd = resultSet.getInt( COLUMN_ID )
-            val idUserPwd = resultSet.getInt( COLUMN_ID_USER )
-            val currentPwd = resultSet.getString( COLUMN_CURRENT )
-            val lastPwd = resultSet.getString( COLUMN_LAST )
-            val moreLastPwd = resultSet.getString( COLUMN_MORE_LAST )
-            val datePwd = resultSet.getString( COLUMN_DATE )
-
-            pwdList.add(
-                Pwd(
-                    idPwd,
-                    idUserPwd,
-                    currentPwd,
-                    lastPwd,
-                    moreLastPwd,
-                    datePwd
-                )
-            )
+            pwdList.add( getResultSet( resultSet ) )
         }
 
         if (pwdList.isNotEmpty()) {

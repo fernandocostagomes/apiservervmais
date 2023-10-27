@@ -3,16 +3,18 @@ package fernandocostagomes.schemas
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
 import java.sql.Connection
+import java.sql.PreparedStatement
+import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
 @Serializable
 data class Parameter(
-    val idParameter: Int = 0,
-    val codeParameter: String,
-    val nameParameter: String,
-    val valueParameter: String,
-    val dateParameter: String)
+    val parameterId: Int = 0,
+    val parameterCode: String,
+    val parameterName: String,
+    val parameterValue: String,
+    val parameterDate: String)
 class ServiceParameter(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_parameter"
@@ -59,22 +61,42 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         }
     }
 
+    private fun getResultSet(pResultSet: ResultSet): Parameter {
+        return Parameter(
+            pResultSet.getInt( COLUMN_ID ),
+            pResultSet.getString( COLUMN_CODE ),
+            pResultSet.getString( COLUMN_NAME ),
+            pResultSet.getString( COLUMN_VALUE ),
+            pResultSet.getString( COLUMN_DATA )
+        )
+    }
+
+    private fun getPreparedStatement(pStatement: PreparedStatement, pObj: Any): PreparedStatement {
+        pObj as Parameter
+        pStatement.setString(1, pObj.parameterCode)
+        pStatement.setString(2, pObj.parameterName)
+        pStatement.setString(3, pObj.parameterValue)
+        pStatement.setString(4, SchemaUtils.getCurrentDate())
+        return pStatement
+    }
+
     // Create new parameter
     override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(
             SchemaUtils.insertQuery(
                 TABLE,
                 listColumns
             ),
             Statement.RETURN_GENERATED_KEYS)
-        obj as Parameter
-        statement.setString(1, obj.codeParameter)
-        statement.setString(2, obj.nameParameter)
-        statement.setString(3, obj.valueParameter)
-        statement.setString(4, SchemaUtils.getCurrentDate())
-        statement.executeUpdate()
 
-        val generatedKeys = statement.generatedKeys
+        obj as Parameter
+
+        val statementPos: PreparedStatement = getPreparedStatement( statement, obj )
+        statementPos.executeUpdate()
+
+        val generatedKeys = statementPos.generatedKeys
+
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
         } else {
@@ -84,6 +106,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
 
     // Read a parameter
     override suspend fun read(id: Int): Parameter = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(
             SchemaUtils.selectQuery(
                 TABLE,
@@ -91,22 +114,13 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
                 listColumns
             )
         )
+
         statement.setInt(1, id)
+
         val resultSet = statement.executeQuery()
 
         if (resultSet.next()) {
-            val idParameter = resultSet.getInt("id_parameter")
-            val codeParameter = resultSet.getString("code_parameter")
-            val nameParameter = resultSet.getString("name_parameter")
-            val valueParameter = resultSet.getString("value_parameter")
-            val dataParameter = resultSet.getString("data_parameter")
-            return@withContext Parameter(
-                idParameter,
-                codeParameter,
-                nameParameter,
-                valueParameter,
-                dataParameter
-            )
+            return@withContext getResultSet( resultSet )
         } else {
             throw Exception(SchemaUtils.RECORD_NOT_FOUND)
         }
@@ -114,6 +128,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
 
     // Update a parameter
     override suspend fun update( id: Int, obj: Any ) = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(
             SchemaUtils.updateQuery(
                 TABLE,
@@ -121,13 +136,12 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
                 COLUMN_ID
             )
         )
+
         obj as Parameter
-        statement.setInt(0, id)
-        statement.setString(1, obj.codeParameter)
-        statement.setString(2, obj.nameParameter)
-        statement.setString(3, obj.valueParameter)
-        statement.setString(4, SchemaUtils.getCurrentDate())
-        statement.executeUpdate()
+
+        val statementPos = getPreparedStatement( statement, obj )
+        statementPos.setInt(0, id)
+        statementPos.executeUpdate()
     }
 
     // Delete a parameter
@@ -139,6 +153,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
 
     // List all parameters
     override suspend fun list(): List<Parameter> = withContext(Dispatchers.IO) {
+
         val statement = connection.prepareStatement(
             "SELECT * FROM $TABLE;"
         )
@@ -147,20 +162,7 @@ class ServiceParameter(private val connection: Connection): SchemaInterface {
         val parameterList = mutableListOf<Parameter>()
 
         while (resultSet.next()) {
-            val idParameter = resultSet.getInt( COLUMN_ID )
-            val codeParameter = resultSet.getString( COLUMN_CODE )
-            val nameParameter = resultSet.getString( COLUMN_NAME )
-            val valueParameter = resultSet.getString( COLUMN_VALUE )
-            val dataParameter = resultSet.getString( COLUMN_DATA )
-
-            val parameter = Parameter(
-                idParameter,
-                codeParameter,
-                nameParameter,
-                valueParameter,
-                dataParameter
-            )
-            parameterList.add( parameter )
+            parameterList.add( getResultSet( resultSet ) )
         }
 
         if (parameterList.isNotEmpty()) {

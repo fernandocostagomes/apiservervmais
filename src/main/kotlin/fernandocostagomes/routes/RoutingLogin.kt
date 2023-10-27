@@ -7,8 +7,10 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.Serializable
 
 fun Application.configureRoutingLogin(serviceUser: ServiceUser, servicePwd: ServicePwd) {
+    @Serializable
     class Login(val email: String, val password: String)
 
     routing {
@@ -26,7 +28,7 @@ fun Application.configureRoutingLogin(serviceUser: ServiceUser, servicePwd: Serv
             if(user == null)
                 call.respond(HttpStatusCode.OK, "User not found")
 
-            if(pwd.currentPwd == login.password){
+            if(pwd.pwdCurrent == login.password){
                 call.respond(HttpStatusCode.OK, "Login successful")
             }
             else{
