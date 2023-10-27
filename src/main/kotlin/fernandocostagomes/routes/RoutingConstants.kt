@@ -26,3 +26,5 @@ const val permissionMoreIdConst = "/permission/{id}"
 
 const val roleConst = "/role"
 const val roleMoreIdConst = "/role/{id}"
+
+const val loginConst = "/login"
