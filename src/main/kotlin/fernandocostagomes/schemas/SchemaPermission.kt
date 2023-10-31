@@ -16,8 +16,8 @@ data class Permission(
     val permissionName: String,
     val permissionDescription: String,
     val permissionDate: String,
-    val permission_roleId: Int,
-    val permission_actionId: Int)
+    val permissionRoleId: Int,
+    val permissionActionId: Int)
 class ServicePermission(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_permission"
@@ -79,8 +79,8 @@ class ServicePermission(private val connection: Connection): SchemaInterface {
         pPreparedStatement.setString(1, pObj.permissionName)
         pPreparedStatement.setString(2, pObj.permissionDescription)
         pPreparedStatement.setString(3, getCurrentDate())
-        pPreparedStatement.setInt(4, pObj.permission_roleId)
-        pPreparedStatement.setInt(5, pObj.permission_actionId)
+        pPreparedStatement.setInt(4, pObj.permissionRoleId)
+        pPreparedStatement.setInt(5, pObj.permissionActionId)
         return pPreparedStatement
     }
 

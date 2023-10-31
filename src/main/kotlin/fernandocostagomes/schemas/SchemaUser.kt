@@ -14,11 +14,12 @@ data class User(
     val userId: Int = 0,
     val userEmail: String,
     val userName: String,
-    val userPwd: Int = 0,
     val userPhone: String,
     val userNick: String,
     val userBirthday: String,
-    val userDate: String)
+    val userDate: String,
+    val userPwdFirst: String,
+    val userPwdid: Int = 0)
 
 class ServiceUser(private val connection: Connection) : SchemaInterface {
     companion object {
@@ -119,10 +120,13 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         //Criar o usuario primeiro, pega o id dele, cria a senha e retorna e edita o usuario
 
         val statementPos = getPreparedStatement(statement, obj)
-        statementPos.setInt(3, pwd)
         statementPos.executeUpdate()
 
         val generatedKeys = statementPos.generatedKeys
+
+        //Cria a senha
+        val servicePwd = ServicePwd( connection )
+        val pwd = Pwd(0, generatedKeys.getInt(1), obj.userPwd, obj.userDate)
 
         if (generatedKeys.next()) {
             return@withContext generatedKeys.getInt(1)
