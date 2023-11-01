@@ -66,7 +66,7 @@ class ServiceGroup(private val connection: Connection): SchemaInterface {
         pObj as Group
         pPreparedStatement.setString(1, pObj.groupName)
         pPreparedStatement.setString(2, pObj.groupPwd)
-        pPreparedStatement.setString(3, pObj.groupDate)
+        pPreparedStatement.setString(3, SchemaUtils.getCurrentDate())
         pPreparedStatement.setInt(4, pObj.groupUserId)
         return pPreparedStatement
     }

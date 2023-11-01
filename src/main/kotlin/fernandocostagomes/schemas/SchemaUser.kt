@@ -19,7 +19,7 @@ data class User(
     val userBirthday: String,
     val userDate: String,
     val userPwdCurrent: String,
-    val userPwdid: Int = 0)
+    val userPwdId: Int = 0)
 
 class ServiceUser(private val connection: Connection) : SchemaInterface {
     companion object {
@@ -105,9 +105,9 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         pPreparedStatement.setString(3, pObj.userPhone)
         pPreparedStatement.setString(4, pObj.userNick)
         pPreparedStatement.setString(5, pObj.userBirthday)
-        pPreparedStatement.setString(6, pObj.userDate)
+        pPreparedStatement.setString(6, SchemaUtils.getCurrentDate())
         pPreparedStatement.setString(7, pObj.userPwdCurrent)
-        pPreparedStatement.setInt(8, pObj.userPwdid)
+        pPreparedStatement.setInt(8, pObj.userPwdId)
         return pPreparedStatement
     }
 
@@ -140,7 +140,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
                 obj.userPwdCurrent,
                 "",
                 "",
-                obj.userDate
+                SchemaUtils.getCurrentDate()
             )
             servicePwd.create(pwd)
         } else {

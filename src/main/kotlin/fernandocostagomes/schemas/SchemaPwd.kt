@@ -79,7 +79,7 @@ class ServicePwd(private val connection: Connection): SchemaInterface {
         pPreparedStatement.setString(2, pObj.pwdCurrent)
         pPreparedStatement.setString(3, pObj.pwdLast)
         pPreparedStatement.setString(4, pObj.pwdMoreLast)
-        pPreparedStatement.setString(5, pObj.pwdDate)
+        pPreparedStatement.setString(5, SchemaUtils.getCurrentDate())
         return pPreparedStatement
     }
 

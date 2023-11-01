@@ -63,7 +63,7 @@ class ServiceRole(private val connection: Connection): SchemaInterface {
         pObj as Role
         pPreparedStatement.setString(1, pObj.roleName)
         pPreparedStatement.setString(2, pObj.roleDescription)
-        pPreparedStatement.setString(3, pObj.roleDate)
+        pPreparedStatement.setString(3, SchemaUtils.getCurrentDate())
         return pPreparedStatement
     }
 

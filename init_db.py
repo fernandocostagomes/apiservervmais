@@ -121,20 +121,22 @@ def getArray(name):
             {
                 "userEmail": "fernandocostagomes@gmail.com",
                 "userName": "Fernando Costa",
-                "userPwd": "senha123",
                 "userPhone": "5561985141904",
                 "userNick": "Nando",
                 "userBirthday": "28/05/1980",
                 "userDate": "2023-10-17",
+                "userPwdCurrent": "senha123",
+                "userPwdId": 0,
             },
             {
                 "userEmail": "rafaelcostafernandes2015@gmail.com",
                 "userName": "Rafael Costa",
-                "userPwd": "senha456",
                 "userPhone": "5561999888951",
                 "userNick": "Rafa",
                 "userBirthday": "08/09/2011",
                 "userDate": "2023-10-17",
+                "userPwdCurrent": "senha456",
+                "userPwdId": 0,
             },
         ]
         return users
