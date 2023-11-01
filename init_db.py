@@ -313,4 +313,3 @@ if __name__ == "__main__":
     populate_address()
     populate_roles()
     populate_permissions()
-    populate_pwd()
