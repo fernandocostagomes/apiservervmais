@@ -103,13 +103,30 @@ def populate_permissions():
         else:
             print(f"Erro ao inserir permission {permission['namePermission']}.")
 
-def getUserByEmail(email):
+""" Popula a tabela de pwd com dados de exemplo. """
+def populate_pwd():
+    for pwd in getArray("pwd"):
+        response = requests.post(
+            f"{full_url}/pwd",
+            data=json.dumps(pwd),
+            headers=application_json,
+        )
+
+        if response.status_code == 201:
+            print(f"Pwd {pwd['idUserPwd']} inserido com sucesso!")
+        else:
+            print(f"Erro ao inserir pwd {pwd['idUserPwd']}.")
+
+def getUserByEmail(tipo, email):
     response = requests.get(full_url + f"/user/email/{email}")
     # Verifica se a solicitação foi bem-sucedida
     if response.status_code == 200:
-        print(f"O usuário {email} foi encontrado com sucesso!")
-        data = json.loads(response.text)
-        return data["userId"]
+        if(tipo == "pwdCurrent"):
+            data = json.loads(response.text)
+            return data["pwdCurrent"]
+        elif(tipo == "email"):
+            data = json.loads(response.text)
+            return data["userEmail"]
     else:
         print(f"Ocorreu um erro ao buscar o usuário {email} "
               f"Status response:  {response.status_code}")
@@ -143,99 +160,100 @@ def getArray(name):
     elif name == "parameters":
         parameters = [
             {
-                "codeParameter": "100",
-                "nameParameter": "Parameter100",
-                "valueParameter": "100",
-                "dateParameter": "2023-10-17",
+                "parameterCode": "100",
+                "parameterName": "Parameter100",
+                "parameterValue": "100",
+                "parameterDate": "2023-10-17",
             },
             {
-                "codeParameter": "200",
-                "nameParameter": "Parameter200",
-                "valueParameter": "200",
-                "dateParameter": "2023-10-17",
+                "parameterCode": "200",
+                "parameterName": "Parameter200",
+                "parameterValue": "200",
+                "parameterDate": "2023-10-17",
             },
         ]
         return parameters
     elif name == "actions":
         actions = [
             {
-                "nameAction": "Create user",
-                "descriptionAction": "Cria novo usuário no sistema.",
-                "dateAction": "2023-10-17"
+                "actionName": "Create user",
+                "actionDescription": "Cria novo usuário no sistema.",
+                "actionDate": "2023-10-17"
             },
             {
-                "nameAction": "Edite user",
-                "descriptionAction": "Edita usuário no sistema.",
-                "dateAction": "2023-10-17"
+                "actionName": "Edite user",
+                "actionDescription": "Edita usuário no sistema.",
+                "actionDate": "2023-10-17"
             },
             {
-                "nameAction": "Remove user", "descriptionAction":
+                "actionName": "Remove user",
+                "actionDescription":
                 "Exclui usuário do sistema.",
-                "dateAction": "2023-10-17"
+                "actionDate": "2023-10-17"
             },
             {
-                "nameAction": "Login user",
-                "descriptionAction": "Faz login usuário no sistema.",
-                "dateAction": "2023-10-17"
+                "actionName": "Login user",
+                "actionDescription": "Faz login usuário no sistema.",
+                "actionDate": "2023-10-17"
             },
             {
-                "nameAction": "Logout user",
-                "descriptionAction": "Desloga usuário do sistema.",
-                "dateAction": "2023-10-17"
+                "actionName": "Logout user",
+                "actionDescription": "Desloga usuário do sistema.",
+                "actionDate": "2023-10-17"
             },
             {
-                "nameAction": "List users",
-                "descriptionAction": "Lista usuários do sistema.",
-                "dateAction": "2023-10-17"
+                "actionName": "List users",
+                "actionDescription": "Lista usuários do sistema.",
+                "actionDate": "2023-10-17"
             },
             {
-                "nameAction": "Find user",
-                "descriptionAction": "Pesquisa usuário pelo nome.",
-                "dateAction": "2023-10-17"
+                "actionName": "Find user",
+                "actionDescription": "Pesquisa usuário pelo nome.",
+                "actionDate": "2023-10-17"
             },
             {
-                "nameAction": "Setar perm. user",
-                "descriptionAction": "Atribui permissão a usuário.",
-                "dateAction": "2023-10-17"
+                "actionName": "Setar perm. user",
+                "actionDescription": "Atribui permissão a usuário.",
+                "actionDate": "2023-10-17"
             },
             {
-                "nameAction": "Remove perm. user",
-                "descriptionAction": "Remove permissão de usuário.",
-                "dateAction": "2023-10-17"
+                "actionName": "Remove perm. user",
+                "actionDescription": "Remove permissão de usuário.",
+                "actionDate": "2023-10-17"
             },
         ]
         return actions
     elif name == "addresses":
         addresses = [
             {
-                "nameAddress": "Casa",
-                "zipcodeAddress": "72.304-116",
+                "addressName": "Casa",
+                "addressZipcode": "72.304-116",
                 "addressAddress": "QN 122 conj 15 lote 01 bloco A",
-                "numberAddress": "1308",
-                "cityAddress": "Samambaia",
-                "stateAddress": "DF",
-                "idUserAddress": getUserByEmail("fernandocostagomes@gmail.com"),
-                "dateAddress": "2023-10-17",
+                "addressNumber": "1308",
+                "addressCity": "Samambaia",
+                "addressState": "DF",
+                "addressUserId": getUserByEmail("fernandocostagomes@gmail.com"),
+                "addressDate": "2023-10-17",
             },
             {
-                "nameAddress": "Trabalho",
-                "zipcodeAddress": "72.910-901",
+                "addressName": "Trabalho",
+                "addressZipcode": "72.910-901",
                 "addressAddress": "SCN Quadra 1 Ed. Esplanada Rossi",
-                "numberAddress": "S/N",
-                "cityAddress": "Asa Norte",
-                "stateAddress": "DF",
-                "idUserAddress": getUserByEmail("fernandocostagomes@gmail.com"),
-                "dateAddress": "2023-10-17",
+                "addressNumber": "S/N",
+                "addressCity": "Asa Norte",
+                "addressState": "DF",
+                "addressUserId": getUserByEmail("fernandocostagomes@gmail.com"),
+                "addressDate": "2023-10-17",
             },
             {
-                "nameAddress": "Casa",
-                "zipcodeAddress": "71.882-108",
+                "addressName": "Casa",
+                "addressZipcode": "71.882-108",
                 "addressAddress": "QC 03 conj 8 lote 3 Bloco A",
-                "numberAddress": "104",
-                "cityAddress": "Riacho Fundo II",
-                "stateAddress": "DF",
-                "idUserAddress": getUserByEmail("rafaelcostafernandes2015@gmail.com"),
-                "dateAddress": "2023-10-17",
+                "addressNumber": "104",
+                "addressCity": "Riacho Fundo II",
+                "addressState": "DF",
+                "addressUserId": getUserByEmail("rafaelcostafernandes2015@gmail.com"),
+                "addressDate": "2023-10-17",
             },
         ]
         return addresses
@@ -256,47 +274,47 @@ def getArray(name):
     elif name == "permissions":
         permissions = [
             {
-                "namePermission": "Create user",
-                "descriptionPermission": "Cria novo usuário no sistema.",
-                "datePermission": "2023-10-17",
-                "idRolePermission": "1",
-                "idActionPermission": "1",
+                "permissionName": "Create user",
+                "permissionDescription": "Cria novo usuário no sistema.",
+                "permissionDate": "2023-10-17",
+                "permissionRoleId": "1",
+                "permissionActionId": "1",
             },
             {
-                "namePermission": "Edite user",
-                "descriptionPermission": "Edita usuário no sistema.",
-                "datePermission": "2023-10-17",
-                "idRolePermission": "1",
-                "idActionPermission": "2",
+                "permissionName": "Edite user",
+                "permissionDescription": "Edita usuário no sistema.",
+                "permissionDate": "2023-10-17",
+                "permissionRoleId": "1",
+                "permissionActionId": "2",
             },
             {
-                "namePermission": "Remove user",
-                "descriptionPermission": "Exclui usuário do sistema.",
-                "datePermission": "2023-10-17",
-                "idRolePermission": "1",
-                "idActionPermission": "3",
+                "permissionName": "Remove user",
+                "permissionDescription": "Exclui usuário do sistema.",
+                "permissionDate": "2023-10-17",
+                "permissionRoleId": "1",
+                "permissionActionId": "3",
             },
             {
-                "namePermission": "Login user",
-                "descriptionPermission": "Faz login usuário no sistema.",
-                "datePermission": "2023-10-17",
-                "idRolePermission": "1",
-                "idActionPermission": "4",
+                "permissionName": "Login user",
+                "permissionDescription": "Faz login usuário no sistema.",
+                "permissionDate": "2023-10-17",
+                "permissionRoleId": "1",
+                "permissionActionId": "4",
             }
         ]
         return permissions
     elif name == "pwd":
         pwds = [
             {
-                "idUserPwd": getUserByEmail("fernandocostagomes@gmail.com"),
-                "currentPwd": "senha123",
-                "lastPwd": "senha123",
-                "moreLastPwd": "senha123",
-                "datePwd": "2023-10-17",
+                "pwdUserId": getUserByEmail("email","fernandocostagomes@gmail.com"),
+                "pwdCurrent": getUserByEmail("pwdCurrent","fernandocostagomes@gmail.com"),
+                "pwdLast": "",
+                "pwdMoreLast": "",
+                "pwdDate": "2023-10-17",
             },
             {
                 "idUserPwd": getUserByEmail("rafaelcostafernandes2015@gmail.com"),
-                "currentPwd": "senha123",
+                "pwdCurrent": getUserByEmail("pwdCurrent","fernandocostagomes@gmail.com"),
                 "lastPwd": "senha123456",
                 "moreLastPwd": "senha12345678",
                 "datePwd": "2023-10-17",
@@ -313,3 +331,4 @@ if __name__ == "__main__":
     populate_address()
     populate_roles()
     populate_permissions()
+    pop
