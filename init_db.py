@@ -26,9 +26,9 @@ def populate_actions():
 
         # Verifica se a solicitação foi bem-sucedida
         if response.status_code == 201:
-            print(f"A ação {action['nameAction']} foi inserida com sucesso!")
+            print(f"A ação {action['actionName']} foi inserida com sucesso!")
         else:
-            print(f"Ocorreu um erro ao inserir a ação {action['nameAction']} "
+            print(f"Ocorreu um erro ao inserir a ação {action['actionName']} "
                   f"Status response:  {response.status_code}")
 
 def populate_users():
@@ -56,13 +56,12 @@ def populate_parameters():
         )
 
         if response.status_code == 201:
-            print(f"Parametro {parameter['nameParameter']} inserido com sucesso!")
+            print(f"Parametro {parameter['parameterName']} inserido com sucesso!")
         else:
-            print(f"Erro ao inserir parametro {parameter['nameParameter']}.")
+            print(f"Erro ao inserir parametro {parameter['parameterName']}.")
 
 """ Popula a tabela de address com dados de exemplo. """
 def populate_address():
-
     for address in getArray("addresses"):
         response = requests.post(
             f"{full_url}/address",
@@ -71,9 +70,9 @@ def populate_address():
         )
 
         if response.status_code == 201:
-            print(f"Address {address['nameAddress']} inserido com sucesso!")
+            print(f"Address {address['addressName']} inserido com sucesso!")
         else:
-            print(f"Erro ao inserir address {address['nameAddress']}.")
+            print(f"Erro ao inserir address {address['addressName']}.")
 
 
 """ Popula a tabela de roles com dados de exemplo. """
@@ -86,9 +85,9 @@ def populate_roles():
         )
 
         if response.status_code == 201:
-            print(f"Role {role['nameRole']} inserido com sucesso!")
+            print(f"Role {role['roleName']} inserido com sucesso!")
         else:
-            print(f"Erro ao inserir role {role['nameRole']}.")
+            print(f"Erro ao inserir role {role['roleName']}.")
 
 """ Popula a tabela de permissions com dados de exemplo. """
 def populate_permissions():
@@ -99,9 +98,9 @@ def populate_permissions():
             headers=application_json,
         )
         if response.status_code == 201:
-            print(f"Permission {permission['namePermission']} inserido com sucesso!")
+            print(f"Permission {permission['permissionName']} inserido com sucesso!")
         else:
-            print(f"Erro ao inserir permission {permission['namePermission']}.")
+            print(f"Erro ao inserir permission {permission['permissionName']}.")
 
 """ Popula a tabela de pwd com dados de exemplo. """
 def populate_pwd():
@@ -113,9 +112,9 @@ def populate_pwd():
         )
 
         if response.status_code == 201:
-            print(f"Pwd {pwd['idUserPwd']} inserido com sucesso!")
+            print(f"Pwd {pwd['pwdUserId']} inserido com sucesso!")
         else:
-            print(f"Erro ao inserir pwd {pwd['idUserPwd']}.")
+            print(f"Erro ao inserir pwd {pwd['pwdUserId']}.")
 
 def getUserByEmail(tipo, email):
     response = requests.get(full_url + f"/user/email/{email}")
