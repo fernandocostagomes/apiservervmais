@@ -123,9 +123,9 @@ def getUserByEmail(tipo, email):
         if(tipo == "pwdCurrent"):
             data = json.loads(response.text)
             return data["pwdCurrent"]
-        elif(tipo == "email"):
+        elif(tipo == "id"):
             data = json.loads(response.text)
-            return data["userEmail"]
+            return data["userId"]
     else:
         print(f"Ocorreu um erro ao buscar o usuário {email} "
               f"Status response:  {response.status_code}")
@@ -231,7 +231,7 @@ def getArray(name):
                 "addressNumber": "1308",
                 "addressCity": "Samambaia",
                 "addressState": "DF",
-                "addressUserId": getUserByEmail("fernandocostagomes@gmail.com"),
+                "addressUserId": getUserByEmail("id", "fernandocostagomes@gmail.com"),
                 "addressDate": "2023-10-17",
             },
             {
@@ -241,7 +241,7 @@ def getArray(name):
                 "addressNumber": "S/N",
                 "addressCity": "Asa Norte",
                 "addressState": "DF",
-                "addressUserId": getUserByEmail("fernandocostagomes@gmail.com"),
+                "addressUserId": getUserByEmail("id", "fernandocostagomes@gmail.com"),
                 "addressDate": "2023-10-17",
             },
             {
@@ -251,7 +251,7 @@ def getArray(name):
                 "addressNumber": "104",
                 "addressCity": "Riacho Fundo II",
                 "addressState": "DF",
-                "addressUserId": getUserByEmail("rafaelcostafernandes2015@gmail.com"),
+                "addressUserId": getUserByEmail("id", "rafaelcostafernandes2015@gmail.com"),
                 "addressDate": "2023-10-17",
             },
         ]
@@ -305,18 +305,18 @@ def getArray(name):
     elif name == "pwd":
         pwds = [
             {
-                "pwdUserId": getUserByEmail("email","fernandocostagomes@gmail.com"),
+                "pwdUserId": getUserByEmail("id","fernandocostagomes@gmail.com"),
                 "pwdCurrent": getUserByEmail("pwdCurrent","fernandocostagomes@gmail.com"),
                 "pwdLast": "",
                 "pwdMoreLast": "",
                 "pwdDate": "2023-10-17",
             },
             {
-                "idUserPwd": getUserByEmail("rafaelcostafernandes2015@gmail.com"),
+                "pwdUserId": getUserByEmail("id", "rafaelcostafernandes2015@gmail.com"),
                 "pwdCurrent": getUserByEmail("pwdCurrent","fernandocostagomes@gmail.com"),
-                "lastPwd": "senha123456",
-                "moreLastPwd": "senha12345678",
-                "datePwd": "2023-10-17",
+                "pwdLast": "",
+                "pwdMoreLast": "",
+                "pwdDate": "2023-10-17",
             }
         ]
         return pwds
@@ -330,4 +330,3 @@ if __name__ == "__main__":
     populate_address()
     populate_roles()
     populate_permissions()
-    pop
