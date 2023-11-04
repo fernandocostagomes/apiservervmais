@@ -19,7 +19,7 @@ data class User(
     val userBirthday: String,
     val userDate: String,
     val userPwdCurrent: String,
-    val userPwdId: Int = 0)
+    val userPwdId: Int)
 
 class ServiceUser(private val connection: Connection) : SchemaInterface {
     companion object {
@@ -43,7 +43,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         private const val COLUMN_BIRTHDAY_QUERY = "$COLUMN_BIRTHDAY VARCHAR(20), "
         private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20), "
         private const val COLUMN_PWD_CURRENT_QUERY = "$COLUMN_PWD_CURRENT VARCHAR(20) NOT NULL, "
-        private const val COLUMN_PWD_ID_QUERY = "$COLUMN_PWD_ID INTEGER NOT NULL"
+        private const val COLUMN_PWD_ID_QUERY = "$COLUMN_PWD_ID INTEGER"
 
         val listColumnsQuery = listOf(
             COLUMN_ID_QUERY,
@@ -53,8 +53,8 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             COLUMN_NICK_QUERY,
             COLUMN_BIRTHDAY_QUERY,
             COLUMN_DATE_QUERY,
-            COLUMN_PWD_ID_QUERY,
-            COLUMN_PWD_CURRENT_QUERY
+            COLUMN_PWD_CURRENT_QUERY,
+            COLUMN_PWD_ID_QUERY
         )
 
         val listColumns = listOf(
@@ -65,8 +65,8 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             COLUMN_NICK,
             COLUMN_BIRTHDAY,
             COLUMN_DATE,
-            COLUMN_PWD_ID,
-            COLUMN_PWD_CURRENT
+            COLUMN_PWD_CURRENT,
+            COLUMN_PWD_ID
         )
     }
 

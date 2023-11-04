@@ -259,14 +259,14 @@ def getArray(name):
     elif name == "roles":
         roles = [
             {
-                "nameRole": "Admin",
-                "descriptionRole": "Administrador do sistema",
-                "dateRole": "2023-10-17",
+                "roleName": "Admin",
+                "roleDescription": "Administrador do sistema",
+                "roleDate": "2023-10-17",
             },
             {
-                "nameRole": "User",
-                "descriptionRole": "Usuário do sistema",
-                "dateRole": "2023-10-17",
+                "roleName": "User",
+                "roleDescription": "Usuário do sistema",
+                "roleDate": "2023-10-17",
             },
         ]
         return roles
