@@ -19,7 +19,7 @@ data class User(
     val userBirthday: String,
     val userDate: String,
     val userPwdCurrent: String,
-    val userPwdId: Int)
+    var userPwdId: Int)
 
 class ServiceUser(private val connection: Connection) : SchemaInterface {
     companion object {
@@ -132,7 +132,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
         //Cria a senha
         //Valida se o id é diferente de 0
-        if (generatedKeys.next()) {
+        if (generatedKeys.getInt(1) > 0) {
             val servicePwd = ServicePwd( connection )
             val pwd = Pwd(
                 0,
@@ -142,13 +142,19 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
                 "",
                 SchemaUtils.getCurrentDate()
             )
-            servicePwd.create(pwd)
-        } else {
-            throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
-        }
 
-        if (generatedKeys.next()) {
-            return@withContext generatedKeys.getInt(1)
+            val pwdId = servicePwd.create(pwd)
+
+            if ( pwdId > 0 ) {
+                //Atualiza o usuario com o id da senha
+                var user: User = read(generatedKeys.getInt(1))
+                user.userPwdId = pwd.pwdId
+                update(generatedKeys.getInt(1), user)
+
+                return@withContext generatedKeys.getInt(1)
+            } else {
+                throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
+            }
         } else {
             throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
         }
