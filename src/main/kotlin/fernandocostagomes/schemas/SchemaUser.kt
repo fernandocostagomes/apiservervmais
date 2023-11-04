@@ -113,6 +113,43 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
     // Create new user
     override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
+        obj as User
+
+        val userId = createUserDb( obj )
+
+        //Cria a senha
+        //Valida se o id é diferente de 0
+        if ( userId > 0) {
+            val servicePwd = ServicePwd( connection )
+            val pwd = Pwd(
+                0,
+                userId,
+                obj.userPwdCurrent,
+                "",
+                "",
+                SchemaUtils.getCurrentDate()
+            )
+
+            val pwdId = servicePwd.create( pwd )
+
+            if ( pwdId > 0 ) {
+                //Atualiza o usuario com o id da senha
+                var user: User = read( userId )
+                user.userPwdId = pwd.pwdId
+                if( update( userId, user ) == 1 ) {
+                    return@withContext userId
+                } else {
+                    throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
+                }
+            } else {
+                throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
+            }
+        } else {
+            throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
+        }
+    }
+
+    suspend fun createUserDb(obj: Any ): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(
             SchemaUtils.insertQuery(
                 TABLE,
@@ -123,40 +160,15 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
         obj as User
 
-        //Criar o usuario primeiro, pega o id dele, cria a senha e retorna e edita o usuario
-
         val statementPos = getPreparedStatement(statement, obj)
         statementPos.executeUpdate()
 
         val generatedKeys = statementPos.generatedKeys
 
-        //Cria a senha
-        //Valida se o id é diferente de 0
-        if (generatedKeys.getInt(1) > 0) {
-            val servicePwd = ServicePwd( connection )
-            val pwd = Pwd(
-                0,
-                generatedKeys.getInt(1),
-                obj.userPwdCurrent,
-                "",
-                "",
-                SchemaUtils.getCurrentDate()
-            )
-
-            val pwdId = servicePwd.create(pwd)
-
-            if ( pwdId > 0 ) {
-                //Atualiza o usuario com o id da senha
-                var user: User = read(generatedKeys.getInt(1))
-                user.userPwdId = pwd.pwdId
-                update(generatedKeys.getInt(1), user)
-
-                return@withContext generatedKeys.getInt(1)
-            } else {
-                throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
-            }
+        if (generatedKeys.next()) {
+            return@withContext generatedKeys.getInt(1)
         } else {
-            throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
+            throw Exception(SchemaUtils.UNABLE_NEW_ID_INSERTED)
         }
     }
 
@@ -196,6 +208,13 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         val statementPos = getPreparedStatement(statement, obj)
         statementPos.setInt(0, id)
         statementPos.executeUpdate()
+
+        // Retorna o id do usuario se nao tiver dado erro.
+        if ( id == 1 ) {
+            return@withContext id
+        } else {
+            throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
+        }
     }
 
     // Delete a user
