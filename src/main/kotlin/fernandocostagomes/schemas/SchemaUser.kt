@@ -237,7 +237,8 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         val statementPos = getPreparedStatement(statement, obj)
 
         println( statementPos.toString() )
-        statementPos.setInt(0, id)
+
+        statementPos.setInt(1, id)
         statementPos.executeUpdate()
 
         // Retorna o id do usuario se nao tiver dado erro.
