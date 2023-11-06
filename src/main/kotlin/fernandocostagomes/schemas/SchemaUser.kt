@@ -137,16 +137,21 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             println( "Schema pwdId: $pwdId" )
 
             if ( pwdId > 0 ) {
+
                 //Atualiza o usuario com o id da senha
-                val user: User = read( userId )
+                var user: User = read( userId )
+
                 //Imprime o user.
                 println( user )
+
                 user.userPwdId = pwdId
+
                 if( update( userId, user ) == 1 ) {
                     return@withContext userId
                 } else {
                     throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
                 }
+
             } else {
                 throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
             }
