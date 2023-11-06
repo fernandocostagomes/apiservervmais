@@ -35,6 +35,11 @@ services:
   fcg_webapp:
     container_name: fcg_webapp
     image: fcg_webapp
+    environment:
+      JWT_SECRET: senhasecretasecreta123
+      JWT_ISSUER: http://0.0.0.0:8080/
+      JWT_AUDIENCE: http://0.0.0.0:8080/login
+      JWT_REALM: Access to the API
     ports:
       - "8080:8080"
     restart: always

@@ -311,7 +311,7 @@ def getArray(name):
             },
             {
                 "email": "rafaelcostafernandes2015@gmail.com",
-                "password": "senha456",
+                "password": "senha123",
             }
         ]
         return pwds

@@ -28,6 +28,4 @@ const val roleConst = "/role"
 const val roleMoreIdConst = "/role/{id}"
 
 const val loginConst = "/login"
-
-const val pwdConst = "/pwd"
-const val pwdMoreIdConst = "/pwd/{id}"
+const val helloConst = "/hello"
