@@ -8,6 +8,12 @@ import java.sql.DriverManager
 
 fun Application.configureDatabases() {
 
+    val url = environment.config.property("POSTGRES_URL").getString()
+    val port = environment.config.property("POSTGRES_PORT").getString()
+    val user = environment.config.property("POSTGRES_USER").getString()
+    val pwd = environment.config.property("POSTGRES_PASSWORD").getString()
+    val db = environment.config.property("POSTGRES_DB").getString()
+
     val dbConnection: Connection = connectToPostgres(embedded = true)
 
     val serviceAction = ServiceAction(dbConnection)
@@ -51,12 +57,6 @@ fun Application.configureDatabases() {
  * your application shuts down by calling [Connection.close]
  * */
 fun connectToPostgres(embedded: Boolean): Connection {
-
-    val url = "fcg_postgres"
-    val db = "dbfcgvmais"
-    val port = "5432"
-    val user = "userfcgpostgres"
-    val pwd = "pwduserpostgres"
 
     Class.forName("org.postgresql.Driver")
 
