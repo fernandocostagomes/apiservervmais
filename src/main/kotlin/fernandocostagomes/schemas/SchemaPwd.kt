@@ -87,12 +87,8 @@ class ServicePwd(private val connection: Connection): SchemaInterface {
     override suspend fun create( obj: Any ): Int = withContext(Dispatchers.IO) {
 
         val query = SchemaUtils.insertQuery( TABLE, listColumns )
-        println( query )
 
         val statement = connection.prepareStatement( query, Statement.RETURN_GENERATED_KEYS)
-
-        //Imprimi todas as tabelas que o statement recebeu como parametro.
-        println( statement.toString() )
 
         obj as Pwd
 

@@ -118,10 +118,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         obj as User
 
         val userId = createUserDb( obj )
-        println( "Schema userId: $userId" )
 
-        //Cria a senha
-        //Valida se o id é diferente de 0
         if ( userId > 0) {
 
             val pwd = Pwd(
@@ -134,18 +131,11 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             )
 
             val pwdId = createPwd( pwd )
-            println( "Schema pwdId: $pwdId" )
 
             if ( pwdId > 0 ) {
-
                 //Atualiza o usuario com o id da senha
                 var user: User = read( userId )
-
                 user.userPwdId = pwdId
-
-                //Imprime o user.
-                println( user )
-
 
                 if( update( userId, user ) == 1 ) {
                     return@withContext userId
@@ -228,18 +218,13 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             COLUMN_ID
         )
 
-        println( query )
-
         val statement = connection.prepareStatement( query )
 
         obj as User
 
         val statementPos = getPreparedStatement(statement, obj)
-
-        println( statementPos.toString() )
-
         statementPos.setInt( 9, id )
-        println( statementPos.toString() )
+
         val result = statementPos.executeUpdate()
 
         // Retorna o id do usuario se nao tiver dado erro.
