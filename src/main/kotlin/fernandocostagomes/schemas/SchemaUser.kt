@@ -141,10 +141,11 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
                 //Atualiza o usuario com o id da senha
                 var user: User = read( userId )
 
+                user.userPwdId = pwdId
+
                 //Imprime o user.
                 println( user )
 
-                user.userPwdId = pwdId
 
                 if( update( userId, user ) == 1 ) {
                     return@withContext userId
@@ -220,16 +221,22 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
     // Update a user
     override suspend fun update( id: Int, obj: Any ) = withContext(Dispatchers.IO) {
+
         val query = SchemaUtils.updateQuery(
             TABLE,
             listColumns,
             COLUMN_ID
         )
+
         println( query )
+
         val statement = connection.prepareStatement( query )
+
         obj as User
 
         val statementPos = getPreparedStatement(statement, obj)
+
+        println( statementPos.toString() )
         statementPos.setInt(0, id)
         statementPos.executeUpdate()
 
