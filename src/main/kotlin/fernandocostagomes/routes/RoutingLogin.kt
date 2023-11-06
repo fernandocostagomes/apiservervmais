@@ -15,7 +15,7 @@ fun Application.configureRoutingLogin(serviceUser: ServiceUser, servicePwd: Serv
 
     routing {
 
-        // Create action
+        // Make the login.
         post( loginConst ) {
             val login = call.receive<Login>()
 

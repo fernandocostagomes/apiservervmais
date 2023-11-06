@@ -103,18 +103,15 @@ def populate_permissions():
             print(f"Erro ao inserir permission {permission['permissionName']}.")
 
 """ Popula a tabela de pwd com dados de exemplo. """
-def populate_pwd():
+def teste_login():
     for pwd in getArray("pwd"):
         response = requests.post(
-            f"{full_url}/pwd",
+            f"{full_url}/login",
             data=json.dumps(pwd),
             headers=application_json,
         )
 
-        if response.status_code == 201:
-            print(f"Pwd {pwd['pwdUserId']} inserido com sucesso!")
-        else:
-            print(f"Erro ao inserir pwd {pwd['pwdUserId']}.")
+        print(f"{response.text} \n Login: {pwd['email']}.")
 
 def getUserByEmail(tipo, email):
     response = requests.get(full_url + f"/user/email/{email}")
@@ -305,18 +302,16 @@ def getArray(name):
     elif name == "pwd":
         pwds = [
             {
-                "pwdUserId": getUserByEmail("id","fernandocostagomes@gmail.com"),
-                "pwdCurrent": getUserByEmail("pwdCurrent","fernandocostagomes@gmail.com"),
-                "pwdLast": "",
-                "pwdMoreLast": "",
-                "pwdDate": "2023-10-17",
+                "email": "fernandocostagomes@gmail.com",
+                "password": "senha123",
             },
             {
-                "pwdUserId": getUserByEmail("id", "rafaelcostafernandes2015@gmail.com"),
-                "pwdCurrent": getUserByEmail("pwdCurrent","fernandocostagomes@gmail.com"),
-                "pwdLast": "",
-                "pwdMoreLast": "",
-                "pwdDate": "2023-10-17",
+                "email": "rafaelcostafernandes2015@gmail.com",
+                "password": "senha456",
+            },
+            {
+                "email": "rafaelcostafernandes2015@gmail.com",
+                "password": "senha456",
             }
         ]
         return pwds
