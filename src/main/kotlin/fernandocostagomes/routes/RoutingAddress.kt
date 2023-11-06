@@ -20,38 +20,36 @@ fun Application.configureRoutingAddress(serviceAddress: ServiceAddress){
                 val id = serviceAddress.create(address)
                 call.respond(HttpStatusCode.Created, id)
             }
-        }
+            // Delete address
+            delete( addressMoreIdConst ) {
+                val id = call.parameters[ idConst ]?.toInt() ?: throw IllegalArgumentException( invalidConst )
+                serviceAddress.delete( id )
+                call.respond(HttpStatusCode.OK)
+            }
 
-        // Delete address
-        delete( addressMoreIdConst ) {
-            val id = call.parameters[ idConst ]?.toInt() ?: throw IllegalArgumentException( invalidConst )
-            serviceAddress.delete( id )
-            call.respond(HttpStatusCode.OK)
-        }
+            // List all address
+            get( addressConst ) {
+                val listAddress = serviceAddress.list()
+                call.respond(HttpStatusCode.OK, listAddress)
+            }
 
-        // List all address
-        get( addressConst ) {
-            val listAddress = serviceAddress.list()
-            call.respond(HttpStatusCode.OK, listAddress)
-        }
-
-        // Read address
-        get( addressMoreIdConst ) {
-            val id = call.parameters[ idConst ]?.toInt() ?: throw IllegalArgumentException( invalidConst )
-            try {
-                val address = serviceAddress.read(id)
-                call.respond(HttpStatusCode.OK, address)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.NotFound)
+            // Read address
+            get( addressMoreIdConst ) {
+                val id = call.parameters[ idConst ]?.toInt() ?: throw IllegalArgumentException( invalidConst )
+                try {
+                    val address = serviceAddress.read(id)
+                    call.respond(HttpStatusCode.OK, address)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.NotFound)
+                }
+            }
+            // Update address
+            put( addressMoreIdConst ) {
+                val id = call.parameters[ idConst ]?.toInt() ?: throw IllegalArgumentException( invalidConst )
+                val address = call.receive<Address>()
+                serviceAddress.update(id, address)
+                call.respond(HttpStatusCode.OK)
             }
         }
-        // Update address
-        put( addressMoreIdConst ) {
-            val id = call.parameters[ idConst ]?.toInt() ?: throw IllegalArgumentException( invalidConst )
-            val address = call.receive<Address>()
-            serviceAddress.update(id, address)
-            call.respond(HttpStatusCode.OK)
-        }
-
     }
 }
