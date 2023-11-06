@@ -21,7 +21,7 @@ class ServicePwd(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_pwd"
         private const val COLUMN_ID = "v_pwd_id"
-        private const val COLUMN_ID_USER = "v_pwd_id_user"
+        private const val COLUMN_ID_USER = "v_user_id"
         private const val COLUMN_CURRENT = "v_pwd_current"
         private const val COLUMN_LAST = "v_pwd_last"
         private const val COLUMN_MORE_LAST = "v_pwd_more_last"
