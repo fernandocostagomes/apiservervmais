@@ -244,7 +244,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
         // Retorna o id do usuario se nao tiver dado erro.
         if ( result == 1 ) {
-            return@withContext id
+            return@withContext 1
         } else {
             throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
         }
