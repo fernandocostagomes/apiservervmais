@@ -11,14 +11,14 @@ import java.sql.Statement
 @Serializable
 data class Address(
     val addressId: Int = 0,
-    val addressName: String,
-    val addressZipcode: String,
-    val addressAddress: String,
-    val addressNumber: String,
-    val addressCity: String,
-    val addressState: String,
+    var addressName: String,
+    var addressZipcode: String,
+    var addressAddress: String,
+    var addressNumber: String,
+    var addressCity: String,
+    var addressState: String,
     val addressUserId: Int,
-    val addressDate: String)
+    var addressDate: String)
 class ServiceAddress(private val connection: Connection) : SchemaInterface{
     companion object {
         private const val TABLE = "v_address"

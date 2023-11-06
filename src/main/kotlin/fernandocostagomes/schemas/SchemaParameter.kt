@@ -12,9 +12,9 @@ import java.sql.Statement
 data class Parameter(
     val parameterId: Int = 0,
     val parameterCode: String,
-    val parameterName: String,
-    val parameterValue: String,
-    val parameterDate: String)
+    var parameterName: String,
+    var parameterValue: String,
+    var parameterDate: String)
 class ServiceParameter(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_parameter"

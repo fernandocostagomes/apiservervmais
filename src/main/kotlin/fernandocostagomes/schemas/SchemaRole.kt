@@ -11,9 +11,9 @@ import java.sql.Statement
 @Serializable
 data class Role(
     val roleId: Int = 0,
-    val roleName: String,
-    val roleDescription: String,
-    val roleDate: String)
+    var roleName: String,
+    var roleDescription: String,
+    var roleDate: String)
 class ServiceRole(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_role"

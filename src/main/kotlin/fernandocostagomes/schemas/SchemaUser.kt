@@ -1,5 +1,7 @@
 package fernandocostagomes.schemas
 
+import io.ktor.client.*
+import io.ktor.server.routing.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -12,13 +14,13 @@ import java.sql.Statement
 @Serializable
 data class User(
     val userId: Int = 0,
-    val userEmail: String,
-    val userName: String,
-    val userPhone: String,
-    val userNick: String,
-    val userBirthday: String,
-    val userDate: String,
-    val userPwdCurrent: String,
+    var userEmail: String,
+    var userName: String,
+    var userPhone: String,
+    var userNick: String,
+    var userBirthday: String,
+    var userDate: String,
+    var userPwdCurrent: String,
     var userPwdId: Int)
 
 class ServiceUser(private val connection: Connection) : SchemaInterface {
@@ -116,28 +118,28 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         obj as User
 
         val userId = createUserDb( obj )
-        System.out.println( "Schema userId: $userId" )
+        println( "Schema userId: $userId" )
 
         //Cria a senha
         //Valida se o id é diferente de 0
         if ( userId > 0) {
-            val servicePwd = ServicePwd( connection )
+
             val pwd = Pwd(
-                0,
-                obj.userPwdCurrent,
-                "",
-                "",
-                SchemaUtils.getCurrentDate(),
-                userId
+                pwdId = 0,
+                pwdUserId = userId,
+                pwdCurrent = obj.userPwdCurrent,
+                pwdLast = "",
+                pwdMoreLast = "",
+                pwdDate = SchemaUtils.getCurrentDate()
             )
 
-            val pwdId = servicePwd.create( pwd )
-            System.out.println( "Schema pwdId: $pwdId" )
+            val pwdId = createPwd( pwd )
+            println( "Schema pwdId: $pwdId" )
 
             if ( pwdId > 0 ) {
                 //Atualiza o usuario com o id da senha
-                var user: User = read( userId )
-                user.userPwdId = pwd.pwdId
+                val user: User = read( userId )
+                user.userPwdId = pwdId
                 if( update( userId, user ) == 1 ) {
                     return@withContext userId
                 } else {
@@ -151,7 +153,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         }
     }
 
-    suspend fun createUserDb(obj: Any ): Int = withContext(Dispatchers.IO) {
+    private suspend fun createUserDb(obj: Any ): Int = withContext(Dispatchers.IO) {
         val statement = connection.prepareStatement(
             SchemaUtils.insertQuery(
                 TABLE,
@@ -171,6 +173,19 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             return@withContext generatedKeys.getInt(1)
         } else {
             throw Exception(SchemaUtils.UNABLE_NEW_ID_INSERTED)
+        }
+    }
+
+    private suspend fun createPwd( pwd: Pwd ): Int = withContext( Dispatchers.IO ) {
+
+        val servicePwd = ServicePwd( connection )
+
+        val pwdId = servicePwd.create( pwd )
+
+        if( pwdId > 0 ) {
+            return@withContext pwdId
+        } else {
+            throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
         }
     }
 

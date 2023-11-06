@@ -8,9 +8,9 @@ import java.sql.*
 @Serializable
 data class Action(
     val actionId: Int = 0,
-    val actionName: String,
-    val actionDescription: String,
-    val actionDate: String)
+    var actionName: String,
+    var actionDescription: String,
+    var actionDate: String)
 class ServiceAction(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_action"

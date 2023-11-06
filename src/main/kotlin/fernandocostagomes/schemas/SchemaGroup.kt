@@ -7,9 +7,9 @@ import java.sql.*
 @Serializable
 data class Group(
     val groupId: Int,
-    val groupName: String,
-    val groupPwd: String,
-    val groupDate: String,
+    var groupName: String,
+    var groupPwd: String,
+    var groupDate: String,
     val groupUserId: Int)
 class ServiceGroup(private val connection: Connection): SchemaInterface {
     companion object {
