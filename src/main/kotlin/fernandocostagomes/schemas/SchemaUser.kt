@@ -240,10 +240,10 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
         statementPos.setInt( 9, id )
         println( statementPos.toString() )
-        statementPos.executeUpdate()
+        val result = statementPos.executeUpdate()
 
         // Retorna o id do usuario se nao tiver dado erro.
-        if ( id == 1 ) {
+        if ( result == 1 ) {
             return@withContext id
         } else {
             throw Exception( SchemaUtils.UNABLE_NEW_ID_INSERTED )
