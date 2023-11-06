@@ -73,7 +73,7 @@ fun Application.configureRoutingLogin(serviceUser: ServiceUser, servicePwd: Serv
             }
         }
 
-        authenticate {
+        authenticate( "auth-jwt") {
             get( helloConst ) {
                 val principal = call.principal<JWTPrincipal>()
                 val email = principal!!.payload.getClaim("email").asString()
