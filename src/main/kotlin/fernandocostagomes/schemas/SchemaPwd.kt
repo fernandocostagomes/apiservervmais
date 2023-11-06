@@ -12,44 +12,44 @@ import java.sql.Statement
 @Serializable
 data class Pwd(
     val pwdId: Int = 0,
-    val pwdUserId: Int,
     val pwdCurrent: String,
     val pwdLast: String,
     val pwdMoreLast: String,
-    val pwdDate: String)
+    val pwdDate: String,
+    val pwdUserId: Int)
 class ServicePwd(private val connection: Connection): SchemaInterface {
     companion object {
         private const val TABLE = "v_pwd"
         private const val COLUMN_ID = "v_pwd_id"
-        private const val COLUMN_ID_USER = "v_pwd_id_user"
         private const val COLUMN_CURRENT = "v_pwd_current"
         private const val COLUMN_LAST = "v_pwd_last"
         private const val COLUMN_MORE_LAST = "v_pwd_more_last"
         private const val COLUMN_DATE = "v_pwd_date"
+        private const val COLUMN_ID_USER = "v_pwd_id_user"
 
         private const val COLUMN_ID_QUERY = "$COLUMN_ID SERIAL PRIMARY KEY, "
-        private const val COLUMN_ID_USER_QUERY = "$COLUMN_ID_USER INTEGER NOT NULL, "
         private const val COLUMN_CURRENT_QUERY = "$COLUMN_CURRENT VARCHAR(20) NOT NULL, "
         private const val COLUMN_LAST_QUERY = "$COLUMN_LAST VARCHAR(20), "
         private const val COLUMN_MORE_LAST_QUERY = "$COLUMN_MORE_LAST VARCHAR(20), "
-        private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20)"
+        private const val COLUMN_DATE_QUERY = "$COLUMN_DATE VARCHAR(20), "
+        private const val COLUMN_ID_USER_QUERY = "$COLUMN_ID_USER INTEGER NOT NULL"
 
         val listColumnsQuery = listOf(
             COLUMN_ID_QUERY,
-            COLUMN_ID_USER_QUERY,
             COLUMN_CURRENT_QUERY,
             COLUMN_LAST_QUERY,
             COLUMN_MORE_LAST_QUERY,
-            COLUMN_DATE_QUERY
+            COLUMN_DATE_QUERY,
+            COLUMN_ID_USER_QUERY
         )
 
         val listColumns = listOf(
             COLUMN_ID,
-            COLUMN_ID_USER,
             COLUMN_CURRENT,
             COLUMN_LAST,
             COLUMN_MORE_LAST,
-            COLUMN_DATE
+            COLUMN_DATE,
+            COLUMN_ID_USER
         )
     }
 
@@ -65,21 +65,21 @@ class ServicePwd(private val connection: Connection): SchemaInterface {
     private fun getResultSet(pResultSet: ResultSet): Pwd {
         return Pwd(
             pResultSet.getInt(COLUMN_ID),
-            pResultSet.getInt(COLUMN_ID_USER),
             pResultSet.getString(COLUMN_CURRENT),
             pResultSet.getString(COLUMN_LAST),
             pResultSet.getString(COLUMN_MORE_LAST),
-            pResultSet.getString(COLUMN_DATE)
+            pResultSet.getString(COLUMN_DATE),
+            pResultSet.getInt(COLUMN_ID_USER)
         )
     }
 
     private fun getPreparedStatement(pPreparedStatement: PreparedStatement, pObj: Any): PreparedStatement{
         pObj as Pwd
-        pPreparedStatement.setInt(1, pObj.pwdUserId)
-        pPreparedStatement.setString(2, pObj.pwdCurrent)
-        pPreparedStatement.setString(3, pObj.pwdLast)
-        pPreparedStatement.setString(4, pObj.pwdMoreLast)
-        pPreparedStatement.setString(5, SchemaUtils.getCurrentDate())
+        pPreparedStatement.setString(1, pObj.pwdCurrent)
+        pPreparedStatement.setString(2, pObj.pwdLast)
+        pPreparedStatement.setString(3, pObj.pwdMoreLast)
+        pPreparedStatement.setString(4, SchemaUtils.getCurrentDate())
+        pPreparedStatement.setInt(5, pObj.pwdUserId)
         return pPreparedStatement
     }
 

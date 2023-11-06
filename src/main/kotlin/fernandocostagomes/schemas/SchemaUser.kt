@@ -116,6 +116,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
         obj as User
 
         val userId = createUserDb( obj )
+        System.out.println( "Schema userId: $userId" )
 
         //Cria a senha
         //Valida se o id é diferente de 0
@@ -123,14 +124,15 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
             val servicePwd = ServicePwd( connection )
             val pwd = Pwd(
                 0,
-                userId,
                 obj.userPwdCurrent,
                 "",
                 "",
-                SchemaUtils.getCurrentDate()
+                SchemaUtils.getCurrentDate(),
+                userId
             )
 
             val pwdId = servicePwd.create( pwd )
+            System.out.println( "Schema pwdId: $pwdId" )
 
             if ( pwdId > 0 ) {
                 //Atualiza o usuario com o id da senha
