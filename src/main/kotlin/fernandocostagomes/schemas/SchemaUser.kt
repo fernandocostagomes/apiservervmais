@@ -238,7 +238,7 @@ class ServiceUser(private val connection: Connection) : SchemaInterface {
 
         println( statementPos.toString() )
 
-        statementPos.setInt( 1, id )
+        statementPos.setInt( 9, id )
         println( statementPos.toString() )
         statementPos.executeUpdate()
 
