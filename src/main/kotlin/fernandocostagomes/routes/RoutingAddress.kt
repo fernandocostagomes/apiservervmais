@@ -4,6 +4,7 @@ import fernandocostagomes.schemas.Address
 import fernandocostagomes.schemas.ServiceAddress
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -13,10 +14,12 @@ fun Application.configureRoutingAddress(serviceAddress: ServiceAddress){
     routing {
 
         // Create address
-        post( addressConst ) {
-            val address = call.receive<Address>()
-            val id = serviceAddress.create(address)
-            call.respond(HttpStatusCode.Created, id)
+        authenticate( "auth-jwt") {
+            post( addressConst ) {
+                val address = call.receive<Address>()
+                val id = serviceAddress.create(address)
+                call.respond(HttpStatusCode.Created, id)
+            }
         }
 
         // Delete address

@@ -19,6 +19,7 @@ fun Application.configureDatabases() {
     val serviceUser = ServiceUser(dbConnection)
     val servicePwd = ServicePwd(dbConnection)
 
+    configureRoutingLogin(serviceUser, servicePwd)
     configureRoutingAddress(serviceAddress)
     configureRoutingAction(serviceAction)
     configureRoutingGroup(serviceGroup)
@@ -26,7 +27,6 @@ fun Application.configureDatabases() {
     configureRoutingPermission(servicePermission)
     configureRoutingRole(serviceRole)
     configureRoutingUser(serviceUser)
-    configureRoutingLogin(serviceUser, servicePwd)
 }
 
 /**

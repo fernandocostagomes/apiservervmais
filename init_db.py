@@ -14,7 +14,6 @@ if len(sys.argv) > 1:
 else:
     print("Nenhum parâmetro foi passado.")
 
-
 def populate_actions():
     """ Popula a tabela action com as ações definidas na API.   """
     for action in getArray("actions"):
@@ -110,7 +109,6 @@ def teste_login():
             data=json.dumps(pwd),
             headers=application_json,
         )
-
         print(f"{response.text} \n Login: {pwd['email']}.")
 
 def getUserByEmail(tipo, email):
