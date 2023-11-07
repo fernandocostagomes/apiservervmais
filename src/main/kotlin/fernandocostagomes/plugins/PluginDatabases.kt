@@ -10,11 +10,11 @@ import java.sql.DriverManager
 fun Application.configureDatabases() {
 
     val hashSet = hashMapOf<String, String>()
-    hashSet["url"] = environment.config.property("POSTGRES_URL").getString()
-    hashSet["port"] = environment.config.property("POSTGRES_PORT").getString()
-    hashSet["user"] = environment.config.property("POSTGRES_USER").getString()
-    hashSet["pwd"] = environment.config.property("POSTGRES_PASSWORD").getString()
-    hashSet["db"] = environment.config.property("POSTGRES_DB").getString()
+    hashSet["url"] = environment.config.property("ktor.postgres.url").getString()
+    hashSet["port"] = environment.config.property("ktor.postgres.port").getString()
+    hashSet["user"] = environment.config.property("ktor.postgres.user").getString()
+    hashSet["pwd"] = environment.config.property("ktor.postgres.password").getString()
+    hashSet["db"] = environment.config.property("ktor.postgres.database").getString()
 
     val dbConnection: Connection = connectToPostgres(embedded = true, hashSet)
 
