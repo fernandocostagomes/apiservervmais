@@ -114,5 +114,23 @@ fun Application.configureRoutingUser(serviceUser: ServiceUser){
                 call.respond(HttpStatusCode.OK)
             }
         }
+
+        post("/createUser") {
+            //cria os primeiros usuários.
+            val user = User(
+                userId = 0,
+                userEmail = "admin@admin",
+                userName = "admin",
+                userPhone = "999999999",
+                userNick = "admin",
+                userBirthday = "01/01/2000",
+                userDate = "01/01/2000",
+                userPwdCurrent = "admin123",
+                userPwdId = 0
+            )
+
+            val id = serviceUser.create( user )
+            call.respond(HttpStatusCode.Created, id)
+        }
     }
 }

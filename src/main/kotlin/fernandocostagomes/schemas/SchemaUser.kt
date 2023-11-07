@@ -1,15 +1,9 @@
 package fernandocostagomes.schemas
 
-import io.ktor.client.*
-import io.ktor.server.routing.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
-import java.sql.Connection
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.SQLException
-import java.sql.Statement
+import java.sql.*
 
 @Serializable
 data class User(

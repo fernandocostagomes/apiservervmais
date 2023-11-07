@@ -3,36 +3,29 @@ package fernandocostagomes.plugins
 import fernandocostagomes.schemas.*
 import fernandocostagomes.routes.*
 import io.ktor.server.application.*
+import io.ktor.server.util.*
 import java.sql.Connection
 import java.sql.DriverManager
 
 fun Application.configureDatabases() {
 
-    val url = environment.config.property("POSTGRES_URL").getString()
-    val port = environment.config.property("POSTGRES_PORT").getString()
-    val user = environment.config.property("POSTGRES_USER").getString()
-    val pwd = environment.config.property("POSTGRES_PASSWORD").getString()
-    val db = environment.config.property("POSTGRES_DB").getString()
+    val hashSet = hashMapOf<String, String>()
+    hashSet["url"] = environment.config.property("POSTGRES_URL").getString()
+    hashSet["port"] = environment.config.property("POSTGRES_PORT").getString()
+    hashSet["user"] = environment.config.property("POSTGRES_USER").getString()
+    hashSet["pwd"] = environment.config.property("POSTGRES_PASSWORD").getString()
+    hashSet["db"] = environment.config.property("POSTGRES_DB").getString()
 
-    val dbConnection: Connection = connectToPostgres(embedded = true)
+    val dbConnection: Connection = connectToPostgres(embedded = true, hashSet)
 
-    val serviceAction = ServiceAction(dbConnection)
-    val serviceAddress = ServiceAddress(dbConnection)
-    val serviceGroup = ServiceGroup(dbConnection)
-    val serviceParameter = ServiceParameter(dbConnection)
-    val servicePermission = ServicePermission(dbConnection)
-    val serviceRole = ServiceRole(dbConnection)
-    val serviceUser = ServiceUser(dbConnection)
-    val servicePwd = ServicePwd(dbConnection)
-
-    configureRoutingLogin(serviceUser, servicePwd)
-    configureRoutingAddress(serviceAddress)
-    configureRoutingAction(serviceAction)
-    configureRoutingGroup(serviceGroup)
-    configureRoutingParameter(serviceParameter)
-    configureRoutingPermission(servicePermission)
-    configureRoutingRole(serviceRole)
-    configureRoutingUser(serviceUser)
+    configureRoutingLogin( ServiceUser(dbConnection), ServicePwd(dbConnection))
+    configureRoutingAddress( ServiceAddress(dbConnection) )
+    configureRoutingAction( ServiceAction(dbConnection) )
+    configureRoutingGroup( ServiceGroup(dbConnection) )
+    configureRoutingParameter( ServiceParameter(dbConnection) )
+    configureRoutingPermission( ServicePermission(dbConnection) )
+    configureRoutingRole( ServiceRole(dbConnection) )
+    configureRoutingUser( ServiceUser(dbConnection) )
 }
 
 /**
@@ -56,14 +49,13 @@ fun Application.configureDatabases() {
  * @return [Connection] that represent connection to the database. Please, don't forget to close this connection when
  * your application shuts down by calling [Connection.close]
  * */
-fun connectToPostgres(embedded: Boolean): Connection {
+fun connectToPostgres(embedded: Boolean, hashMap: HashMap<String, String>): Connection {
 
     Class.forName("org.postgresql.Driver")
 
     return if (embedded) {
-        DriverManager.getConnection("jdbc:postgresql://$url:$port/$db", user, pwd)
+        DriverManager.getConnection("jdbc:postgresql://${hashMap["url"]}:${hashMap["port"]}/${hashMap["db"]}", hashMap["user"], hashMap["pwd"] )
     } else {
-        //val url = environment.config.property("postgres.url").getString()
-        DriverManager.getConnection(url, user, pwd)
+        DriverManager.getConnection(hashMap["url"], hashMap["user"], hashMap["pwd"])
     }
 }
