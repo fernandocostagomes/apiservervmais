@@ -1,170 +1,72 @@
 #!/bin/bash
 
-echo "#####################################################"
-echo "### Atualizando repositório local com 'git pull'. ###"
-echo "#####################################################"
+function show() {
+  //pula uma linha
+  echo ""
+  echo "### $1 ###"
+  echo ""
+}
+function apaga_imprime() {
+  # Limpa a linha
+  echo -en "\r"
+  # Imprime o texto recebido
+  echo -n "$1"
+}
+
+show "Atualizando repositório local com 'git pull'."
 git pull origin main
-echo "########################"
-echo "### Pull Finalizado. ###"
-echo "########################"
+show "Pull Finalizado."
 
-echo "############################################"
-echo "### Limpando projeto com 'gradle clean'. ###"
-echo "############################################"
+show "Limpando o projeto com 'gradle clean'."
 gradle clean
-echo "###############################"
-echo "### Build clean Finalizado. ###"
-echo "###############################"
+show "Build clean Finalizado."
 
-echo "#################################################"
-echo "### Construindo o projeto com 'gradle build'. ###"
-echo "#################################################"
+show "Construindo o projeto com 'gradle build'."
 gradle build
-echo "###############################"
-echo "### Build finalizado. ###"
-echo "###############################"
+show "Build finalizado."
 
-echo "#################################################################################"
-echo "### Construindo a imagem do Docker com 'docker buildx build . -t fcg_webapp'. ###"
-echo "#################################################################################"
+show "Construindo a imagem do Docker com 'docker buildx build . -t fcg_webapp'."
 docker buildx build . -t fcg_webapp
-echo "################################"
-echo "### Buildx build Finalizado. ###"
-echo "################################"
+show "Buildx build Finalizado."
 
-echo "##########################################################################"
-echo "### Removendo os containers de todos os serviços criados pelo compose. ###"
-echo "##########################################################################"
-
-echo "###################################"
-echo "####### Service: fcg_webapp #######"
-echo "###################################"
+show "Removendo os containers de todos os serviços criados pelo compose."
+show "Service: fcg_webapp"
 docker-compose down --services fcg_webapp
+show "Container removido."
 
-echo "###########################"
-echo "### Container removido. ###"
-echo "###########################"
-
-echo "#############################"
-echo "### Service: fcg_postgres ###"
-echo "#############################"
+show "Service: fcg_postgres"
 docker-compose down --services fcg_postgres
+show "Container removido."
 
-echo "###########################"
-echo "### Container removido. ###"
-echo "###########################"
-
-echo "############################"
-echo "### Service: fcg_pgadmin ###"
-echo "############################"
+show "Service: fcg_pgadmin"
 docker-compose down --services fcg_pgadmin
+show "Container removido."
 
-echo "###########################"
-echo "### Container removido. ###"
-echo "###########################"
-
-echo "###################################################"
-echo "### Removendo as networks criadas pelo compose. ###"
-echo "###################################################"
-
-echo "############################"
-echo "### Network: fcg_default ###"
-echo "############################"
+show "Removendo as networks criadas pelo compose."
+show "Network: fcg_default"
 docker network rm fcg_network
 
-echo "###################################################################"
-echo "### Remove orphans com 'docker-compose up -d --remove-orphans'. ###"
-echo "###################################################################"
+show "Remove orphans com 'docker-compose up -d --remove-orphans'."
 docker-compose up -d --remove-orphans
+show "Finalizado delete orphans."
 
-echo "###################"
-echo "### Finalizado. ###"
-echo "###################"
-
-echo "##################################################"
-echo "### Removendo containers sem uso da aplicacao. ###"
-echo "##################################################"
+show "Removendo containers sem uso da aplicacao."
 docker container prune -f
+show "Finalizado."
 
-echo "###################"
-echo "### Finalizado. ###"
-echo "###################"
+show "Aguardando inicialização dos servidores"
 
-echo "###############################################"
-echo "### Aguardando inicialização dos servidores ###"
-echo "###############################################"
+show "Iniciando servers: 10"
 
-sleep 1
-echo "###############################################"
-sleep 1
-echo "##############################################"
-sleep 1
-echo "#############################################"
-sleep 1
-echo "############################################"
-sleep 1
-echo "###########################################"
-sleep 1
-echo "##########################################"
-sleep 1
-echo "#########################################"
-sleep 1
-echo "########################################"
-sleep 1
-echo "#######################################"
-sleep 1
-echo "######################################"
-sleep 1
-echo "#####################################"
-sleep 1
-echo "####################################"
-sleep 1
-echo "###################################"
-sleep 1
-echo "####################################"
-sleep 1
-echo "#####################################"
-sleep 1
-echo "######################################"
-sleep 1
-echo "#######################################"
-sleep 1
-echo "########################################"
-sleep 1
-echo "#########################################"
-sleep 1
-echo "#########################################"
-sleep 1
-echo "##########################################"
-sleep 1
-echo "###########################################"
-sleep 1
-echo "############################################"
-sleep 1
-echo "#############################################"
-sleep 1
-echo "##############################################"
-sleep 1
-echo "###############################################"
-sleep 1
-echo "################################################"
-sleep 1
-echo "#################################################"
-sleep 1
-echo "##################################################"
-sleep 1
-echo "###################################################"
-sleep 1
-echo "####################################################"
-sleep 1
-echo "#####################################################"
-sleep 1
-echo "######################################################"
-echo "###   Populando banco de dados com 'init_db.py'.   ###"
-echo "######################################################"
+for i in {20..1}; do
+  # Chama a função com o texto da linha
+  apaga_imprime "$i"
+  # Aguarda 1 segundo
+  sleep 1
+done
+
+show "Populando banco de dados com 'init_db.py'."
 
 python3 init_db.py localhost
 
-echo "###################"
-echo "### Finalizado. ###"
-echo "###################"
+show "Finalizado."
