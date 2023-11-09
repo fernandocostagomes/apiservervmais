@@ -34,7 +34,6 @@ def getToken():
 def populate_actions():
     """ Popula a tabela action com as ações definidas na API.   """
     for action in getArray("actions"):
-        print(token)
         response = requests.post(
             f"{full_url}/action",
             data=json.dumps(action),
@@ -46,7 +45,7 @@ def populate_actions():
             print(f"A ação {action['actionName']} foi inserida com sucesso!")
         else:
             print(f"Ocorreu um erro ao inserir a ação {action['actionName']} "
-                  f"Status response:  {response.status_code}")
+                  f"Status response:  {response.status_code}" token)
 
 def populate_users():
     """ Popula a tabela de usuários com dados de exemplo. """
