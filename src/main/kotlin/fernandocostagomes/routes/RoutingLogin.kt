@@ -40,7 +40,7 @@ fun Application.configureRoutingLogin(serviceUser: ServiceUser, servicePwd: Serv
                 else
                     null
             }
-            challenge { s, _ ->
+            challenge { _, _ ->
                 call.respond(
                     HttpStatusCode.Unauthorized,
                     "Token is not valid or has expired"
