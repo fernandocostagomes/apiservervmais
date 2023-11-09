@@ -5,6 +5,7 @@ import sys
 base_url = sys.argv[1]
 full_url = "http://" + base_url + ":8080"
 application_json = {"Content-Type": "application/json"}
+token = ""
 
 # Verifica se pelo menos um argumento foi passado (o nome do script é o primeiro argumento)
 if len(sys.argv) > 1:
@@ -14,13 +15,23 @@ if len(sys.argv) > 1:
 else:
     print("Nenhum parâmetro foi passado.")
 
+def getToken():
+    """ Retorna o token de acesso. """
+    response = requests.post(
+        f"{full_url}/login",
+        data=json.dumps({"email": "admin@admin", "password": "admin123"}),
+        if response.status_code == 200:
+            data = json.loads(response.text)
+        else:
+           print(f"Ocorreu um erro ao solicitar o token")
+
 def populate_actions():
     """ Popula a tabela action com as ações definidas na API.   """
     for action in getArray("actions"):
         response = requests.post(
             f"{full_url}/action",
             data=json.dumps(action),
-            headers={"Content-Type": "application/json"},
+            headers={"Authorization": "Bearer " + token},
         )
 
         # Verifica se a solicitação foi bem-sucedida
@@ -317,6 +328,7 @@ def getArray(name):
         return None
 
 if __name__ == "__main__":
+    getToken()
     populate_actions()
     populate_users()
     populate_parameters()
