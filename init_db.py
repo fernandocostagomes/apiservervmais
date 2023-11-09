@@ -24,7 +24,7 @@ def getToken():
         print(f"Ocorreu um erro ao solicitar o token" f"Status response:  {response.status_code}")
 
 
-login =
+login
     {
         "email": "admin@admin",
         "password": "admin123"
