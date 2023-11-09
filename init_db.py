@@ -19,7 +19,7 @@ def getToken():
     """ Retorna o token de acesso. """
     response = requests.post(
         f"{full_url}/login",
-        data=json.dumps({"email": "admin@admin", "password": "admin123"}),
+        data=json.dumps({"email": "admin@admin", "password": "admin123"}))
         if response.status_code == 200:
             data = json.loads(response.text)
         else:
