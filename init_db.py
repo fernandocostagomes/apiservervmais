@@ -27,6 +27,7 @@ def getToken():
         response = requests.post(full_url + f"/login", data=json.dumps(login), headers=application_json)
         if response.status_code == 200:
             token = json.loads(response.text)["token"]
+            print(f"Token: {token}")
         else:
             print(f"Ocorreu um erro ao solicitar o token" f"Status response:  {response.status_code}")
 
