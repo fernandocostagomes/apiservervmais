@@ -1,7 +1,6 @@
 #!/bin/bash
 
 function show() {
-  //pula uma linha
   echo ""
   echo "### $1 ###"
   echo ""
