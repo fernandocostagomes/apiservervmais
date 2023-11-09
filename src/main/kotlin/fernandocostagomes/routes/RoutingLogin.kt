@@ -64,7 +64,7 @@ fun Application.configureRoutingLogin(serviceUser: ServiceUser, servicePwd: Serv
                     .withAudience( audience )
                     .withIssuer( issuer )
                     .withClaim("email", login.email )
-                    .withExpiresAt( Date( System.currentTimeMillis() + 60000 ) )
+                    .withExpiresAt( Date( System.currentTimeMillis() + 600000 ) )
                     .sign( Algorithm.HMAC256( secret ) )
                 call.respond( hashMapOf( "token" to token))
             }
