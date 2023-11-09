@@ -10,11 +10,11 @@ import java.sql.DriverManager
 fun Application.configureDatabases() {
 
     val hashSet = hashMapOf<String, String>()
-    hashSet["url"] = environment.config.property("postgres.POSTGRES_URL").getString()
-    hashSet["port"] = environment.config.property("postgres.POSTGRES_PORT").getString()
-    hashSet["user"] = environment.config.property("postgres.POSTGRES_USER").getString()
-    hashSet["pwd"] = environment.config.property("postgres.POSTGRES_PASSWORD").getString()
-    hashSet["db"] = environment.config.property("postgres.POSTGRES_DB").getString()
+    hashSet["url"] = environment.config.property("POSTGRES_URL").getString()
+    hashSet["port"] = environment.config.property("POSTGRES_PORT").getString()
+    hashSet["user"] = environment.config.property("POSTGRES_USER").getString()
+    hashSet["pwd"] = environment.config.property("POSTGRES_PASSWORD").getString()
+    hashSet["db"] = environment.config.property("POSTGRES_DB").getString()
 
     val dbConnection: Connection = connectToPostgres(embedded = true, hashSet)
 
