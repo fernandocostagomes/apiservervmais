@@ -40,12 +40,14 @@ def populate_actions():
             headers={"Authorization": "Bearer " + token},
         )
 
+        print(token)
+
         # Verifica se a solicitação foi bem-sucedida
         if response.status_code == 201:
             print(f"A ação {action['actionName']} foi inserida com sucesso!")
         else:
             print(f"Ocorreu um erro ao inserir a ação {action['actionName']} "
-                  f"Status response:  {response.status_code}" token)
+                  f"Status response:  {response.status_code}")
 
 def populate_users():
     """ Popula a tabela de usuários com dados de exemplo. """
