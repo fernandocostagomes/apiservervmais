@@ -17,18 +17,18 @@ else:
 
 def getToken():
     """ Retorna o token de acesso. """
-    response = requests.post(full_url + f"/login", data=json.dumps(login), headers=application_json)
-    if response.status_code == 200:
-        token = json.loads(response.text)["token"]
-    else:
-        print(f"Ocorreu um erro ao solicitar o token" f"Status response:  {response.status_code}")
-
-
-login
-    {
-        "email": "admin@admin",
-        "password": "admin123"
-    }
+    logins = [
+        {
+            "email": "admin@admin",
+            "password": "admin123"
+        }
+    ]
+    for login in logins:
+        response = requests.post(full_url + f"/login", data=json.dumps(login), headers=application_json)
+        if response.status_code == 200:
+            token = json.loads(response.text)["token"]
+        else:
+            print(f"Ocorreu um erro ao solicitar o token" f"Status response:  {response.status_code}")
 
 def populate_actions():
     """ Popula a tabela action com as ações definidas na API.   """
