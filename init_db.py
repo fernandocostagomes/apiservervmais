@@ -34,6 +34,7 @@ def getToken():
 def populate_actions():
     """ Popula a tabela action com as ações definidas na API.   """
     for action in getArray("actions"):
+        print(token)
         response = requests.post(
             f"{full_url}/action",
             data=json.dumps(action),
