@@ -4,8 +4,7 @@ import sys
 
 base_url = sys.argv[1]
 full_url = "http://" + base_url + ":8080"
-application_json = {"Content-Type": "application/json"}
-token = ""
+application_json = {"Content-Type": "application/json"} 
 
 # Verifica se pelo menos um argumento foi passado (o nome do script é o primeiro argumento)
 if len(sys.argv) > 1:
@@ -17,31 +16,39 @@ else:
 
 def getToken():
     """ Retorna o token de acesso. """
+    token = None
     logins = [
         {
             "email": "admin@admin",
             "password": "admin123"
         }
-    ]
+    ]    
+
     for login in logins:
         response = requests.post(full_url + f"/login", data=json.dumps(login), headers=application_json)
         if response.status_code == 200:
-            token = json.loads(response.text)["token"]
-            print(f"Token: {token}")
+            print (f"Token: {json.loads(response.text)['token']}")
+            return json.loads(response.text)["token"]            
         else:
             print(f"Ocorreu um erro ao solicitar o token" f"Status response:  {response.status_code}")
+        
+    return token
 
 def populate_actions():
     """ Popula a tabela action com as ações definidas na API.   """
+    
+    token = getToken()
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+    }    
+    
     for action in getArray("actions"):
-        response = requests.post(
+        response = (requests.post(
             f"{full_url}/action",
             data=json.dumps(action),
-            headers={"Authorization": "Bearer " + token},
-        )
-
-        print(token)
-
+            headers=headers,
+        ))
         # Verifica se a solicitação foi bem-sucedida
         if response.status_code == 201:
             print(f"A ação {action['actionName']} foi inserida com sucesso!")
@@ -51,12 +58,18 @@ def populate_actions():
 
 def populate_users():
     """ Popula a tabela de usuários com dados de exemplo. """
+    token = getToken()
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+    }
+
     for user in getArray("users"):
         response = (
             requests.post(
                 f"{full_url}/user",
                 data=json.dumps(user),
-                headers={"Content-Type": "application/json"},
+                headers=headers,
             ))
 
         if response.status_code == 201:
@@ -66,11 +79,18 @@ def populate_users():
 
 def populate_parameters():
     """ Popula a tabela de parametros com dados de exemplo. """
+
+    token = getToken()
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+    }
+
     for parameter in getArray("parameters"):
         response = requests.post(
             f"{full_url}/parameter",
             data=json.dumps(parameter),
-            headers={"Content-Type": "application/json"},
+            headers=headers,
         )
 
         if response.status_code == 201:
@@ -80,11 +100,18 @@ def populate_parameters():
 
 """ Popula a tabela de address com dados de exemplo. """
 def populate_address():
+
+    token = getToken()
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+    }
+
     for address in getArray("addresses"):
         response = requests.post(
             f"{full_url}/address",
             data=json.dumps(address),
-            headers=application_json,
+            headers=headers,
         )
 
         if response.status_code == 201:
@@ -95,11 +122,18 @@ def populate_address():
 
 """ Popula a tabela de roles com dados de exemplo. """
 def populate_roles():
+    
+    token = getToken()
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+    }
+
     for role in getArray("roles"):
         response = requests.post(
             f"{full_url}/role",
             data=json.dumps(role),
-            headers=application_json,
+            headers=headers,
         )
 
         if response.status_code == 201:
@@ -109,11 +143,18 @@ def populate_roles():
 
 """ Popula a tabela de permissions com dados de exemplo. """
 def populate_permissions():
+
+    token = getToken()
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+    }
+
     for permission in getArray("permissions"):
         response = requests.post(
             f"{full_url}/permission",
             data=json.dumps(permission),
-            headers=application_json,
+            headers=headers,
         )
         if response.status_code == 201:
             print(f"Permission {permission['permissionName']} inserido com sucesso!")
@@ -122,16 +163,30 @@ def populate_permissions():
 
 """ Popula a tabela de pwd com dados de exemplo. """
 def teste_login():
+
+    token = getToken()
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+    }
+
     for pwd in getArray("pwd"):
         response = requests.post(
             f"{full_url}/login",
             data=json.dumps(pwd),
-            headers=application_json,
+            headers=headers,
         )
-        print(f"{response.text} \n Login: {pwd['email']}.")
+        print(f"{response.status_code} \n Login: {pwd['email']}.")
 
 def getUserByEmail(tipo, email):
-    response = requests.get(full_url + f"/user/email/{email}")
+
+    token = getToken()
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+    }
+
+    response = requests.get(full_url + f"/user/email/{email}", headers=headers)
     # Verifica se a solicitação foi bem-sucedida
     if response.status_code == 200:
         if(tipo == "pwdCurrent"):
@@ -336,7 +391,6 @@ def getArray(name):
         return None
 
 if __name__ == "__main__":
-    getToken()
     populate_actions()
     populate_users()
     populate_parameters()

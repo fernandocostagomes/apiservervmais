@@ -1,9 +1,10 @@
 package fernandocostagomes.plugins
 
-import fernandocostagomes.schemas.*
 import fernandocostagomes.routes.*
+import fernandocostagomes.routes.cgd.*
+import fernandocostagomes.schemas.*
+import fernandocostagomes.schemas.cgd.*
 import io.ktor.server.application.*
-import io.ktor.server.util.*
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -26,6 +27,13 @@ fun Application.configureDatabases() {
     configureRoutingPermission( ServicePermission(dbConnection) )
     configureRoutingRole( ServiceRole(dbConnection) )
     configureRoutingUser( ServiceUser(dbConnection) )
+
+    configureRoutingPlayer( ServicePlayer(dbConnection ) )
+    configureRoutingTribe( ServiceTribe(dbConnection ) )
+    configureRoutingGame( ServiceGame( dbConnection ) )
+    configureRoutingPunctuation( ServicePunctuation( dbConnection ) )
+    configureRoutingPermissionCgd( ServicePermissionCgd( dbConnection ) )
+    configureRoutingPlayerTribe( ServicePlayerTribe( dbConnection ) )
 }
 
 /**

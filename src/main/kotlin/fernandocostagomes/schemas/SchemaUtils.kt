@@ -1,5 +1,8 @@
 package fernandocostagomes.schemas
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.sql.ResultSet
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -51,6 +54,22 @@ class SchemaUtils {
             val current = LocalDateTime.now()
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
             return current.format(formatter)
+        }
+
+        suspend fun checkGeneratedKeys(generatedKeys: ResultSet): Any = withContext( Dispatchers.IO ){
+            if (generatedKeys.next())
+                return@withContext generatedKeys.getInt(1)
+            else
+                throw Exception( UNABLE_NEW_ID_INSERTED )
+
+        }
+
+        suspend fun checkListIsNoEmpty( pMutableList: MutableList<Any>): MutableList<Any> = withContext( Dispatchers.IO ){
+            if ( pMutableList.isNotEmpty() )
+                return@withContext pMutableList
+            else
+                throw Exception( RECORD_NOT_FOUND )
+
         }
     }
 }
