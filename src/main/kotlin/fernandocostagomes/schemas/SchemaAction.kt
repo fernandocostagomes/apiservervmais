@@ -5,6 +5,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import java.sql.*
 
+/*
+Classe utilizacao para o objeto e o schema Action.
+ */
 @Serializable
 data class Action(
     val actionId: Int = 0,
